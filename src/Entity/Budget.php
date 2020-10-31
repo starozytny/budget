@@ -40,6 +40,16 @@ class Budget
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $spend;
+
+    public function __construct()
+    {
+        $this->setSpend(0);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +99,18 @@ class Budget
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSpend(): ?float
+    {
+        return $this->spend;
+    }
+
+    public function setSpend(float $spend): self
+    {
+        $this->spend = $spend;
 
         return $this;
     }
