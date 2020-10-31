@@ -27,25 +27,10 @@
 
     {% set menu = [
         {
-            'path': path('app_homepage'), 'blank': false,
-            'label': 'Accueil',
-            'name': 'accueil'
+            'path': path('app_login'), 'blank': false,
+            'label': 'Espace membre',
+            'name': 'espace-utilisateur'
         },
-        {
-            'path': "https://www.instagram.com/shanbo_daltonien/", 'blank': true,
-            'label': 'Instragram',
-            'name': 'instagram'
-        },
-        {
-            'path': "https://www.linkedin.com/in/chanbora-chhun-00a0a0112/", 'blank': true,
-            'label': 'LinkedIn',
-            'name': 'linkedIn'
-        },
-        {
-            'path': "https://github.com/starozytny", 'blank': true,
-            'label': 'Github',
-            'name': 'github'
-        }
     ] %}
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}

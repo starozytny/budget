@@ -78,23 +78,6 @@ img, svg{
   .image{
     overflow: hidden;
   }
-
-  img:nth-child(1), img:nth-child(2){
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  img:nth-child(2){
-    transform: scale(0.5);
-  }
-
-  img:nth-child(3){
-    position: relative;
-    z-index: 1;
-    transform: scale(0.95) translateY(50px);
-  }
 }
 
 h2{
@@ -252,35 +235,11 @@ h2{
   .header-drawing{
     width: 468px;
 
-    @keyframes respire {
-      0%{transform: scale(0.3) translate(-550px, 780px) rotate(-14deg);}
-      50%{transform: scale(0.31) translate(-550px, 780px) rotate(-14deg);}
-      100%{transform: scale(0.3) translate(-550px, 780px) rotate(-14deg);}
-    }
+   
 
     .image{
       overflow: initial;
       transform: translateX(-40px);
-    }
-
-    @keyframes respire2 {
-      0%{transform: scale(1);}
-      50%{transform: scale(1.1);}
-      100%{transform: scale(1);}
-    }
-
-    img:nth-child(1){
-      animation: 6s ease-in-out 0.4s infinite alternate respire2;
-    }
-
-    img:nth-child(3) {
-      transform: scale(1) translateY(100px);
-    }
-
-    img:nth-child(2) {
-      transform-origin: center center;
-      transform: scale(0.3) translate(-550px, 780px) rotate(-14deg);
-      animation: 6s ease-in-out 0.4s infinite alternate respire;
     }
   }
   .header-scroll{

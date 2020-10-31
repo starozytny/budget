@@ -8,38 +8,35 @@
     {{ encore_entry_link_tags('default_homepage') }}
 {% endblock %}
 
-{% block title %}Développeur web fullstack Marseille Chanbora Chhun, Symfony, React{% endblock %}
+{% block title %}Shanbo Budget - gestion de son budget{% endblock %}
 
 {% block main_content %}
     <header>
         <div class="header-infos">
             <div class="header-title" data-aos="fade-right">
-                <div class="subtitle">Explorateur développeur</div>
+                <div class="subtitle">Gestion de son budget</div>
                 <div class="title">
-                    <span>Salut, je m'appelle </span>
-                    <h1>Chanbora Chhun.</h1>
-                    <p>Je suis Développeur Web à Marseille.</p>
+                    <h1>Shanbo budget</h1>
                 </div>
                 <div class="content">
                     <p>
-                        Depuis quelques années je développe des sites web avec, principalement,
-                        le framework Symfony, le grand Javascript et du Sass. Récemment, je me
-                        suis mis au React dans certains de mes projets !
+                        Gère ton budget facilement. Prévois tes dépenses, tes économies et tes rentrées d'argents !
                     </p>
+                    <div>
+                        <a class="btn btn-danger" href="{{ path('app_login') }}"><span>Espace membre</span></a>
+                    </div>
                 </div>
             </div>
             <div class="header-scroll" data-aos="fade-up">
                 <a href="#gardons-contact">
                     <span class="icon-down-arrow"></span>
-                    <span>En savoir plus</span>
+                    <span>Gardons contact</span>
                 </a>
             </div>
         </div>
         <div class="header-drawing">
             <div class="image">
-                <img src="{{ asset(path_images ~ "blob-1.svg") }}" alt="illustration deco blob">
-                <img src="{{ asset(path_images ~ "blob-2.svg") }}" alt="illustration deco blob">
-                <img src="{{ asset(path_images ~ "profil-chanbora-chhun.svg") }}" alt="Photo de profil de Chanbora Chhun">
+                <img src="{{ asset(path_images ~ "bg.jpg") }}" alt="Illustration Shanbo Budget">
             </div>
         </div>
     </header>
@@ -66,15 +63,7 @@
                 </div>
             </div>
             <div class="newsletter" data-aos="fade-up">
-                <p>
-                    Au fur et à mesure, je vais remplir ce site internet avec des projets personnels qui
-                    seront pour la grande majorité totalement gratuite d'utilisations (gestionnaire de budget,
-                    partage de photographies, partage de recettes de cuisines, blog aventure en randonnées !)
-                    <br><br>
-                    Tu peux rester informé des nouvelles mises à jour de contenu grâce au formulaire juste en dessous !
-                    Je garderai ton adresse e-mail que pour cet usage.
-                </p>
-                <div id="newsletter" data-aos="fade-up"></div>
+                <a class="btn btn-primary" target="_blank" href="https://chanbora-chhun.fr"><span>Rester informé</span></a>
             </div>
         </div>
     </section>
