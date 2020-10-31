@@ -8,12 +8,76 @@
     {{ encore_entry_link_tags('default_homepage') }}
 {% endblock %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Développeur web fullstack Marseille Chanbora Chhun, Symfony, React{% endblock %}
 
 {% block main_content %}
-    Hello world 
+    <header>
+        <div class="header-infos">
+            <div class="header-title" data-aos="fade-right">
+                <div class="subtitle">Explorateur développeur</div>
+                <div class="title">
+                    <span>Salut, je m'appelle </span>
+                    <h1>Chanbora Chhun.</h1>
+                    <p>Je suis Développeur Web à Marseille.</p>
+                </div>
+                <div class="content">
+                    <p>
+                        Depuis quelques années je développe des sites web avec, principalement,
+                        le framework Symfony, le grand Javascript et du Sass. Récemment, je me
+                        suis mis au React dans certains de mes projets !
+                    </p>
+                </div>
+            </div>
+            <div class="header-scroll" data-aos="fade-up">
+                <a href="#gardons-contact">
+                    <span class="icon-down-arrow"></span>
+                    <span>En savoir plus</span>
+                </a>
+            </div>
+        </div>
+        <div class="header-drawing">
+            <div class="image">
+                <img src="{{ asset(path_images ~ "blob-1.svg") }}" alt="illustration deco blob">
+                <img src="{{ asset(path_images ~ "blob-2.svg") }}" alt="illustration deco blob">
+                <img src="{{ asset(path_images ~ "profil-chanbora-chhun.svg") }}" alt="Photo de profil de Chanbora Chhun">
+            </div>
+        </div>
+    </header>
 
-    <div id="r-compteur" class="compteur" data-count="1946">0</div>
+    <section id="gardons-contact">
+        <h2 data-aos="fade-right">Gardons contact !</h2>
+        <div class="content">
+            <div class="social" data-aos="fade-up">
+                <p>
+                    N'hésites pas à me contacter à travers mon compte Instagram ou mon compte LinkedIn !
+                    Que ce soit pour discuter d'un projet, d'échanger des informations en programmation web,
+                    de parler de technologies ou tout simplement discuter.
+                </p>
+                <div class="social-links">
+                    <a target="_blank" rel="nofollow" href="https://www.instagram.com/shanbo_daltonien/" title="@shanbo_daltonien">
+                        <span class="icon-instagram"></span> Instagram
+                    </a>
+                    <a target="_blank" rel="nofollow" href="https://www.linkedin.com/in/chanbora-chhun-00a0a0112/" title="LinkedIn de Chanbora Chhun">
+                        <span class="icon-linkedin"></span> LinkedIn
+                    </a>
+                    <a target="_blank" rel="nofollow" href="https://github.com/starozytny" title="Github de Chanbora Chhun alias Starozytny">
+                        <span class="icon-github"></span> GitHub
+                    </a>
+                </div>
+            </div>
+            <div class="newsletter" data-aos="fade-up">
+                <p>
+                    Au fur et à mesure, je vais remplir ce site internet avec des projets personnels qui
+                    seront pour la grande majorité totalement gratuite d'utilisations (gestionnaire de budget,
+                    partage de photographies, partage de recettes de cuisines, blog aventure en randonnées !)
+                    <br><br>
+                    Tu peux rester informé des nouvelles mises à jour de contenu grâce au formulaire juste en dessous !
+                    Je garderai ton adresse e-mail que pour cet usage.
+                </p>
+                <div id="newsletter" data-aos="fade-up"></div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}

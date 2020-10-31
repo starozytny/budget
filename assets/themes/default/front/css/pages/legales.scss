@@ -1,18 +1,22 @@
 @import "../vars/vars.scss";
 
+form{
+  margin-top: 24px;
+}
+
 .legales{
-    margin-top: 24px;
+  margin-top: 24px;
 
-    & > div{
-        margin-bottom: 24px;
+  & > div{
+    margin-bottom: 24px;
 
-        h2{
-            margin-bottom: 8px;
-        }
-
-        h3{
-            margin-top: 12px;
-            margin-bottom: 4px;
-        }
+    h2{
+      margin-bottom: 12px;
     }
-} 
+
+    h3{
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 @import "~normalize.css";
 
 :root{
-    --color0: #2B96D6;
+    --color0: #9D0208;
     --color1: #FEC61F;
     --color2: #103044;
     --color3: #15120D;
@@ -10,6 +10,7 @@
     --color6: #676767;
 
     --colorDisabled: #BCC0BC;
+    --colorBorder: #DBDEDB;
 
     --nuance0: #ffcbf2;
     --nuance1: #deaaff;
@@ -35,8 +36,8 @@
     --betaRGBA: 0,0,0;
     --primaryRGBA: 91,60,196;
     --warningRGBA: 255, 130, 0;
-    --dangerRGBA: 245, 147, 180;
-    --successRGBA: 23, 201, 100;
+    --dangerRGBA: 255, 185, 185;
+    --successRGBA: 131, 255, 197;
 
     --color0RGBA: 26, 83, 92;
     --color1RGBA: 78, 205, 196;

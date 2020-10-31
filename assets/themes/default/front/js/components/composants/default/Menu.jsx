@@ -47,7 +47,7 @@ export class Menu extends Component {
         const {menu, active} = this.state;
 
         let menuItems = menu.map((elem, index) => {
-            return <a href={elem.path} className={"nav-item nav-item-"+ elem.name + ((active == elem.name) ? " active" : "")} 
+            return <a href={elem.path} target={elem.blank ? '_blank' : '_self'} className={"nav-item nav-item-"+ elem.name + ((active == elem.name) ? " active" : "")}
                       onMouseOver={this.handleHover} 
                       onMouseLeave={this.handleLeave} 
                       key={index}
@@ -60,7 +60,7 @@ export class Menu extends Component {
             <nav className={menuOpened}>
                 <div className="nav-header">
                     <a href={Routing.generate('app_homepage')} title="Logilink">
-                        <img src="../../build/themes/default/front/images/logo.svg" alt="logo"/>
+                        Shanbo
                     </a>
                     <div className="nav-header-actions">
                         <span className={"icon-menu " + (menuOpened == "" ? "active" : null)} onClick={onOpenMenu}></span>
