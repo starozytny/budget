@@ -79,6 +79,48 @@ class Budget
         return $this;
     }
 
+    public function getMonthString(){
+        switch($this->month)
+        {
+            case 2:
+                return 'Février';
+                break;
+            case 3:
+                return 'Mars';
+                break;
+            case 4:
+                return 'Avril';
+                break;
+            case 5:
+                return 'Mai';
+                break;
+            case 6:
+                return 'Juin';
+                break;
+            case 7:
+                return 'Juillet';
+                break;
+            case 8:
+                return 'Août';
+                break;
+            case 9:
+                return 'Septembre';
+                break;
+            case 10:
+                return 'Octobre';
+                break;
+            case 11:
+                return 'Novembre';
+                break;
+            case 12:
+                return 'Décembre';
+                break;
+            default:
+                return 'Janvier';
+                break;
+        }
+    }
+
     public function getComment(): ?string
     {
         return $this->comment;

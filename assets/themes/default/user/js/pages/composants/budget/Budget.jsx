@@ -14,13 +14,13 @@ export class Budget extends Component {
         const {budget} = this.state
 
         let content = <div className="liste">
-            <div class="card-1">
-                <div class="card-1-header">
-                    <div class="title">Reste à dépenser pour</div>
+            <div class="card card-1 card-budget-toSpend">
+                <div class="card-budget-toSpend-header">
+                    <div class="title">{budget.spend} €</div>
                 </div>
-                <div class="card-1-body">
+                <div class="card-budget-toSpend-body">
                     <p>
-                        <b>{budget.spend} €</b>
+                        Reste à dépenser pour {budget.monthString}
                     </p>
                 </div>
             </div>

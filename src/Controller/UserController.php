@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'spend'];
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'spend'];
 
     /**
      * @Route("/espace-utilisateur", name="user_dashboard")
