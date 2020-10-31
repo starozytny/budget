@@ -35,16 +35,6 @@ class Budget
     private $comment;
 
     /**
-     * @ORM\OneToOne(targetEntity=Budget::class, cascade={"persist", "remove"})
-     */
-    private $next;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Budget::class, cascade={"persist", "remove"})
-     */
-    private $prev;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="budgets")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -87,30 +77,6 @@ class Budget
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getNext(): ?self
-    {
-        return $this->next;
-    }
-
-    public function setNext(?self $next): self
-    {
-        $this->next = $next;
-
-        return $this;
-    }
-
-    public function getPrev(): ?self
-    {
-        return $this->prev;
-    }
-
-    public function setPrev(?self $prev): self
-    {
-        $this->prev = $prev;
 
         return $this;
     }

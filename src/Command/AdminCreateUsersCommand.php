@@ -73,6 +73,11 @@ class AdminCreateUsersCommand extends Command
                 $new, 'azerty'
             ));
 
+            for($i=1 ; $i<=12 ; $i++){
+                $budget = (new Budget())
+                ;
+            }
+
             $this->em->persist($new);
             $io->text('USER : ' . $user['username'] . ' créé' );
         }
