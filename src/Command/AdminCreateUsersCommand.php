@@ -3,13 +3,14 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Entity\Budget;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AdminCreateUsersCommand extends Command
@@ -73,10 +74,17 @@ class AdminCreateUsersCommand extends Command
                 $new, 'azerty'
             ));
 
-            for($i=1 ; $i<=12 ; $i++){
-                $budget = (new Budget())
-                ;
-            }
+            for($i=2020 ; $i<=2022 ; $i++){
+                for($j=1 ; $j<=12 ; $j++){
+                    $budget = (new Budget())
+                        ->setYear($i)
+                        ->setMonth($j)
+                        ->setUser($new)
+                    ;
+                    
+                    $this->em->persist($budget);
+                }
+            }            
 
             $this->em->persist($new);
             $io->text('USER : ' . $user['username'] . ' créé' );
