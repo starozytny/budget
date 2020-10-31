@@ -10,6 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'spend'];
+
     /**
      * @Route("/espace-utilisateur", name="user_dashboard")
      */
@@ -17,9 +19,12 @@ class UserController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $today = $calendarService->getToday();
-        $month = $em->getRepository(Budget::class)->findOneBy(['year' => $today['year'], 'month' => $today['mon']]);
+        $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $today['year'], 'month' => $today['mon']]);
 
+        $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
 
-        return $this->render('root/user/index.html.twig');
+        return $this->render('root/user/index.html.twig', [
+            'budget' => $budget
+        ]);
     }
 }
