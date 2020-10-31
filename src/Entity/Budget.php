@@ -45,9 +45,21 @@ class Budget
      */
     private $spend;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Outgo::class, mappedBy="budget", orphanRemoval=true)
+     */
+    private $outgos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RegularSpend::class, mappedBy="budget", orphanRemoval=true)
+     */
+    private $regularSpends;
+
     public function __construct()
     {
         $this->setSpend(0);
+        $this->outgos = new ArrayCollection();
+        $this->regularSpends = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -153,6 +165,68 @@ class Budget
     public function setSpend(float $spend): self
     {
         $this->spend = $spend;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Outgo[]
+     */
+    public function getOutgos(): Collection
+    {
+        return $this->outgos;
+    }
+
+    public function addOutgo(Outgo $outgo): self
+    {
+        if (!$this->outgos->contains($outgo)) {
+            $this->outgos[] = $outgo;
+            $outgo->setBudget($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOutgo(Outgo $outgo): self
+    {
+        if ($this->outgos->contains($outgo)) {
+            $this->outgos->removeElement($outgo);
+            // set the owning side to null (unless already changed)
+            if ($outgo->getBudget() === $this) {
+                $outgo->setBudget(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RegularSpend[]
+     */
+    public function getRegularSpends(): Collection
+    {
+        return $this->regularSpends;
+    }
+
+    public function addRegularSpend(RegularSpend $regularSpend): self
+    {
+        if (!$this->regularSpends->contains($regularSpend)) {
+            $this->regularSpends[] = $regularSpend;
+            $regularSpend->setBudget($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegularSpend(RegularSpend $regularSpend): self
+    {
+        if ($this->regularSpends->contains($regularSpend)) {
+            $this->regularSpends->removeElement($regularSpend);
+            // set the owning side to null (unless already changed)
+            if ($regularSpend->getBudget() === $this) {
+                $regularSpend->setBudget(null);
+            }
+        }
 
         return $this;
     }

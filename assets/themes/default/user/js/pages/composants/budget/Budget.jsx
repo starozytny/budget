@@ -13,15 +13,42 @@ export class Budget extends Component {
     render () {
         const {budget} = this.state
 
-        let content = <div className="liste">
-            <div class="card card-1 card-budget-toSpend">
-                <div class="card-budget-toSpend-header">
-                    <div class="title">{budget.spend} €</div>
+        let content = <div>
+            <div className="budget-general">
+                <div class="card-1 card-budget-toSpend">
+                    <div class="card-1-header">
+                        <div class="title">{budget.spend} €</div>
+                    </div>
+                    <div class="card-1-body">
+                        <p>
+                            Reste à dépenser pour {budget.monthString}
+                        </p>
+                    </div>
                 </div>
-                <div class="card-budget-toSpend-body">
-                    <p>
-                        Reste à dépenser pour {budget.monthString}
-                    </p>
+            </div>
+            <div className="budget-regular">
+            <div class="card-1 card-budget-regular">
+                    <div class="card-1-header">
+                        <div class="title">Dépense régulière</div>
+                    </div>
+                    <div class="card-1-body">
+                        <p>
+                            XXXX €
+                        </p>
+                    </div>
+                    <div class="card-1-footer">
+                        <div className="items">
+                            <div className="item">
+                                <input type="text" name="" id=""/>
+                            </div>
+                            <div className="item">
+                                <input type="text" name="" id=""/>
+                            </div>
+                            <div className="item">
+                                <div className="btn-icon"><span className="icon-plus"></span></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

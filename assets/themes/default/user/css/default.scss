@@ -4,3 +4,9 @@
 @import "vars/vars.scss";
 
 @import "./components/card.scss";
+
+.card-budget-toSpend{
+    .card-1-body{
+        margin-bottom: 16px;
+    }
+}
