@@ -13,7 +13,6 @@ class UserController extends AbstractController
 {
     const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'spend', 
                                'regularSpends' => ['id', 'name', 'price'] ];
-    const ATTRIBUTES_DONNEES = ['id', 'name', 'price'];
 
     /**
      * @Route("/espace-utilisateur", name="user_dashboard")

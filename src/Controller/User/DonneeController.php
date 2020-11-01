@@ -15,7 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DonneeController extends AbstractController
 {
-    const ATTRIBUTES_DONNEES = ['id', 'name', 'price'];
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'spend', 
+                               'regularSpends' => ['id', 'name', 'price'] ];
 
     /**
      * @Route("/{type}/{id}/ajouter", options={"expose"=true}, name="add")
@@ -41,18 +42,24 @@ class DonneeController extends AbstractController
 
         $donnee->setName($name);
         $donnee->setPrice($price);
-        $donnee->setBudget($budget);
+        // $donnee->setBudget($budget);
 
-        $em->persist($donnee); $em->flush();
+        switch($type){
+            default:
+                $budget->addRegularSpend($donnee);
+                break;
+        }
 
-        $donnee = $serializer->getSerializeData($donnee, self::ATTRIBUTES_DONNEES);
-        return new JsonResponse(['code' => 1, 'donnee' => $donnee, 'type' => $type]);
+        $em->persist($budget); $em->persist($donnee); $em->flush();
+
+        $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
+        return new JsonResponse(['code' => 1, 'budget' => $budget, 'type' => $type]);
     }
 
     /**
      * @Route("/{type}/{id}/supprimer", options={"expose"=true}, name="delete")
      */
-    public function delete($type, $id)
+    public function delete(SerializeData $serializer, $type, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -69,6 +76,7 @@ class DonneeController extends AbstractController
         $em->remove($donnee); 
         $em->flush();
 
-        return new JsonResponse(['code' => 1, 'type' => $type]);
+        $budget = $serializer->getSerializeData($donnee->getBudget(), self::ATTRIBUTES_BUDGET);
+        return new JsonResponse(['code' => 1, 'budget' => $budget, 'type' => $type]);
     }
 }

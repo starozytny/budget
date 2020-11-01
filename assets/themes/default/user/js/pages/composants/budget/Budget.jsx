@@ -20,69 +20,55 @@ function getType(type, self){
     return [name, tab]
 }
 
+function getTotalSpend(budget){
+    //Calcul Total
+    let total = budget.spend;
+    let totalRegularSpends = 0;
+    if(budget.regularSpends.length != 0){
+        budget.regularSpends.forEach(elem => {
+            totalRegularSpends += elem.price
+        })
+    }
+
+    return total - totalRegularSpends;
+}
+
 export class Budget extends Component {
     constructor (props){
         super ()
 
-        let b = JSON.parse(props.budget);
-
         this.state = {
             budgets: JSON.parse(props.budgets),
-            budget: b,
-            regularSpends: b.regularSpends
+            budget: JSON.parse(props.budget),
         }
 
         this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
-        this.handleDeleteDonnee = this.handleDeleteDonnee.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
     }
 
     handleMonth = (id) => {
         let budget = this.state.budgets.filter(v => v.id == id)
-        console.log(budget)
-        this.setState({ budget: budget[0], regularSpends: budget[0].regularSpends })
+        this.setState({ budget: budget[0] })
     }
 
-    handleUpdateBudget = (type, donnee) => {
+    handleUpdateBudget = (type, bu) => {
         const {budgets, budget} = this.state
-        let data = getType(type, this)
-        let name = data[0]; let tab = data[1]; 
 
-        let bs = [];
-        budgets.forEach(elem => {
-            if(elem.id == budget.id){
-                elem.regularSpends.push(JSON.parse(donnee))
-            }
-            bs.push(elem)
-        })
-        this.setState({ budgets: bs, [name]: ActionsArray.addInArray(tab, donnee) })
-    }
+        console.log(ActionsArray.addOrUpdateInArray(budgets, bu))
 
-    handleDeleteDonnee = (type, id) => {
-        let data = getType(type, this)
-        let name = data[0]; let tab = data[1];
-
-        let donnee = tab.filter(v => v.id == id)
-        this.setState({ [name]: ActionsArray.deleteInArray(tab, donnee[0]) })
+        this.setState({ budgets: ActionsArray.addOrUpdateInArray(budgets, bu), budget: ActionsArray.addOrUpdateInArray(budget, bu)[0] })
     }
 
     render () {
-        const {budgets, budget, regularSpends} = this.state
+        const {budgets, budget} = this.state
 
         //Get months
         let months = budgets.map(elem => {
-            return <div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>{elem.monthString}</div>
+            return <div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>
+                <div>{elem.monthString}</div>
+                <div>{getTotalSpend(elem)} €</div>
+            </div>
         })
-
-        //Calcul Total
-        let totalRegularSpends = 0;
-        if(regularSpends.length != 0){
-            regularSpends.forEach(elem => {
-                totalRegularSpends += elem.price
-            })
-        }
-
-        let total = budget.spend - totalRegularSpends
 
         //main
         let infos = <p>Planning pour l'année {budget.year}.</p>
@@ -92,7 +78,7 @@ export class Budget extends Component {
             <div className="budget-general">
                 <div className="card-1 card-budget-toSpend">
                     <div className="card-1-header">
-                        <div className="title">{total} €</div>
+                        <div className="title">{getTotalSpend(budget)} €</div>
                     </div>
                     <div className="card-1-body">
                         <p>
@@ -102,7 +88,7 @@ export class Budget extends Component {
                 </div>
             </div>
             <div className="budget-regular">
-                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} onDeleteDonnee={this.handleDeleteDonnee} add={false} type="regularSpend" donnees={regularSpends} title="Dépenses régulières" />
+                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" />
             </div>
         </div>
 
