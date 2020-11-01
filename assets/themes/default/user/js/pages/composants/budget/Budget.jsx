@@ -46,6 +46,9 @@ export class Budget extends Component {
 
         let total = budget.spend - totalRegularSpends
 
+        //main
+        let infos = <p>Planning pour l'année {budget.year}.</p>
+
         let content = <div>
             <div className="budget-months">{months}</div>
             <div className="budget-general">
@@ -66,7 +69,7 @@ export class Budget extends Component {
         </div>
 
         return <>
-            <Page content={content} />
+            <Page infos={infos} content={content} />
         </>
     }
 }
