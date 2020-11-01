@@ -33,6 +33,12 @@ export class Budget extends Component {
     render () {
         const {budget, regularSpends} = this.state
 
+        //Get months
+        let months = Calendrier.getMonthsFr().map((elem, index) => {
+            return <div key={index} className={"item" + (index == budget.month - 1 ? ' active' : '')}>{elem}</div>
+        })
+
+        //Calcul Total
         let totalRegularSpends = 0;
         regularSpends.forEach(elem => {
             totalRegularSpends += elem.price
@@ -41,6 +47,7 @@ export class Budget extends Component {
         let total = budget.spend - totalRegularSpends
 
         let content = <div>
+            <div className="budget-months">{months}</div>
             <div className="budget-general">
                 <div className="card-1 card-budget-toSpend">
                     <div className="card-1-header">

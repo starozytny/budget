@@ -1,0 +1,50 @@
+@import "../vars/vars.scss";
+
+.budget-months{
+    @include flex(row, center, center);
+    overflow-x: auto;
+    margin-bottom: 24px;
+
+    .item{
+        padding: 12px;
+        border-radius: 10px;
+        opacity: 0.7;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &.active{
+            background-color: var(--color0);
+            color: var(--alpha);
+            opacity: 1;
+            
+            &:hover{
+                transform: translateY(0);
+            }
+        }
+
+        &:hover{
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+    }
+
+}
+
+.card-budget-toSpend{
+    .card-1-body{
+        margin-bottom: 16px;
+    }
+}
+
+.card-budget-regular{
+    .card-1-body{
+        margin-top: 24px;
+    }
+    .card-1-body, .card-1-footer{
+        border-top: 1px solid var(--colorDisabled);
+    }
+
+    .objet{
+        @include flex(row, flex-start, space-between);
+    }
+}

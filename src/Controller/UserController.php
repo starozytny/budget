@@ -24,7 +24,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
         $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $today['year'], 'month' => $today['mon'], 'user' => $user]);
         $regularSpends = $em->getRepository(RegularSpend::class)->findBy(['budget' => $budget], ['name' => 'ASC']);
-
+        
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
         $regularSpends = $serializer->getSerializeData($regularSpends, self::ATTRIBUTES_DONNEES);
 

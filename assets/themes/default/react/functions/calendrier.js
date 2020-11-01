@@ -4,6 +4,12 @@ function getDayFr(day){
     return days[day];
 }
 
+function getMonthsFr(){
+    let months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mail', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
+    return months;
+}
+
 function getShortDayFr(day){
     let days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
@@ -33,5 +39,6 @@ function getTimeCalendar(start, end){
 module.exports = {
     getDayFr,
     getShortDayFr,
-    getTimeCalendar
+    getTimeCalendar,
+    getMonthsFr
 }
