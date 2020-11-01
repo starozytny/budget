@@ -54,8 +54,6 @@ export class Budget extends Component {
     handleUpdateBudget = (type, bu) => {
         const {budgets, budget} = this.state
 
-        console.log(ActionsArray.addOrUpdateInArray(budgets, bu))
-
         this.setState({ budgets: ActionsArray.addOrUpdateInArray(budgets, bu), budget: ActionsArray.addOrUpdateInArray(budget, bu)[0] })
     }
 
