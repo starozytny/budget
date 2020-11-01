@@ -63,7 +63,8 @@ export class Budget extends Component {
         let tab = data[1];
 
         let donnee = tab.filter(v => v.id == id)
-        this.setState({ [name]: ActionsArray.deleteInArray(tab, donnee[0]) })
+        let arr = ActionsArray.deleteInArray(tab, donnee[0])
+        this.setState({ [name]: arr.length != 0 ? arr : null })
     }
 
     render () {
