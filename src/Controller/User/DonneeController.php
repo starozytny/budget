@@ -4,8 +4,6 @@ namespace App\Controller\User;
 
 use App\Entity\Budget;
 use App\Entity\RegularSpend;
-use App\Entity\User;
-use App\Service\CalendarService;
 use App\Service\SerializeData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,9 +18,9 @@ class DonneeController extends AbstractController
     const ATTRIBUTES_DONNEES = ['id', 'name', 'price'];
 
     /**
-     * @Route("/{id}/ajouter", options={"expose"=true}, name="add")
+     * @Route("/{type}/{id}/ajouter", options={"expose"=true}, name="add")
      */
-    public function add(Request $request,SerializeData $serializer, $id)
+    public function add(Request $request, SerializeData $serializer, $type, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent());
@@ -35,15 +33,19 @@ class DonneeController extends AbstractController
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
 
-        $donnee = (new RegularSpend())
-            ->setName($name)
-            ->setPrice($price)
-            ->setBudget($budget)
-        ;
+        switch($type){
+            default:
+                $donnee = new RegularSpend();
+                break;
+        }
 
-        $em->persist($donnee);
-        $em->flush();
+        $donnee->setName($name);
+        $donnee->setPrice($price);
+        $donnee->setBudget($budget);
 
-        return new JsonResponse(['code' => 1]);
+        $em->persist($donnee); $em->flush();
+
+        $donnee = $serializer->getSerializeData($donnee, self::ATTRIBUTES_DONNEES);
+        return new JsonResponse(['code' => 1, 'donnee' => $donnee, 'type' => $type]);
     }
 }

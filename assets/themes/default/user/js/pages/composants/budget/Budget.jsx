@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Calendrier from '../../../../../react/functions/calendrier';
 import {Page} from '../../../../../react/composants/page/Page';
 import {Donnee} from './Donnee';
+import ActionsArray from '../../../../../react/functions/actions_array';
 
 export class Budget extends Component {
     constructor (props){
@@ -11,7 +12,24 @@ export class Budget extends Component {
             budget: JSON.parse(props.budget),
             regularSpends: JSON.parse(props.regularSpends)
         }
+
+        this.handleUpdate = this.handleUpdate.bind(this)
     }
+
+    handleUpdate = (type, donnee) => {
+        const {regularSpends} = this.state
+
+        let tab; let name;
+        switch(type) {
+            default:
+                name = "regularSpends"
+                tab = regularSpends
+                break;
+        }
+            
+        this.setState({[name]: ActionsArray.addInArray(tab, donnee)})
+    }
+
     render () {
         const {budget, regularSpends} = this.state
 
@@ -19,8 +37,6 @@ export class Budget extends Component {
         regularSpends.forEach(elem => {
             totalRegularSpends += elem.price
         })
-
-        console.log(totalRegularSpends)
 
         let total = budget.spend - totalRegularSpends
 
@@ -38,8 +54,7 @@ export class Budget extends Component {
                 </div>
             </div>
             <div className="budget-regular">
-                <Donnee id={budget.id} donnees={regularSpends} title="Dépenses régulières" />
-                <Donnee id={budget.id} donnees={regularSpends} title="Entrées d'argent" />
+                <Donnee id={budget.id} onUpdateData={this.handleUpdate} add={false} type="regularSpend" donnees={regularSpends} title="Dépenses régulières" />
             </div>
         </div>
 

@@ -7,6 +7,17 @@ function updateInArray(array, data){
     return arr;
 }
 
+function addInArray(array, data){
+    let arr = []; 
+    let obj = JSON.parse(data)
+    array.forEach(element => {
+        arr.push(element)
+    });
+    arr.push(obj) // if no find doc in docs => add new doc
+    return arr;
+}
+
+
 function addOrUpdateInArray(array, data){
     let arr = []; let findOne = false;
     let obj = JSON.parse(data)
@@ -41,5 +52,6 @@ module.exports = {
     updateInArray,
     updateInArraySeen,
     deleteInArray,
-    addOrUpdateInArray
+    addOrUpdateInArray,
+    addInArray
 }

@@ -5,7 +5,6 @@ import {Input} from '../../../../../react/composants/Fields';
 import Routing from '../../../../../../../../public/bundles/fosjsrouting/js/router.min.js';
 import Loader from '../../../../../react/functions/loader';
 import Validateur from '../../../../../react/functions/validateur';
-import ActionsArray from '../../../../../react/functions/actions_array';
 import {Alert} from '../../../../../react/composants/Alert';
 import {Drop} from '../../../../../react/composants/Drop';
 
@@ -26,7 +25,7 @@ export class Donnee extends Component {
         this.setState({ [e.currentTarget.name]: {value: e.currentTarget.value} })
     }
 
-    handleAdd = (id) => {
+    handleAdd = (type, id) => {
         const {name, price} = this.state
 
         let validate = Validateur.validateur([
@@ -37,14 +36,18 @@ export class Donnee extends Component {
         if(!validate.code){
             this.setState(validate.errors);
         }else{
-            Loader.loader(true)
+            Loader.loaderWithoutAjax(true)
 
             let self = this
-            axios({ method: 'post', url: Routing.generate('user_donnees_add', {'id': id}), data: self.state }).then(function (response) {
+            axios({ method: 'post', url: Routing.generate('user_donnees_add', {'type': type, 'id': id}), data: self.state }).then(function (response) {
                 let data = response.data; let code = data.code; Loader.loader(false)
 
                 if(code === 1){
-                    toastr.info('ok')
+                    self.props.onUpdateData(data.type, data.donnee)
+                    self.setState({ 
+                        name: {value: '', error: ''},
+                        price: {value: '', error: ''}
+                     })
                 }else{
                     toastr.error(data.message)
                 }
@@ -53,16 +56,16 @@ export class Donnee extends Component {
     } 
 
     render () {
-        const {id, donnees, title} = this.props
+        const {id, type, add, donnees, title} = this.props
         const {name, price} = this.state
 
         let items = <div className="objet"><div className="name">Aucune donnée</div></div>
 
         if(donnees.length != 0){
-            items = donnees.map(elem => {
-                return <div className="objet">
+            items = donnees.map((elem, index) => {
+                return <div key={index} className="objet">
                     <div className="name">{elem.name}</div>
-                    <div className="price">{elem.price} €</div>
+                    <div className="price">{add ? "+" : "-"} {elem.price} €</div>
                 </div>
             })
         }
@@ -83,7 +86,7 @@ export class Donnee extends Component {
                         <Input type="number" valeur={price} identifiant="price" placeholder="prix €" onChange={this.handleChange} />
                     </div>
                     <div className="item">
-                        <div className="btn-icon" onClick={e => {this.handleAdd(id)}}><span className="icon-plus"></span></div>
+                        <div className="btn-icon" onClick={e => {this.handleAdd(type, id)}}><span className="icon-plus"></span></div>
                     </div>
                 </div>
             </div>
