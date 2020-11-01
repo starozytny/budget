@@ -29,8 +29,8 @@ export class Budget extends Component {
                 </div>
             </div>
             <div className="budget-regular">
-                <Donnee donnees={regularSpends} title="Dépenses régulières" />
-                <Donnee donnees={regularSpends} title="Entrées d'argent" />
+                <Donnee id={budget.id} donnees={regularSpends} title="Dépenses régulières" />
+                <Donnee id={budget.id} donnees={regularSpends} title="Entrées d'argent" />
             </div>
         </div>
 
