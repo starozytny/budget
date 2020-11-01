@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Calendrier from '../../../../../react/functions/calendrier';
 import {Page} from '../../../../../react/composants/page/Page';
+import {Donnee} from './Donnee';
 
 export class Budget extends Component {
     constructor (props){
@@ -8,18 +9,19 @@ export class Budget extends Component {
 
         this.state = {
             budget: JSON.parse(props.budget),
+            regularSpends: JSON.parse(props.regularSpends)
         }
     }
     render () {
-        const {budget} = this.state
+        const {budget, regularSpends} = this.state
 
         let content = <div>
             <div className="budget-general">
-                <div class="card-1 card-budget-toSpend">
-                    <div class="card-1-header">
-                        <div class="title">{budget.spend} €</div>
+                <div className="card-1 card-budget-toSpend">
+                    <div className="card-1-header">
+                        <div className="title">{budget.spend} €</div>
                     </div>
-                    <div class="card-1-body">
+                    <div className="card-1-body">
                         <p>
                             Reste à dépenser pour {budget.monthString}
                         </p>
@@ -27,29 +29,8 @@ export class Budget extends Component {
                 </div>
             </div>
             <div className="budget-regular">
-            <div class="card-1 card-budget-regular">
-                    <div class="card-1-header">
-                        <div class="title">Dépense régulière</div>
-                    </div>
-                    <div class="card-1-body">
-                        <p>
-                            XXXX €
-                        </p>
-                    </div>
-                    <div class="card-1-footer">
-                        <div className="items">
-                            <div className="item">
-                                <input type="text" name="" id=""/>
-                            </div>
-                            <div className="item">
-                                <input type="text" name="" id=""/>
-                            </div>
-                            <div className="item">
-                                <div className="btn-icon"><span className="icon-plus"></span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Donnee donnees={regularSpends} title="Dépenses régulières" />
+                <Donnee donnees={regularSpends} title="Entrées d'argent" />
             </div>
         </div>
 
