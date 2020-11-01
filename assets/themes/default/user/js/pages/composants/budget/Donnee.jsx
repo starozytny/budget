@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import toastr from 'toastr';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import {Input} from '../../../../../react/composants/Fields';
 import Routing from '../../../../../../../../public/bundles/fosjsrouting/js/router.min.js';
 import Loader from '../../../../../react/functions/loader';
@@ -19,10 +20,37 @@ export class Donnee extends Component {
 
         this.handleChange = this.handleChange.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
     }
 
     handleChange = (e) => {
         this.setState({ [e.currentTarget.name]: {value: e.currentTarget.value} })
+    }
+
+    handleDelete = (type, id) => {
+        Swal.fire({
+            title: 'Etes-vous sûr ?',
+            text: "La suppression est définitive.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, je confirme',
+            cancelButtonText: 'Annuler'
+          }).then((result) => {
+            if (result.value) {
+                Loader.loader(true)
+                let self = this
+                axios({ method: 'post', url: Routing.generate('user_donnees_delete', {'type': type, 'id': id}) }).then(function (response) {
+                    let data = response.data; let code = data.code; Loader.loader(false)
+
+                    if(code === 1){
+                        self.props.onDeleteData(data.type, id)
+                        toastr.info('Suppression réussie.')
+                    }else{
+                        toastr.error(data.message)
+                    }
+                });
+            }
+          })
     }
 
     handleAdd = (type, id) => {
@@ -66,6 +94,7 @@ export class Donnee extends Component {
                 return <div key={index} className="objet">
                     <div className="name">{elem.name}</div>
                     <div className="price">{add ? "+" : "-"} {elem.price} €</div>
+                    <div className="delete" onClick={e => {this.handleDelete(type, elem.id)}}><span className="icon-trash"></span></div>
                 </div>
             })
         }

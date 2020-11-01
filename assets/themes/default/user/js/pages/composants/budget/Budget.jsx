@@ -8,6 +8,18 @@ import ActionsArray from '../../../../../react/functions/actions_array';;
 import Routing from '../../../../../../../../public/bundles/fosjsrouting/js/router.min.js';
 import Loader from '../../../../../react/functions/loader';
 
+function getType(type, self){
+    let name, tab;
+    switch(type) {
+        default:
+            name = "regularSpends"
+            tab = self.state.regularSpends
+            break;
+    }
+
+    return [name, tab]
+}
+
 export class Budget extends Component {
     constructor (props){
         super ()
@@ -18,6 +30,7 @@ export class Budget extends Component {
         }
 
         this.handleUpdate = this.handleUpdate.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
     }
 
@@ -37,17 +50,19 @@ export class Budget extends Component {
     }
 
     handleUpdate = (type, donnee) => {
-        const {regularSpends} = this.state
+        let data = getType(type, this)
+        let tab = data[0]; let name = data[1];
 
-        let tab; let name;
-        switch(type) {
-            default:
-                name = "regularSpends"
-                tab = regularSpends
-                break;
-        }
-            
-        this.setState({[name]: ActionsArray.addInArray(tab, donnee)})
+        this.setState({ [name]: ActionsArray.addInArray(tab, donnee) })
+    }
+
+    handleDelete = (type, id) => {
+        let data = getType(type, this)
+        let name = data[0];
+        let tab = data[1];
+
+        let donnee = tab.filter(v => v.id == id)
+        this.setState({ [name]: ActionsArray.deleteInArray(tab, donnee[0]) })
     }
 
     render () {
@@ -57,8 +72,6 @@ export class Budget extends Component {
         let months = Calendrier.getMonthsFr().map((elem, index) => {
             return <div key={index} className={"item" + (index+1 == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(index+1)}}>{elem}</div>
         })
-        
-        console.log(regularSpends)
 
         //Calcul Total
         let totalRegularSpends = 0;
@@ -67,7 +80,7 @@ export class Budget extends Component {
                 totalRegularSpends += elem.price
             })
         }
-        
+
         let total = budget.spend - totalRegularSpends
 
         //main
@@ -88,7 +101,7 @@ export class Budget extends Component {
                 </div>
             </div>
             <div className="budget-regular">
-                <Donnee id={budget.id} onUpdateData={this.handleUpdate} add={false} type="regularSpend" donnees={regularSpends} title="Dépenses régulières" />
+                <Donnee id={budget.id} onUpdateData={this.handleUpdate} onDeleteData={this.handleDelete} add={false} type="regularSpend" donnees={regularSpends} title="Dépenses régulières" />
             </div>
         </div>
 

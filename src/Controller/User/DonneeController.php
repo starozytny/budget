@@ -48,4 +48,27 @@ class DonneeController extends AbstractController
         $donnee = $serializer->getSerializeData($donnee, self::ATTRIBUTES_DONNEES);
         return new JsonResponse(['code' => 1, 'donnee' => $donnee, 'type' => $type]);
     }
+
+    /**
+     * @Route("/{type}/{id}/supprimer", options={"expose"=true}, name="delete")
+     */
+    public function delete($type, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        switch($type){
+            default:
+                $donnee = $em->getRepository(RegularSpend::class)->find($id);
+                break;
+        }
+
+        if(!$donnee){
+            return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
+        }
+
+        $em->remove($donnee); 
+        $em->flush();
+
+        return new JsonResponse(['code' => 1, 'type' => $type]);
+    }
 }
