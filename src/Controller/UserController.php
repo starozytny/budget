@@ -7,6 +7,7 @@ use App\Entity\RegularSpend;
 use App\Service\CalendarService;
 use App\Service\SerializeData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
@@ -23,14 +24,43 @@ class UserController extends AbstractController
         $today = $calendarService->getToday();
         $user = $this->getUser();
         $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $today['year'], 'month' => $today['mon'], 'user' => $user]);
-        $regularSpends = $em->getRepository(RegularSpend::class)->findBy(['budget' => $budget], ['name' => 'ASC']);
         
+        $data = $this->getData($serializer, $budget);
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
-        $regularSpends = $serializer->getSerializeData($regularSpends, self::ATTRIBUTES_DONNEES);
 
         return $this->render('root/user/index.html.twig', [
             'budget' => $budget,
-            'regularSpends' => $regularSpends
+            'regularSpends' => $data['regularSpends']
         ]);
+    }
+    /**
+     * @Route("/espace-utilisateur/change-month/{id}", options={"expose"=true}, name="user_dashboard_month")
+     */
+    public function month(SerializeData $serializer, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $budget = $em->getRepository(Budget::class)->findOneBy(['id' => $id, 'user' => $user]);
+
+        if(!$budget){
+            return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
+        }
+        
+        $data = $this->getData($serializer, $budget);
+        $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
+
+        return new JsonResponse(['code' => 1, 'budget' => $budget, 'regularSpends' => $data['regularSpends']]);
+    }
+
+    private function getData(SerializeData $serializer, $budget)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $regularSpends = $em->getRepository(RegularSpend::class)->findBy(['budget' => $budget], ['name' => 'ASC']);
+        
+        $regularSpends = $regularSpends ? $serializer->getSerializeData($regularSpends, self::ATTRIBUTES_DONNEES) : null;
+
+        return [
+            'regularSpends' => $regularSpends
+        ];
     }
 }

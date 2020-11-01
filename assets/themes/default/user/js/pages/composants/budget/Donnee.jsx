@@ -61,7 +61,7 @@ export class Donnee extends Component {
 
         let items = <div className="objet"><div className="name">Aucune donnée</div></div>
 
-        if(donnees.length != 0){
+        if(donnees != null){
             items = donnees.map((elem, index) => {
                 return <div key={index} className="objet">
                     <div className="name">{elem.name}</div>
