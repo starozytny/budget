@@ -41,6 +41,9 @@ class AdminCreateUsersCommand extends Command
 
         $io->title('Reset des tables');
         $this->resetTable($io,'user');
+        $this->resetTable($io,'regular_spend');
+        $this->resetTable($io,'outgo');
+        $this->resetTable($io,'budget');
 
         $users = array(
             [

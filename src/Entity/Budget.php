@@ -51,7 +51,7 @@ class Budget
     private $outgos;
 
     /**
-     * @ORM\OneToMany(targetEntity=RegularSpend::class, mappedBy="budget", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=RegularSpend::class, fetch="EAGER", mappedBy="budget", orphanRemoval=true)
      */
     private $regularSpends;
 

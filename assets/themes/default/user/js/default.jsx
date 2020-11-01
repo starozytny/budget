@@ -5,5 +5,5 @@ import {Budget} from './pages/composants/budget/Budget';
 
 let el = document.getElementById("budget");
 if(el){
-    ReactDOM.render(<Budget budget={el.dataset.budget} regularSpends={el.dataset.regularSpends} />, el)
+    ReactDOM.render(<Budget budgets={el.dataset.budgets} budget={el.dataset.budget} />, el)
 }

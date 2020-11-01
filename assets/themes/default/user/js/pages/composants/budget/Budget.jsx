@@ -24,60 +24,59 @@ export class Budget extends Component {
     constructor (props){
         super ()
 
+        let b = JSON.parse(props.budget);
+
         this.state = {
-            budget: JSON.parse(props.budget),
-            regularSpends: props.regularSpends ? JSON.parse(props.regularSpends) : null
+            budgets: JSON.parse(props.budgets),
+            budget: b,
+            regularSpends: b.regularSpends
         }
 
-        this.handleUpdate = this.handleUpdate.bind(this)
-        this.handleDelete = this.handleDelete.bind(this)
+        this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
+        this.handleDeleteDonnee = this.handleDeleteDonnee.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
     }
 
     handleMonth = (id) => {
-        Loader.loaderWithoutAjax(true)
+        let budget = this.state.budgets.filter(v => v.id == id)
+        console.log(budget)
+        this.setState({ budget: budget[0], regularSpends: budget[0].regularSpends })
+    }
 
-        let self = this
-        axios({ method: 'post', url: Routing.generate('user_dashboard_month', {'id': id}) }).then(function (response) {
-            let data = response.data; let code = data.code; Loader.loader(false)
+    handleUpdateBudget = (type, donnee) => {
+        const {budgets, budget} = this.state
+        let data = getType(type, this)
+        let name = data[0]; let tab = data[1]; 
 
-            if(code === 1){
-                self.setState({budget: JSON.parse(data.budget), regularSpends: JSON.parse(data.regularSpends)})
-            }else{
-                toastr.error(data.message)
+        let bs = [];
+        budgets.forEach(elem => {
+            if(elem.id == budget.id){
+                elem.regularSpends.push(JSON.parse(donnee))
             }
-        });
+            bs.push(elem)
+        })
+        this.setState({ budgets: bs, [name]: ActionsArray.addInArray(tab, donnee) })
     }
 
-    handleUpdate = (type, donnee) => {
+    handleDeleteDonnee = (type, id) => {
         let data = getType(type, this)
-        let name = data[0];
-        let tab = data[1] != null ? data[1] : []; 
-
-        this.setState({ [name]: ActionsArray.addInArray(tab, donnee) })
-    }
-
-    handleDelete = (type, id) => {
-        let data = getType(type, this)
-        let name = data[0];
-        let tab = data[1];
+        let name = data[0]; let tab = data[1];
 
         let donnee = tab.filter(v => v.id == id)
-        let arr = ActionsArray.deleteInArray(tab, donnee[0])
-        this.setState({ [name]: arr.length != 0 ? arr : null })
+        this.setState({ [name]: ActionsArray.deleteInArray(tab, donnee[0]) })
     }
 
     render () {
-        const {budget, regularSpends} = this.state
+        const {budgets, budget, regularSpends} = this.state
 
         //Get months
-        let months = Calendrier.getMonthsFr().map((elem, index) => {
-            return <div key={index} className={"item" + (index+1 == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(index+1)}}>{elem}</div>
+        let months = budgets.map(elem => {
+            return <div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>{elem.monthString}</div>
         })
 
         //Calcul Total
         let totalRegularSpends = 0;
-        if(regularSpends != null){
+        if(regularSpends.length != 0){
             regularSpends.forEach(elem => {
                 totalRegularSpends += elem.price
             })
@@ -103,7 +102,7 @@ export class Budget extends Component {
                 </div>
             </div>
             <div className="budget-regular">
-                <Donnee id={budget.id} onUpdateData={this.handleUpdate} onDeleteData={this.handleDelete} add={false} type="regularSpend" donnees={regularSpends} title="Dépenses régulières" />
+                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} onDeleteDonnee={this.handleDeleteDonnee} add={false} type="regularSpend" donnees={regularSpends} title="Dépenses régulières" />
             </div>
         </div>
 

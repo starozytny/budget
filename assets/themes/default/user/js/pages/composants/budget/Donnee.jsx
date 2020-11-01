@@ -43,7 +43,7 @@ export class Donnee extends Component {
                     let data = response.data; let code = data.code; Loader.loader(false)
 
                     if(code === 1){
-                        self.props.onDeleteData(data.type, id)
+                        self.props.onDeleteDonnee(data.type, id)
                         toastr.info('Suppression réussie.')
                     }else{
                         toastr.error(data.message)
@@ -71,7 +71,7 @@ export class Donnee extends Component {
                 let data = response.data; let code = data.code; Loader.loader(false)
 
                 if(code === 1){
-                    self.props.onUpdateData(data.type, data.donnee)
+                    self.props.onUpdateBudget(data.type, data.donnee)
                     self.setState({ 
                         name: {value: '', error: ''},
                         price: {value: '', error: ''}
@@ -89,7 +89,7 @@ export class Donnee extends Component {
 
         let items = <div className="objet"><div className="name">Aucune donnée</div></div>
 
-        if(donnees != null){
+        if(donnees.length != 0){
             items = donnees.map((elem, index) => {
                 return <div key={index} className="objet">
                     <div className="name">{elem.name}</div>
