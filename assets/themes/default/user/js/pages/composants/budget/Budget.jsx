@@ -51,7 +51,8 @@ export class Budget extends Component {
 
     handleUpdate = (type, donnee) => {
         let data = getType(type, this)
-        let tab = data[0]; let name = data[1];
+        let name = data[0];
+        let tab = data[1] != null ? data[1] : []; 
 
         this.setState({ [name]: ActionsArray.addInArray(tab, donnee) })
     }
