@@ -15,11 +15,20 @@ export class Budget extends Component {
     render () {
         const {budget, regularSpends} = this.state
 
+        let totalRegularSpends = 0;
+        regularSpends.forEach(elem => {
+            totalRegularSpends += elem.price
+        })
+
+        console.log(totalRegularSpends)
+
+        let total = budget.spend - totalRegularSpends
+
         let content = <div>
             <div className="budget-general">
                 <div className="card-1 card-budget-toSpend">
                     <div className="card-1-header">
-                        <div className="title">{budget.spend} €</div>
+                        <div className="title">{total} €</div>
                     </div>
                     <div className="card-1-body">
                         <p>
