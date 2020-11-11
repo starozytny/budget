@@ -47,6 +47,11 @@ class Settings
      */
     private $logo;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $maxYear;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +125,18 @@ class Settings
     public function setLogo(string $logo): self
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    public function getMaxYear(): ?int
+    {
+        return $this->maxYear;
+    }
+
+    public function setMaxYear(?int $maxYear): self
+    {
+        $this->maxYear = $maxYear;
 
         return $this;
     }

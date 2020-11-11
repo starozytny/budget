@@ -22,7 +22,7 @@ export class Settings extends Component {
     constructor (props){
         super ()
 
-        let emailGlobal = '', emailContact = '', emailRgpd = '', websiteName = '', logo = '';
+        let emailGlobal = '', emailContact = '', emailRgpd = '', websiteName = '', logo = '', maxYear = '';
 
         if(props.settings != undefined && props.settings != ''){
             let data = JSON.parse(JSON.parse(props.settings))
@@ -31,6 +31,7 @@ export class Settings extends Component {
             emailContact = setting.emailContact
             emailRgpd = setting.emailRgpd
             websiteName = setting.websiteName
+            maxYear = setting.maxYear
             logo = setting.logo
         }
         
@@ -39,6 +40,7 @@ export class Settings extends Component {
             emailContact: {value: emailContact, error: ''},
             emailRgpd: {value: emailRgpd, error: ''},
             websiteName: {value: websiteName, error: ''},
+            maxYear: {value: maxYear, error: ''},
             logo: {value: logo, error: ''}
         }
 
@@ -58,13 +60,14 @@ export class Settings extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
 
-        const {emailGlobal, emailContact, emailRgpd, websiteName, logo} = this.state
+        const {emailGlobal, emailContact, emailRgpd, websiteName, logo, maxYear} = this.state
 
         let validate = Validateur.validateur([
             {type: "email", id: 'emailGlobal', value: emailGlobal.value},
             {type: "email", id: 'emailContact', value: emailContact.value},
             {type: "email", id: 'emailRgpd', value: emailRgpd.value},
             {type: "text", id: 'websiteName', value: websiteName.value},
+            {type: "number", id: 'maxYear', value: maxYear.value},
             {type: "text", id: 'logo', value: logo.value}
         ]);
 
@@ -87,7 +90,7 @@ export class Settings extends Component {
     }
 
     render () {
-        const {emailGlobal, emailContact, emailRgpd, websiteName, logo} = this.state
+        const {emailGlobal, emailContact, emailRgpd, websiteName, logo, maxYear} = this.state
         const {isDanger} = this.props
 
         return <>
@@ -112,9 +115,9 @@ export class Settings extends Component {
                                     accept={"image/*"} maxFiles={1} onGetFile={this.handleGetFile}/>
                             </div>
                         </div>
-                        {/* <div className="line">
-                            <TextArea identifiant="logo" valeur={logo} onChange={this.handleChange}>Logo pour les <u>mails</u> en base64</TextArea>
-                        </div> */}
+                        <div className="line">
+                            <Input type="number" identifiant="maxYear" valeur={maxYear} onChange={this.handleChange}>Max d'années</Input>
+                        </div>
                         <div className="form-button">
                             <button type="submit" className="btn btn-primary"><span>Valider</span></button>
                         </div>

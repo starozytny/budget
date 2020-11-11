@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class SettingsController extends AbstractController
 {
-    const ATTRIBUTES_SETTINGS = ['id', 'websiteName', 'logo', 'emailGlobal', 'emailContact', 'emailRgpd'];
+    const ATTRIBUTES_SETTINGS = ['id', 'websiteName', 'logo', 'emailGlobal', 'emailContact', 'emailRgpd', 'maxYear'];
 
     /**
      * @Route("/", options={"expose"=true}, name="edit")
@@ -34,6 +34,7 @@ class SettingsController extends AbstractController
             $settings->setEmailContact($data->emailContact->value);
             $settings->setEmailRgpd($data->emailRgpd->value);
             $settings->setLogo($data->logo->value);
+            $settings->setMaxYear($data->maxYear->value);
             $settings->setUrl($this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL));
     
             $em->persist($settings); $em->flush();
