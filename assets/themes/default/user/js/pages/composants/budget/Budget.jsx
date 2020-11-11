@@ -8,18 +8,6 @@ import ActionsArray from '../../../../../react/functions/actions_array';;
 import Routing from '../../../../../../../../public/bundles/fosjsrouting/js/router.min.js';
 import Loader from '../../../../../react/functions/loader';
 
-function getType(type, self){
-    let name, tab;
-    switch(type) {
-        default:
-            name = "regularSpends"
-            tab = self.state.regularSpends
-            break;
-    }
-
-    return [name, tab]
-}
-
 function setCurrency(price){
     return new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"}).format(price);
 }
@@ -71,11 +59,11 @@ export class Budget extends Component {
 
         //main
         let infos = <div className="budget-years">
-            <p>Planning pour l'année </p>
+            <p>Planning pour l'année {budget.year}.</p>
             <div className="years">
-                <div className="item">Previous</div>
+                <div className="item"><span className="icon-left-arrow"></span></div>
                 <div className="item active">{budget.year}</div>
-                <div className="item">Next</div>
+                <div className="item"><span className="icon-right-arrow"></span></div>
             </div>
         </div>
 

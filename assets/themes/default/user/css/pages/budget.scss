@@ -1,33 +1,12 @@
 @import "../vars/vars.scss";
 
+.toolbar{ display: none; }
+
 .budget-months{
     @include flex(row, center, flex-start);
     overflow-x: auto;
     margin-bottom: 24px;
-
-    .item{
-        padding: 12px;
-        border-radius: 10px;
-        opacity: 0.7;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &.active{
-            background-color: var(--color0);
-            color: var(--alpha);
-            opacity: 1;
-            
-            &:hover{
-                transform: translateY(0);
-            }
-        }
-
-        &:hover{
-            opacity: 1;
-            transform: translateY(-2px);
-        }
-    }
-
+    margin-top: 24px;
 }
 
 .card-budget-toSpend{
@@ -58,6 +37,40 @@
             }
         }
     }
+}
+
+.years, .budget-months{
+    .item{
+        @include flex(column, center, center);
+        padding: 12px;
+        border-radius: 10px;
+        opacity: 0.7;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &.active{
+            background-color: var(--color0);
+            color: var(--alpha);
+            opacity: 1;
+            
+            &:hover{
+                transform: translateY(0);
+            }
+        }
+
+        &:hover{
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.years{
+    @include flex(row, center, space-between);
+    margin-top: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color5);
+
 }
 
 //                      __   _____ __    ___    __
@@ -94,5 +107,17 @@
         .budget-cards-container{
             width: calc(100% + 34px);
         }
+    }
+}
+
+//                      __   _  __    ___   ___    __
+//                     | _| / |/ /_  / _ \ / _ \  |_ |
+//    _____ _____ _____| |  | | '_ \| | | | | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | | (_) | |_| | |_| |  | |_____|_____|_____|
+//                     | |  |_|\___/ \___/ \___/   | |
+//                     |__|                       |__|
+@media (min-width: 1600px){
+    .budget-months{
+        justify-content: center;
     }
 }
