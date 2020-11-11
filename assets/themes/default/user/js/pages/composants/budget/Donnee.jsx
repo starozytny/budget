@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import toastr from 'toastr';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import {Input} from '../../../../../react/composants/Fields';
-import Routing from '../../../../../../../../public/bundles/fosjsrouting/js/router.min.js';
-import Loader from '../../../../../react/functions/loader';
-import Validateur from '../../../../../react/functions/validateur';
-import {Alert} from '../../../../../react/composants/Alert';
-import {Drop} from '../../../../../react/composants/Drop';
+
+import toastr             from 'toastr';
+import axios              from 'axios';
+import Swal               from 'sweetalert2';
+
+import {Input}            from '@reactFolder/composants/Fields';
+import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
+import Loader             from '@reactFolder/functions/loader';
+import Validateur         from '@reactFolder/functions/validateur';
 
 function setCurrency(price){
     return new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"}).format(price);

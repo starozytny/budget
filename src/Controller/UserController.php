@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Budget;
-use App\Entity\RegularSpend;
+use App\Service\BudgetService;
 use App\Service\CalendarService;
 use App\Service\SerializeData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
@@ -36,5 +37,47 @@ class UserController extends AbstractController
             'budgets' => $budgets,
             'budget' => $budget
         ]);
+    }
+
+    /**
+     * @Route("/espace-utilisateur/annee/{direction}/{year}", options={"expose"=true}, name="user_dashboard_year")
+     */
+    public function changeYear(SerializeData $serializer, BudgetService $budgetService, $direction, $year)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        $previousBudget = $em->getRepository(Budget::class)->findOneBy(['year' => $year-1, 'month' => 12, 'user' => $user]);
+        $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => 1, 'user' => $user]);
+
+        if(!$budget){
+            if($direction == 'previous'){
+                return new JsonResponse(['code' => 0, 'message' => 'Aucune donnée antérieur.']);
+            }else{
+                // create years months 
+                return new JsonResponse(['code' => 0, 'message' => 'En cours.']);
+            }
+        }
+
+        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $year, 'user' => $user], ['month' => 'ASC']);
+
+        if($direction == 'next'){
+            if($budget->getInitMonth() > $previousBudget->getToSpend()){
+                $isAddition = false;
+                $difference = $budget->getInitMonth() - $previousBudget->getToSpend();
+                $budget->setToSpend($budget->getToSpend() - $difference);
+            }else{
+                $isAddition = true;
+                $difference = $previousBudget->getToSpend() - $budget->getInitMonth();
+                $budget->setToSpend($budget->getToSpend() + $difference);
+            }
+            $budget->setInitMonth($previousBudget->getToSpend());
+            $budgetService->updateNextBudget($budgets, $budget, $isAddition, $difference);
+        }
+
+        $em->persist($budget); $em->flush();
+        $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
+        $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);
+        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
     }
 }

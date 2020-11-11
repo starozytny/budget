@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
-import toastr from 'toastr';
-import axios from 'axios';
-import Calendrier from '../../../../../react/functions/calendrier';
-import {Page} from '../../../../../react/composants/page/Page';
-import {Donnee} from './Donnee';
-import ActionsArray from '../../../../../react/functions/actions_array';;
-import Routing from '../../../../../../../../public/bundles/fosjsrouting/js/router.min.js';
-import Loader from '../../../../../react/functions/loader';
+
+import toastr             from 'toastr';
+import axios              from 'axios';
+
+import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
+import Loader             from '@reactFolder/functions/loader';
+import ActionsArray       from '@reactFolder/functions/actions_array';
+import {Page}             from '@reactFolder/composants/page/Page';
+
+import {Donnee}           from './Donnee';
+
 
 function setCurrency(price){
     return new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"}).format(price);
@@ -23,6 +26,7 @@ export class Budget extends Component {
 
         this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
+        this.handleChangeYear = this.handleChangeYear.bind(this)
     }
 
     handleMonth = (id) => {
@@ -34,6 +38,20 @@ export class Budget extends Component {
         const {budget} = this.state
 
         this.setState({ budgets: JSON.parse(bus), budget: ActionsArray.addOrUpdateInArray(budget, bu)[0] })
+    }
+
+    handleChangeYear = (direction, y) => {
+        Loader.loader(true)
+        let self = this
+        axios({ method: 'post', url: Routing.generate('user_dashboard_year', {'direction': direction, 'year': y}) }).then(function (response) {
+            let data = response.data; let code = data.code; Loader.loader(false)
+
+            if(code === 1){
+                self.setState({ budgets: JSON.parse(data.budgets), budget: JSON.parse(data.budget) })
+            }else{
+                toastr.error(data.message)
+            }
+        });
     }
 
     render () {
@@ -61,9 +79,9 @@ export class Budget extends Component {
         let infos = <div className="budget-years">
             <p>Planning pour l'année {budget.year}.</p>
             <div className="years">
-                <div className="item"><span className="icon-left-arrow"></span></div>
+                <div className="item" onClick={e => this.handleChangeYear('previous', budget.year-1)}><span className="icon-left-arrow"></span></div>
                 <div className="item active">{budget.year}</div>
-                <div className="item"><span className="icon-right-arrow"></span></div>
+                <div className="item" onClick={e => this.handleChangeYear('next', budget.year+1)}><span className="icon-right-arrow"></span></div>
             </div>
         </div>
 
