@@ -1,20 +1,23 @@
 import React from 'react';
+
 import Trumbowyg from 'react-trumbowyg';
 import 'react-trumbowyg/dist/trumbowyg.min.css';
-import '../../../../../node_modules/trumbowyg/dist/plugins/base64/trumbowyg.base64';
-import '../../../../../node_modules/trumbowyg/dist/plugins/cleanpaste/trumbowyg.cleanpaste';
-import '../../../../../node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors';
-import '../../../../../node_modules/trumbowyg/dist/plugins/colors/ui/sass/trumbowyg.colors.scss';
-import '../../../../../node_modules/trumbowyg/dist/plugins/fontsize/trumbowyg.fontsize';
-import '../../../../../node_modules/trumbowyg/dist/plugins/pasteimage/trumbowyg.pasteimage';
-import '../../../../../node_modules/trumbowyg/dist/plugins/history/trumbowyg.history';
-import '../../../../../node_modules/trumbowyg/dist/plugins/upload/trumbowyg.upload';
-import '../functions/textarea/plugins/trumbowyg.alert';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/base64/trumbowyg.base64';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/cleanpaste/trumbowyg.cleanpaste';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/colors/trumbowyg.colors';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/colors/ui/sass/trumbowyg.colors.scss';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/fontsize/trumbowyg.fontsize';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/pasteimage/trumbowyg.pasteimage';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/history/trumbowyg.history';
+import '@nodeModulesFolder/trumbowyg/dist/plugins/upload/trumbowyg.upload';
+import '@reactFolder/functions/textarea/plugins/trumbowyg.alert';
+
 import DatePicker from "react-datepicker";
 import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import fr from 'date-fns/locale/fr';
 registerLocale('fr', fr)
 import "react-datepicker/dist/react-datepicker.css";
+
 import {Drop} from './Drop';
 
 export function Input({type="text", identifiant, valeur, onChange, children, placeholder}) {

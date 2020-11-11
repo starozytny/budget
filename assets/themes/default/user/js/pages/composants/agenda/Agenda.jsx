@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import Calendrier from '../../../../../react/functions/calendrier';
-import {Page} from '../../../../../react/composants/page/Page';
+
+import Calendrier         from '@reactFolder/functions/calendrier';
+import {Page}             from '@reactFolder/composants/page/Page';
 
 export class Agenda extends Component {
     constructor (props){

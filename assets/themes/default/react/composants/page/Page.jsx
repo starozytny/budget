@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Pagination} from '../Pagination';
-import {Toolbar} from './Toolbar.jsx';
-import {Others} from './Others.jsx';
+import {Pagination}       from '../Pagination';
+import {Toolbar}          from './Toolbar.jsx';
+import {Others}           from './Others.jsx';
 
 export class Page extends Component {
     constructor (props) {

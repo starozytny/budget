@@ -1,4 +1,29 @@
-@import url('https://fonts.googleapis.com/css?family=Barlow:300,400,600,700&display=swap');
+@font-face {
+  font-family: 'barlowbold';
+  src: url('../../fonts/barlow-bold-webfont.woff2') format('woff2'),
+       url('../../fonts/barlow-bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'barlowregular';
+  src: url('../../fonts/barlow-regular-webfont.woff2') format('woff2'),
+       url('../../fonts/barlow-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'barlowsemibold';
+  src: url('../../fonts/barlow-semibold-webfont.woff2') format('woff2'),
+       url('../../fonts/barlow-semibold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
     font-family: 'icomoon';
