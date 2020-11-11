@@ -4,6 +4,7 @@ namespace App\Controller\User;
 
 use App\Entity\Budget;
 use App\Service\BudgetService;
+use App\Service\CalendarService;
 use App\Service\SerializeData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +26,7 @@ class DonneeController extends AbstractController
     /**
      * @Route("/{type}/{id}/ajouter", options={"expose"=true}, name="add")
      */
-    public function add(Request $request, SerializeData $serializer, BudgetService $budgetService, $type, $id)
+    public function add(Request $request, SerializeData $serializer, CalendarService $calendarService, BudgetService $budgetService, $type, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent());
@@ -56,6 +57,15 @@ class DonneeController extends AbstractController
         $budget->setToSpend($isAddition ? ($toSpend + $price) : ($toSpend - $price));
         //update initMonth and toSpend of other months of this year
         $budgetService->updateNextBudget($budgets, $budget, $isAddition, $price);
+
+        // ---- if month not passed = spread to others 
+        
+        if($type == "regularSpend" or $type == "income"){
+            $today = $calendarService->getToday();
+            if($budget->getYear() >= $today['year'] && $budget->getMonth() >= $today['mon']){
+                $budgetService->updateRegulatDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price);
+            }
+        }
         
         $em->persist($budget); $em->persist($donnee); $em->flush();
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);

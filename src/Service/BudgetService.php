@@ -93,4 +93,26 @@ class BudgetService
             }
         }
     }
+
+    public function updateRegulatDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price)
+    {
+        $em = $this->em;
+        foreach($budgets as $next){
+            if($next->getMonth() > $budget->getMonth()){
+                
+                $donnee = $this->updateOrGet($type, "donnee", "add", null, null);
+                $donnee->setName($name);
+                $donnee->setPrice($price);
+
+                $this->updateOrGet($type, "budget", "add", $next, $donnee);
+
+                $toSpend = $next->getToSpend();
+                $next->setToSpend($isAddition ? ($toSpend + $price) : ($toSpend - $price));
+
+                $this->updateNextBudget($budgets, $next, $isAddition, $donnee->getPrice());
+
+                $em->persist($donnee); $em->persist($next);
+            }
+        }
+    }
 }

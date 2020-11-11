@@ -30,7 +30,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         $year = $today['year'];
-        $month = $today['month'];
+        $month = $today['mon'];
 
         $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => $month, 'user' => $user]);
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $year, 'user' => $user], ['month' => 'ASC']);
@@ -40,6 +40,8 @@ class UserController extends AbstractController
             if(!$previousBudget){
                 $previousBudget = $budget;
             }
+        }else{
+            $previousBudget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => $month-1, 'user' => $user]);
         }
 
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
