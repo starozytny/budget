@@ -60,12 +60,24 @@ class Budget
      */
     private $regularSpends;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Income::class, mappedBy="budget")
+     */
+    private $incomes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Economy::class, mappedBy="budget")
+     */
+    private $economies;
+
     public function __construct()
     {
         $this->setToSpend(0);
         $this->setInitMonth(0);
         $this->outgos = new ArrayCollection();
         $this->regularSpends = new ArrayCollection();
+        $this->incomes = new ArrayCollection();
+        $this->economies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,6 +255,68 @@ class Budget
             // set the owning side to null (unless already changed)
             if ($regularSpend->getBudget() === $this) {
                 $regularSpend->setBudget(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Income[]
+     */
+    public function getIncomes(): Collection
+    {
+        return $this->incomes;
+    }
+
+    public function addIncome(Income $income): self
+    {
+        if (!$this->incomes->contains($income)) {
+            $this->incomes[] = $income;
+            $income->setBudget($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIncome(Income $income): self
+    {
+        if ($this->incomes->contains($income)) {
+            $this->incomes->removeElement($income);
+            // set the owning side to null (unless already changed)
+            if ($income->getBudget() === $this) {
+                $income->setBudget(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Economy[]
+     */
+    public function getEconomies(): Collection
+    {
+        return $this->economies;
+    }
+
+    public function addEconomy(Economy $economy): self
+    {
+        if (!$this->economies->contains($economy)) {
+            $this->economies[] = $economy;
+            $economy->setBudget($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEconomy(Economy $economy): self
+    {
+        if ($this->economies->contains($economy)) {
+            $this->economies->removeElement($economy);
+            // set the owning side to null (unless already changed)
+            if ($economy->getBudget() === $this) {
+                $economy->setBudget(null);
             }
         }
 

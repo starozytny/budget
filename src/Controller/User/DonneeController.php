@@ -16,7 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class DonneeController extends AbstractController
 {
     const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 
-                               'regularSpends' => ['id', 'name', 'price'] ];
+                               'regularSpends' => ['id', 'name', 'price'],
+                               'economies' => ['id', 'name', 'price'],
+                               'outgos' => ['id', 'name', 'price'],
+                               'incomes' => ['id', 'name', 'price'],
+                            ];
 
     /**
      * @Route("/{type}/{id}/ajouter", options={"expose"=true}, name="add")

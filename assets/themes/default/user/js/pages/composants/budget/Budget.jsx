@@ -70,7 +70,14 @@ export class Budget extends Component {
         })
 
         //main
-        let infos = <p>Planning pour l'année {budget.year}.</p>
+        let infos = <div className="budget-years">
+            <p>Planning pour l'année </p>
+            <div className="years">
+                <div className="item">Previous</div>
+                <div className="item active">{budget.year}</div>
+                <div className="item">Next</div>
+            </div>
+        </div>
 
         let content = <div>
             <div className="budget-months">{months}</div>
@@ -86,8 +93,15 @@ export class Budget extends Component {
                     </div>
                 </div>
             </div>
-            <div className="budget-regular">
-                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" />
+            <div className="budget-cards">
+                <div className="budget-cards-container">
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="economy" donnees={budget.regularSpends} title="Economies" />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="income" donnees={budget.regularSpends} title="Entrées d'argent" />
+                </div>
+            </div>
+            <div className="budget-outgos">
+                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="outgo" donnees={budget.regularSpends} title="Dépenses" />
             </div>
         </div>
 

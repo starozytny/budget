@@ -1,7 +1,7 @@
 @import "../vars/vars.scss";
 
 .budget-months{
-    @include flex(row, center, center);
+    @include flex(row, center, flex-start);
     overflow-x: auto;
     margin-bottom: 24px;
 
@@ -36,7 +36,7 @@
     }
 }
 
-.card-budget-regular{
+.card-budget-cards{
     .card-1-body{
         margin-top: 24px;
     }
@@ -56,6 +56,43 @@
                 opacity: 1;
                 transform: translateX(2px);
             }
+        }
+    }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+    .budget-cards{
+        overflow: hidden;
+
+        .budget-cards-container{
+            @include flex(row, flex-start, flex-start);
+            flex-wrap: wrap;
+            width: calc(100% + 24px);
+        }
+    }
+    .budget-outgos{
+        .card-1{
+            width: 100%;
+        }
+    }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+    .budget-cards{
+        .budget-cards-container{
+            width: calc(100% + 34px);
         }
     }
 }
