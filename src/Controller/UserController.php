@@ -28,15 +28,28 @@ class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $today = $calendarService->getToday();
         $user = $this->getUser();
-        $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $today['year'], 'month' => $today['mon'], 'user' => $user]);
-        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $today['year'], 'user' => $user], ['month' => 'ASC']);
+
+        $year = $today['year'];
+        $month = $today['month'];
+
+        $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => $month, 'user' => $user]);
+        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $year, 'user' => $user], ['month' => 'ASC']);
+
+        if($month == 1){
+            $previousBudget = $em->getRepository(Budget::class)->findOneBy(['year' => $year-1, 'month' => 12, 'user' => $user]);
+            if(!$previousBudget){
+                $previousBudget = $budget;
+            }
+        }
 
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);
+        $previousBudget = $serializer->getSerializeData($previousBudget, self::ATTRIBUTES_BUDGET);
 
         return $this->render('root/user/index.html.twig', [
             'budgets' => $budgets,
-            'budget' => $budget
+            'budget' => $budget,
+            'previousBudget' => $previousBudget
         ]);
     }
 
@@ -93,8 +106,6 @@ class UserController extends AbstractController
             $budget->setInitMonth($previousBudget->getToSpend());
             $budgetService->updateNextBudget($budgets, $budget, $isAddition, $difference);
         }
-
-       
 
         $em->persist($budget); $em->flush();
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);

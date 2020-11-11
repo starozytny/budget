@@ -88,7 +88,7 @@ export class Donnee extends Component {
     } 
 
     render () {
-        const {id, type, add, donnees, title} = this.props
+        const {id, type, donnees, title} = this.props
         const {name, price} = this.state
 
         let items = <div className="objet"><div className="name">Aucune donnée.</div></div>
@@ -99,7 +99,7 @@ export class Donnee extends Component {
                 total += elem.price;
                 return <div key={index} className="objet">
                     <div className="name">{elem.name}</div>
-                    <div className="price currency">{add ? "+" : "-"} {setCurrency(elem.price)}</div>
+                    <div className="price currency">{type == "income" ? "+" : "-"} {setCurrency(elem.price)}</div>
                     <div className="delete" onClick={e => {this.handleDelete(type, elem.id)}}><span className="icon-trash"></span></div>
                 </div>
             })

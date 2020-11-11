@@ -22,6 +22,7 @@ export class Budget extends Component {
         this.state = {
             budgets: JSON.parse(props.budgets),
             budget: JSON.parse(props.budget),
+            previousBudget: JSON.parse(props.previousBudget),
         }
 
         this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
@@ -55,24 +56,15 @@ export class Budget extends Component {
     }
 
     render () {
-        const {budgets, budget} = this.state
+        const {budgets, budget, previousBudget} = this.state
 
         //Get months
-        let previousToSpend = 0, previousToSpendImmuable = 0;
         let months = [];
         budgets.forEach(elem => {
-            let active = '';
-            if(elem.month == budget.month){
-                active = ' active';
-                previousToSpendImmuable = previousToSpend
-            }
-
-            months.push(<div key={elem.id} className={"item" + active} onClick={e => {this.handleMonth(elem.id)}}>
+            months.push(<div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>
                 <div>{elem.monthString}</div>
                 <div><span className="currency">{setCurrency(elem.toSpend)}</span></div>
             </div>)
-            previousToSpend = elem.toSpend
-            
         })
 
         //main
@@ -90,7 +82,7 @@ export class Budget extends Component {
             <div className="budget-general">
                 <div className={"card-1 card-budget-toSpend " + (budget.toSpend > 0 ? 'positive' : 'negative')}>
                     <div className="card-1-header">
-                        <div className="title currency">{setCurrency(budget.toSpend)}</div>
+                        <div className="title">{setCurrency(budget.toSpend)}</div>
                     </div>
                     <div className="card-1-body">
                         <p>
@@ -102,13 +94,19 @@ export class Budget extends Component {
             </div>
             <div className="budget-cards">
                 <div className="budget-cards-container">
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="economy" donnees={budget.economies} title="Economies" />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="income" donnees={budget.incomes} title="Entrées d'argent" />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
+                            type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" 
+                    />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
+                            type="economy" donnees={budget.economies} title="Economies" 
+                    />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
+                            type="income" donnees={budget.incomes} title="Entrées d'argent" 
+                    />
                 </div>
             </div>
             <div className="budget-outgos">
-                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="outgo" donnees={budget.outgos} title="Dépenses" />
+                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} type="outgo" donnees={budget.outgos} title="Dépenses occasionnelles" />
             </div>
         </div>
 
