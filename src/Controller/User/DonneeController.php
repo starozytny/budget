@@ -39,6 +39,11 @@ class DonneeController extends AbstractController
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
 
+        $existe = $budgetService->getRegularOrIncome($type, $budget, $name, $price);
+        if($existe){
+            return new JsonResponse(['code' => 0, 'message' => 'Cette donnée existe déjà.']);
+        }
+
         //budgets of others months of this year
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
 
@@ -59,11 +64,10 @@ class DonneeController extends AbstractController
         $budgetService->updateNextBudget($budgets, $budget, $isAddition, $price);
 
         // ---- if month not passed = spread to others 
-        
         if($type == "regularSpend" or $type == "income"){
             $today = $calendarService->getToday();
             if($budget->getYear() >= $today['year'] && $budget->getMonth() >= $today['mon']){
-                $budgetService->updateRegulatDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price);
+                $budgetService->addRegularDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price);
             }
         }
         
@@ -76,7 +80,7 @@ class DonneeController extends AbstractController
     /**
      * @Route("/{type}/{id}/supprimer", options={"expose"=true}, name="delete")
      */
-    public function delete(SerializeData $serializer, BudgetService $budgetService, $type, $id)
+    public function delete(SerializeData $serializer, CalendarService $calendarService, BudgetService $budgetService, $type, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -97,9 +101,15 @@ class DonneeController extends AbstractController
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
         $budgetService->updateNextBudget($budgets, $budget, $isAddition, $donnee->getPrice());
 
-        $em->persist($budget); 
-        $em->remove($donnee); 
-        $em->flush();
+        // ---- if month not passed = spread to others 
+        if($type == "regularSpend" or $type == "income"){
+            $today = $calendarService->getToday();
+            if($budget->getYear() >= $today['year'] && $budget->getMonth() >= $today['mon']){
+                $budgetService->removeRegulatDonneeToNextBudget($type, $budgets, $budget, $isAddition, $donnee->getName(), $donnee->getPrice());
+            }
+        }
+
+        $em->persist($budget); $em->remove($donnee); $em->flush();
 
         $budget = $serializer->getSerializeData($donnee->getBudget(), self::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);

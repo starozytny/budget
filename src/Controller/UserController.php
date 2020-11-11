@@ -89,6 +89,9 @@ class UserController extends AbstractController
                         $budget = $createBudget;
                     }
 
+                    //add regularspend and income
+                    
+
                     $em->persist($createBudget);
                     array_push($budgets, $createBudget);
                 }

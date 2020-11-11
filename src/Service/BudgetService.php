@@ -94,25 +94,59 @@ class BudgetService
         }
     }
 
-    public function updateRegulatDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price)
+    public function addRegularDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price)
     {
         $em = $this->em;
         foreach($budgets as $next){
-            if($next->getMonth() > $budget->getMonth()){
+            if($next->getMonth() > $budget->getMonth()){               
                 
-                $donnee = $this->updateOrGet($type, "donnee", "add", null, null);
-                $donnee->setName($name);
-                $donnee->setPrice($price);
+                $existe = $this->getRegularOrIncome($type, $next, $name, $price);
+                if(!$existe){
+                    $donnee = $this->updateOrGet($type, "donnee", "add", null, null);
+                    $donnee->setName($name);
+                    $donnee->setPrice($price);
 
-                $this->updateOrGet($type, "budget", "add", $next, $donnee);
+                    $this->updateOrGet($type, "budget", "add", $next, $donnee);
 
-                $toSpend = $next->getToSpend();
-                $next->setToSpend($isAddition ? ($toSpend + $price) : ($toSpend - $price));
+                    $toSpend = $next->getToSpend();
+                    $next->setToSpend($isAddition ? ($toSpend + $price) : ($toSpend - $price));
 
-                $this->updateNextBudget($budgets, $next, $isAddition, $donnee->getPrice());
+                    $this->updateNextBudget($budgets, $next, $isAddition, $donnee->getPrice());
 
-                $em->persist($donnee); $em->persist($next);
+                    $em->persist($donnee); $em->persist($next);
+                }                
             }
         }
+    }
+
+    public function removeRegulatDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price)
+    {
+        $em = $this->em;
+        foreach($budgets as $next){
+            if($next->getMonth() > $budget->getMonth()){            
+                
+                $donnee = $this->getRegularOrIncome($type, $next, $name, $price);
+                
+                if($donnee){
+                    $budget = $this->updateOrGet($type, "budget", "remove", $next, $donnee);
+                    $this->updateNextBudget($budgets, $next, $isAddition, $donnee->getPrice());
+    
+                    $em->remove($donnee); $em->persist($next);
+                }
+            }
+        }
+    }
+
+    public function getRegularOrIncome($type, $budget, $name, $price)
+    {
+        $em = $this->em;
+        $param = ['budget' => $budget, 'name' => $name, 'price' => $price];
+        if($type == "regularSpend"){
+            $donnee = $em->getRepository(RegularSpend::class)->findOneBy($param);
+        }else{
+            $donnee = $em->getRepository(Income::class)->findOneBy($param);
+        }
+
+        return $donnee;
     }
 }
