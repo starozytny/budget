@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DonneeController extends AbstractController
 {
-    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'toSpend', 
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initAccount', 'toSpend', 
                                'regularSpends' => ['id', 'name', 'price'] ];
 
     /**

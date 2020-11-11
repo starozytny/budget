@@ -43,6 +43,11 @@ class Budget
     /**
      * @ORM\Column(type="float")
      */
+    private $initAccount;
+
+    /**
+     * @ORM\Column(type="float")
+     */
     private $toSpend;
 
     /**
@@ -57,6 +62,7 @@ class Budget
 
     public function __construct()
     {
+        $this->setInitAccount(0);
         $this->setToSpend(0);
         $this->outgos = new ArrayCollection();
         $this->regularSpends = new ArrayCollection();
@@ -227,6 +233,18 @@ class Budget
                 $regularSpend->setBudget(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInitAccount(): ?float
+    {
+        return $this->initAccount;
+    }
+
+    public function setInitAccount(float $initAccount): self
+    {
+        $this->initAccount = $initAccount;
 
         return $this;
     }

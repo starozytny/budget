@@ -24,19 +24,6 @@ function setCurrency(price){
     return new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"}).format(price);
 }
 
-function getTotalSpend(budget){
-    //Calcul Tota
-    let total = budget.toSpend;
-    // let totalRegularSpends = 0;
-    // if(budget.regularSpends.length != 0){
-    //     budget.regularSpends.forEach(elem => {
-    //         totalRegularSpends += elem.price
-    //     })
-    // }
-    // let tot = total - totalRegularSpends;
-    return setCurrency(total)
-}
-
 export class Budget extends Component {
     constructor (props){
         super ()
@@ -65,14 +52,21 @@ export class Budget extends Component {
         const {budgets, budget} = this.state
 
         //Get months
-        let previousStartSpend = 0;
+        let previousToSpend = 0, previousToSpendImmuable = 0;
         let months = [];
         budgets.forEach(elem => {
-            months.push(<div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>
+            let active = '';
+            if(elem.month == budget.month){
+                active = ' active';
+                previousToSpendImmuable = previousToSpend
+            }
+
+            months.push(<div key={elem.id} className={"item" + active} onClick={e => {this.handleMonth(elem.id)}}>
                 <div>{elem.monthString}</div>
-                <div><span className="currency">{getTotalSpend(elem, previousStartSpend)}</span></div>
+                <div><span className="currency">{setCurrency(elem.toSpend)}</span></div>
             </div>)
-            previousStartSpend = elem.toSpend
+            previousToSpend = elem.toSpend
+            
         })
 
         //main
@@ -83,7 +77,7 @@ export class Budget extends Component {
             <div className="budget-general">
                 <div className="card-1 card-budget-toSpend">
                     <div className="card-1-header">
-                        <div className="title currency">{getTotalSpend(budget)}</div>
+                        <div className="title currency">{setCurrency(budget.toSpend)}</div>
                     </div>
                     <div className="card-1-body">
                         <p>
