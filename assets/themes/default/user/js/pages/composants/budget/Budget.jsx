@@ -96,12 +96,12 @@ export class Budget extends Component {
             <div className="budget-cards">
                 <div className="budget-cards-container">
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="economy" donnees={budget.regularSpends} title="Economies" />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="income" donnees={budget.regularSpends} title="Entrées d'argent" />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="economy" donnees={budget.economies} title="Economies" />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="income" donnees={budget.incomes} title="Entrées d'argent" />
                 </div>
             </div>
             <div className="budget-outgos">
-                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="outgo" donnees={budget.regularSpends} title="Dépenses" />
+                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} add={false} type="outgo" donnees={budget.outgos} title="Dépenses" />
             </div>
         </div>
 

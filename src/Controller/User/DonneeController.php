@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Entity\Budget;
+use App\Entity\Economy;
 use App\Entity\RegularSpend;
 use App\Service\SerializeData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,55 +35,32 @@ class DonneeController extends AbstractController
 
         $user = $this->getUser();
         $budget = $em->getRepository(Budget::class)->find($id);
-        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
 
         if(!$budget){
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
 
-        switch($type){
-            default:
-                $donnee = new RegularSpend();
-                $isSpend = true;
-                break;
-        }
+        //budgets of others months of this year
+        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
 
-        $toSpend = $budget->getToSpend();
+        //init data to create + to know if isAddition (+) or not (-)
+        $isAddition = $type != 'income' ? false : true; // car on soustrait ce que l'on dépense
+        $donnee = $this->updateOrGet($em, $type, "donnee", "add", null, null);
 
+        //set new data
         $donnee->setName($name);
         $donnee->setPrice($price);
 
-        switch($type){
-            default:
-                $budget->addRegularSpend($donnee);
-                break;
-        }
+        //add data to this budget
+        $budget = $this->updateOrGet($em, $type, "budget", "add", $budget, $donnee);
 
-        if($isSpend){
-            $newtoSpend = $isSpend ? $toSpend - $price :$toSpend + $price; 
-        }
+        //new value of toSpend fo this budget
+        $toSpend = $budget->getToSpend();
+        $budget->setToSpend($isAddition ? ($toSpend + $price) : ($toSpend - $price));
 
-        $valueDonnee = $price;
-        foreach($budgets as $next){
-            if($next->getMonth() > $budget->getMonth()){
-            
-                if($isSpend){
-                    $nextInitMonth = $next->getInitMonth() - $valueDonnee;
-                    $nextToSpend = $next->getToSpend() - $valueDonnee;
-                }else{
-                    $nextInitMonth = $next->getInitMonth() + $valueDonnee;
-                    $nextToSpend = $next->getToSpend() + $valueDonnee;
-                }
-
-                $next->setInitMonth($nextInitMonth);
-                $next->setToSpend($nextToSpend);
-
-                $em->persist($next);
-            }
-        }
+        //update initMonth and toSpend of other months of this year
+        $this->updateNextBudget($em, $budgets, $budget, $isAddition, $price);
         
-        $budget->setToSpend($newtoSpend);
-
         $em->persist($budget); $em->persist($donnee); $em->flush();
 
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
@@ -96,6 +74,8 @@ class DonneeController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
+        $isAddition = $type != "income" ? true : false; //car on rajoute ce qu'on a dépensé
+        $donnee = $this->updateOrGet($em, $type, 'donnee', "remove", null, $id);
         switch($type){
             default:
                 $donnee = $em->getRepository(RegularSpend::class)->find($id);
@@ -103,17 +83,21 @@ class DonneeController extends AbstractController
         }
 
         if(!$donnee){
+            return new JsonResponse(['code' => 0, 'message' => 'Valeur inconnue.']);
+        }
+        $user = $this->getUser();
+        $budget = $donnee->getBudget();
+
+        if(!$budget){
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
 
-        $budget = $donnee->getBudget();
-        $toSpend = $budget->getToSpend();
+        $budget = $this->updateOrGet($em, $type, "budget", "remove", $budget, $donnee);
 
-        switch($type){
-            default:
-                $budget->setToSpend($toSpend + $donnee->getPrice());
-                break;
-        }
+        //budgets of others months of this year
+        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
+        //update initMonth and toSpend of other months of this year
+        $this->updateNextBudget($em, $budgets, $budget, $isAddition, $donnee->getPrice());
 
         $em->persist($budget); 
         $em->remove($donnee); 
@@ -121,5 +105,69 @@ class DonneeController extends AbstractController
 
         $budget = $serializer->getSerializeData($donnee->getBudget(), self::ATTRIBUTES_BUDGET);
         return new JsonResponse(['code' => 1, 'budget' => $budget, 'type' => $type]);
+    }
+
+    private function updateOrGet($em, $type, $whoReturn, $action, $budget, $donnee)
+    {
+        if($whoReturn == 'budget' && $action == "remove"){
+            $toSpend = $budget->getToSpend();
+            $price = $donnee->getPrice();
+            $budget->setToSpend($toSpend + $price);
+
+            return $budget;
+        }
+
+        switch($type){
+            case 'economy':
+                if($whoReturn == 'budget'){
+                    if($action == "add"){ $budget->addEconomy($donnee); }
+                }else{
+                    if($action == "add"){ 
+                        $donnee = new Economy(); 
+                    }else{ 
+                        $donnee = $em->getRepository(Economy::class)->find($donnee); 
+                    }
+                }
+                break;
+            default: //regularSpend
+                if($whoReturn == 'budget'){
+                    if($action == "add"){ $budget->addRegularSpend($donnee); }
+                }else{
+                    if($action == "add"){ 
+                        $donnee = new RegularSpend(); 
+                    }else{ 
+                        $donnee = $em->getRepository(RegularSpend::class)->find($donnee); 
+                    }
+                }
+                break;
+        }
+
+        if($whoReturn == 'budget'){
+            return $budget;
+        }else{
+            return $donnee;
+        }
+        
+    }
+
+    private function updateNextBudget($em, $budgets, $budget, $isAddition, $valueDonnee)
+    {
+        foreach($budgets as $next){
+            if($next->getMonth() > $budget->getMonth()){
+            
+                if(!$isAddition){
+                    $nextInitMonth = $next->getInitMonth() - $valueDonnee;
+                    $nextToSpend = $next->getToSpend() - $valueDonnee;
+                }else{
+                    $nextInitMonth = $next->getInitMonth() + $valueDonnee;
+                    $nextToSpend = $next->getToSpend() + $valueDonnee;
+                }
+
+                $next->setInitMonth($nextInitMonth);
+                $next->setToSpend($nextToSpend);
+
+                $em->persist($next);
+            }
+        }
     }
 }
