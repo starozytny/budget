@@ -26,15 +26,15 @@ function setCurrency(price){
 
 function getTotalSpend(budget){
     //Calcul Tota
-    let total = budget.startSpend;
-    let totalRegularSpends = 0;
-    if(budget.regularSpends.length != 0){
-        budget.regularSpends.forEach(elem => {
-            totalRegularSpends += elem.price
-        })
-    }
-    let tot = total - totalRegularSpends;
-    return setCurrency(tot)
+    let total = budget.toSpend;
+    // let totalRegularSpends = 0;
+    // if(budget.regularSpends.length != 0){
+    //     budget.regularSpends.forEach(elem => {
+    //         totalRegularSpends += elem.price
+    //     })
+    // }
+    // let tot = total - totalRegularSpends;
+    return setCurrency(total)
 }
 
 export class Budget extends Component {
@@ -65,11 +65,14 @@ export class Budget extends Component {
         const {budgets, budget} = this.state
 
         //Get months
-        let months = budgets.map(elem => {
-            return <div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>
+        let previousStartSpend = 0;
+        let months = [];
+        budgets.forEach(elem => {
+            months.push(<div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>
                 <div>{elem.monthString}</div>
-                <div><span className="currency">{getTotalSpend(elem)}</span></div>
-            </div>
+                <div><span className="currency">{getTotalSpend(elem, previousStartSpend)}</span></div>
+            </div>)
+            previousStartSpend = elem.toSpend
         })
 
         //main

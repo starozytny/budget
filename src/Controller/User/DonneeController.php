@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DonneeController extends AbstractController
 {
-    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'startSpend', 
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'toSpend', 
                                'regularSpends' => ['id', 'name', 'price'] ];
 
     /**
@@ -40,13 +40,15 @@ class DonneeController extends AbstractController
                 break;
         }
 
+        $toSpend = $budget->getToSpend();
+
         $donnee->setName($name);
         $donnee->setPrice($price);
-        // $donnee->setBudget($budget);
 
         switch($type){
             default:
                 $budget->addRegularSpend($donnee);
+                $budget->setToSpend($toSpend - $price);
                 break;
         }
 
@@ -73,6 +75,16 @@ class DonneeController extends AbstractController
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
 
+        $budget = $donnee->getBudget();
+        $toSpend = $budget->getToSpend();
+
+        switch($type){
+            default:
+                $budget->setToSpend($toSpend + $donnee->getPrice());
+                break;
+        }
+
+        $em->persist($budget); 
         $em->remove($donnee); 
         $em->flush();
 
