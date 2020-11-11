@@ -43,7 +43,7 @@ class Budget
     /**
      * @ORM\Column(type="float")
      */
-    private $initAccount;
+    private $initMonth;
 
     /**
      * @ORM\Column(type="float")
@@ -62,8 +62,8 @@ class Budget
 
     public function __construct()
     {
-        $this->setInitAccount(0);
         $this->setToSpend(0);
+        $this->setInitMonth(0);
         $this->outgos = new ArrayCollection();
         $this->regularSpends = new ArrayCollection();
     }
@@ -175,6 +175,18 @@ class Budget
         return $this;
     }
 
+    public function getInitMonth(): ?float
+    {
+        return $this->initMonth;
+    }
+
+    public function setInitMonth(float $initMonth): self
+    {
+        $this->initMonth = $initMonth;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Outgo[]
      */
@@ -233,18 +245,6 @@ class Budget
                 $regularSpend->setBudget(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getInitAccount(): ?float
-    {
-        return $this->initAccount;
-    }
-
-    public function setInitAccount(float $initAccount): self
-    {
-        $this->initAccount = $initAccount;
 
         return $this;
     }

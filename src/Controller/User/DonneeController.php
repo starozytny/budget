@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DonneeController extends AbstractController
 {
-    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initAccount', 'toSpend', 
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 
                                'regularSpends' => ['id', 'name', 'price'] ];
 
     /**
@@ -28,7 +28,9 @@ class DonneeController extends AbstractController
         $name = $data->name->value;
         $price = $data->price->value;
 
+        $user = $this->getUser();
         $budget = $em->getRepository(Budget::class)->find($id);
+        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
 
         if(!$budget){
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
@@ -37,6 +39,7 @@ class DonneeController extends AbstractController
         switch($type){
             default:
                 $donnee = new RegularSpend();
+                $isSpend = true;
                 break;
         }
 
@@ -48,9 +51,33 @@ class DonneeController extends AbstractController
         switch($type){
             default:
                 $budget->addRegularSpend($donnee);
-                $budget->setToSpend($toSpend - $price);
                 break;
         }
+
+        if($isSpend){
+            $newtoSpend = $isSpend ? $toSpend - $price :$toSpend + $price; 
+        }
+
+        $valueDonnee = $price;
+        foreach($budgets as $next){
+            if($next->getMonth() > $budget->getMonth()){
+            
+                if($isSpend){
+                    $nextInitMonth = $next->getInitMonth() - $valueDonnee;
+                    $nextToSpend = $next->getToSpend() - $valueDonnee;
+                }else{
+                    $nextInitMonth = $next->getInitMonth() + $valueDonnee;
+                    $nextToSpend = $next->getToSpend() + $valueDonnee;
+                }
+
+                $next->setInitMonth($nextInitMonth);
+                $next->setToSpend($nextToSpend);
+
+                $em->persist($next);
+            }
+        }
+        
+        $budget->setToSpend($newtoSpend);
 
         $em->persist($budget); $em->persist($donnee); $em->flush();
 

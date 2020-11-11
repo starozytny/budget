@@ -77,20 +77,21 @@ class AdminCreateUsersCommand extends Command
                 $new, 'azerty'
             ));
 
-            $init = 0;
+            $init = 1250.38;
 
             for($y=2020 ; $y<=2022 ; $y++){
                 for($m=1 ; $m<=12 ; $m++){
-                    if($y == 2020 && $m <= 10){
+                    if($y == 2020 && $m <= 6){
                         $init = 0;
                     }else{
-                        $init += 1250.38;
+                        $init = 1250.38;
                     }
                     
                     $budget = (new Budget())
                         ->setYear($y)
                         ->setMonth($m)
                         ->setToSpend($init)
+                        ->setInitMonth($init)
                         ->setUser($new)
                     ;
                     

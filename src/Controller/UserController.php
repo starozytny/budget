@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initAccount', 'toSpend', 
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 
                                'regularSpends' => ['id', 'name', 'price'] ];
 
     /**
