@@ -4,6 +4,8 @@ namespace App\Controller\User;
 
 use App\Entity\Budget;
 use App\Entity\Economy;
+use App\Entity\Income;
+use App\Entity\Outgo;
 use App\Entity\RegularSpend;
 use App\Service\SerializeData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -71,7 +73,7 @@ class DonneeController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $isAddition = $type != "income" ? true : false; //car on rajoute ce qu'on a dépensé
-        $donnee = $this->updateOrGet($em, $type, 'donnee', "remove", null, $id);
+        $donnee = $this->updateOrGet($em, $type, 'donnee', "remove", null, $id); //get donnee to delete
         if(!$donnee){
             return new JsonResponse(['code' => 0, 'message' => 'Valeur inconnue.']);
         }
@@ -83,9 +85,8 @@ class DonneeController extends AbstractController
         }
 
         $budget = $this->updateOrGet($em, $type, "budget", "remove", $budget, $donnee);
-        //budgets of others months of this year
+        //budgets of others months of this year to update  initMonth and toSpend of other months
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
-        //update initMonth and toSpend of other months of this year
         $this->updateNextBudget($em, $budgets, $budget, $isAddition, $donnee->getPrice());
 
         $em->persist($budget); 
@@ -101,32 +102,42 @@ class DonneeController extends AbstractController
         if($whoReturn == 'budget' && $action == "remove"){
             $toSpend = $budget->getToSpend();
             $price = $donnee->getPrice();
-            $budget->setToSpend($toSpend + $price);
+            if($type != 'income'){
+                $budget->setToSpend($toSpend + $price);
+            }else{
+                $budget->setToSpend($toSpend - $price);
+            }
 
             return $budget;
         }
 
         switch($type){
+            case 'income':
+                if($whoReturn == 'budget'){
+                    if($action == "add"){ $budget->addIncome($donnee); }
+                }else{
+                    $donnee = ($action == "add") ? new Income() : $em->getRepository(Income::class)->find($donnee);
+                }
+                break;
+            case 'outgo':
+                if($whoReturn == 'budget'){
+                    if($action == "add"){ $budget->addOutgo($donnee); }
+                }else{
+                    $donnee = ($action == "add") ? new Outgo() : $em->getRepository(Outgo::class)->find($donnee);
+                }
+                break;
             case 'economy':
                 if($whoReturn == 'budget'){
                     if($action == "add"){ $budget->addEconomy($donnee); }
                 }else{
-                    if($action == "add"){ 
-                        $donnee = new Economy(); 
-                    }else{ 
-                        $donnee = $em->getRepository(Economy::class)->find($donnee); 
-                    }
+                    $donnee = ($action == "add") ? new Economy() : $em->getRepository(Economy::class)->find($donnee);
                 }
                 break;
             default: //regularSpend
                 if($whoReturn == 'budget'){
                     if($action == "add"){ $budget->addRegularSpend($donnee); }
                 }else{
-                    if($action == "add"){ 
-                        $donnee = new RegularSpend(); 
-                    }else{ 
-                        $donnee = $em->getRepository(RegularSpend::class)->find($donnee); 
-                    }
+                    $donnee = ($action == "add") ? new RegularSpend() : $em->getRepository(RegularSpend::class)->find($donnee);
                 }
                 break;
         }
