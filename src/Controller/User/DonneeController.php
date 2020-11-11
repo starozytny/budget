@@ -62,7 +62,8 @@ class DonneeController extends AbstractController
         
         $em->persist($budget); $em->persist($donnee); $em->flush();
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
-        return new JsonResponse(['code' => 1, 'budget' => $budget, 'type' => $type]);
+        $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);
+        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
     }
 
     /**
@@ -94,7 +95,8 @@ class DonneeController extends AbstractController
         $em->flush();
 
         $budget = $serializer->getSerializeData($donnee->getBudget(), self::ATTRIBUTES_BUDGET);
-        return new JsonResponse(['code' => 1, 'budget' => $budget, 'type' => $type]);
+        $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);
+        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
     }
 
     private function updateOrGet($em, $type, $whoReturn, $action, $budget, $donnee)

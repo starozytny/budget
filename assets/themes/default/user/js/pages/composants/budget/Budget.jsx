@@ -42,10 +42,10 @@ export class Budget extends Component {
         this.setState({ budget: budget[0] })
     }
 
-    handleUpdateBudget = (type, bu) => {
-        const {budgets, budget} = this.state
+    handleUpdateBudget = (bu, bus) => {
+        const {budget} = this.state
 
-        this.setState({ budgets: ActionsArray.addOrUpdateInArray(budgets, bu), budget: ActionsArray.addOrUpdateInArray(budget, bu)[0] })
+        this.setState({ budgets: JSON.parse(bus), budget: ActionsArray.addOrUpdateInArray(budget, bu)[0] })
     }
 
     render () {
