@@ -91,10 +91,12 @@ export class Donnee extends Component {
         const {id, type, add, donnees, title} = this.props
         const {name, price} = this.state
 
-        let items = <div className="objet"><div className="name">Aucune donnée</div></div>
+        let items = <div className="objet"><div className="name">Aucune donnée.</div></div>
+        let total = 0;
 
         if(donnees.length != 0){
             items = donnees.map((elem, index) => {
+                total += elem.price;
                 return <div key={index} className="objet">
                     <div className="name">{elem.name}</div>
                     <div className="price currency">{add ? "+" : "-"} {setCurrency(elem.price)}</div>
@@ -103,25 +105,26 @@ export class Donnee extends Component {
             })
         }
 
-        return <div className="card-1 card-budget-regular">
+        return <div className="card-1 card-budget">
             <div className="card-1-header">
                 <div className="title">{title}</div>
+                <div className="subtitle">{setCurrency(total)}</div>
             </div>
             <div className="card-1-body">
                 {items}
             </div>
             <div className="card-1-footer">
-                <div className="items">
+                <form className="items" onSubmit={e => {e.preventDefault(); this.handleAdd(type, id);}}>
                     <div className="item">
-                        <Input valeur={name} identifiant="name" placeholder="Nom" onChange={this.handleChange} />
+                        <Input valeur={name} identifiant="name" id={"name-" + type} placeholder="Nom" onChange={this.handleChange} />
                     </div>
                     <div className="item">
-                        <Input type="number" valeur={price} identifiant="price" placeholder="prix €" onChange={this.handleChange} />
+                        <Input type="number" valeur={price} identifiant="price" id={"price-" + type} placeholder="Prix €" onChange={this.handleChange} />
                     </div>
                     <div className="item">
-                        <div className="btn-icon" onClick={e => {this.handleAdd(type, id)}}><span className="icon-plus"></span></div>
+                        <button type="submit" className="btn-icon"><span className="icon-plus"></span></button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     }

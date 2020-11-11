@@ -41,7 +41,7 @@ export class Budget extends Component {
     }
 
     handleChangeYear = (direction, y) => {
-        Loader.loader(true)
+        Loader.loaderWithoutAjax(true)
         let self = this
         axios({ method: 'post', url: Routing.generate('user_dashboard_year', {'direction': direction, 'year': y}) }).then(function (response) {
             let data = response.data; let code = data.code; Loader.loader(false)
@@ -88,13 +88,14 @@ export class Budget extends Component {
         let content = <div>
             <div className="budget-months">{months}</div>
             <div className="budget-general">
-                <div className="card-1 card-budget-toSpend">
+                <div className={"card-1 card-budget-toSpend " + (budget.toSpend > 0 ? 'positive' : 'negative')}>
                     <div className="card-1-header">
                         <div className="title currency">{setCurrency(budget.toSpend)}</div>
                     </div>
                     <div className="card-1-body">
                         <p>
-                            Reste à dépenser pour {budget.monthString}
+                            Reste à dépenser pour {budget.monthString} <br/>
+                            Compte au début du mois {setCurrency(budget.initMonth)}
                         </p>
                     </div>
                 </div>

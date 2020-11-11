@@ -20,10 +20,10 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import {Drop} from './Drop';
 
-export function Input({type="text", identifiant, valeur, onChange, children, placeholder}) {
-    let content = <input type={type} name={identifiant} id={identifiant} placeholder={placeholder} value={valeur.value} onChange={onChange}/>
+export function Input({type="text", identifiant, id=null, valeur, onChange, children, placeholder}) {
+    let content = <input type={type} name={identifiant} id={id == null ? identifiant : id} placeholder={placeholder} value={valeur.value} onChange={onChange}/>
 
-    return (<ClassiqueStructure valeur={valeur} identifiant={identifiant} content={content} label={children} />)
+    return (<ClassiqueStructure valeur={valeur} identifiant={id == null ? identifiant : id} content={content} label={children} />)
 }
 
 export function Checkbox({items, name, valeur, onChange, children}) {
