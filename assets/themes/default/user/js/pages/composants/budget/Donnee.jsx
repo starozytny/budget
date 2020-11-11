@@ -9,6 +9,10 @@ import Validateur from '../../../../../react/functions/validateur';
 import {Alert} from '../../../../../react/composants/Alert';
 import {Drop} from '../../../../../react/composants/Drop';
 
+function setCurrency(price){
+    return new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"}).format(price);
+}
+
 export class Donnee extends Component {
     constructor (props) {
         super ()
@@ -93,7 +97,7 @@ export class Donnee extends Component {
             items = donnees.map((elem, index) => {
                 return <div key={index} className="objet">
                     <div className="name">{elem.name}</div>
-                    <div className="price">{add ? "+" : "-"} {elem.price} €</div>
+                    <div className="price currency">{add ? "+" : "-"} {setCurrency(elem.price)}</div>
                     <div className="delete" onClick={e => {this.handleDelete(type, elem.id)}}><span className="icon-trash"></span></div>
                 </div>
             })

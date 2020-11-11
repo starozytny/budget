@@ -43,7 +43,7 @@ class Budget
     /**
      * @ORM\Column(type="float")
      */
-    private $spend;
+    private $startSpend;
 
     /**
      * @ORM\OneToMany(targetEntity=Outgo::class, mappedBy="budget", orphanRemoval=true)
@@ -57,7 +57,7 @@ class Budget
 
     public function __construct()
     {
-        $this->setSpend(0);
+        $this->setStartSpend(0);
         $this->outgos = new ArrayCollection();
         $this->regularSpends = new ArrayCollection();
     }
@@ -157,14 +157,14 @@ class Budget
         return $this;
     }
 
-    public function getSpend(): ?float
+    public function getStartSpend(): ?float
     {
-        return $this->spend;
+        return $this->startSpend;
     }
 
-    public function setSpend(float $spend): self
+    public function setStartSpend(float $startSpend): self
     {
-        $this->spend = $spend;
+        $this->startSpend = $startSpend;
 
         return $this;
     }

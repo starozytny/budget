@@ -20,17 +20,21 @@ function getType(type, self){
     return [name, tab]
 }
 
+function setCurrency(price){
+    return new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"}).format(price);
+}
+
 function getTotalSpend(budget){
-    //Calcul Total
-    let total = budget.spend;
+    //Calcul Tota
+    let total = budget.startSpend;
     let totalRegularSpends = 0;
     if(budget.regularSpends.length != 0){
         budget.regularSpends.forEach(elem => {
             totalRegularSpends += elem.price
         })
     }
-
-    return total - totalRegularSpends;
+    let tot = total - totalRegularSpends;
+    return setCurrency(tot)
 }
 
 export class Budget extends Component {
@@ -64,7 +68,7 @@ export class Budget extends Component {
         let months = budgets.map(elem => {
             return <div key={elem.id} className={"item" + (elem.month == budget.month ? ' active' : '')} onClick={e => {this.handleMonth(elem.id)}}>
                 <div>{elem.monthString}</div>
-                <div>{getTotalSpend(elem)} €</div>
+                <div><span className="currency">{getTotalSpend(elem)}</span></div>
             </div>
         })
 
@@ -76,7 +80,7 @@ export class Budget extends Component {
             <div className="budget-general">
                 <div className="card-1 card-budget-toSpend">
                     <div className="card-1-header">
-                        <div className="title">{getTotalSpend(budget)} €</div>
+                        <div className="title currency">{getTotalSpend(budget)}</div>
                     </div>
                     <div className="card-1-body">
                         <p>
