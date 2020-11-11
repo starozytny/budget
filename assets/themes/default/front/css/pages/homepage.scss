@@ -16,7 +16,7 @@ h2{
 
 #gardons-contact {
   margin-top: 48px;
-  padding: 0 12px;
+  padding: 24px 12px 0 12px;
   text-align: center;
   border-top: 1px solid var(--colorBorder);
 
@@ -116,6 +116,9 @@ h2{
       border-radius: 5px 0 0 5px;
     }
   }
+  #gardons-contact{
+    margin-top: -6px;
+  }
 }
 
 //                      __   _  ___ ____  _  _     __
@@ -131,8 +134,8 @@ h2{
   h2{
     font-size: 36px;
   }
+  
   #gardons-contact{
-    margin-top: 32px;
     padding-top: 32px;
   }
 }
