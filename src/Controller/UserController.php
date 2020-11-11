@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Budget;
+use App\Entity\Settings;
 use App\Service\BudgetService;
 use App\Service\CalendarService;
 use App\Service\SerializeData;
@@ -47,6 +48,7 @@ class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
+        $settings = $em->getRepository(Settings::class)->findAll();
         $previousBudget = $em->getRepository(Budget::class)->findOneBy(['year' => $year-1, 'month' => 12, 'user' => $user]);
         $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => 1, 'user' => $user]);
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $year, 'user' => $user], ['month' => 'ASC']);
@@ -55,7 +57,9 @@ class UserController extends AbstractController
             if($direction == 'previous'){
                 return new JsonResponse(['code' => 0, 'message' => 'Aucune donnée antérieur.']);
             }else{
-                // create years months 
+                if($year > $settings[0]->getMaxYear()){
+                    return new JsonResponse(['code' => 0, 'message' => 'Impossible d\'accéder à cette année pour l\'instant.']);
+                }
                 $budgets = [];
                 for($m=1 ; $m<=12 ; $m++){                    
                     $createBudget = (new Budget())
