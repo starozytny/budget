@@ -35,7 +35,6 @@ class DonneeController extends AbstractController
 
         $user = $this->getUser();
         $budget = $em->getRepository(Budget::class)->find($id);
-
         if(!$budget){
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
@@ -50,19 +49,16 @@ class DonneeController extends AbstractController
         //set new data
         $donnee->setName($name);
         $donnee->setPrice($price);
-
         //add data to this budget
         $budget = $this->updateOrGet($em, $type, "budget", "add", $budget, $donnee);
 
         //new value of toSpend fo this budget
         $toSpend = $budget->getToSpend();
         $budget->setToSpend($isAddition ? ($toSpend + $price) : ($toSpend - $price));
-
         //update initMonth and toSpend of other months of this year
         $this->updateNextBudget($em, $budgets, $budget, $isAddition, $price);
         
         $em->persist($budget); $em->persist($donnee); $em->flush();
-
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
         return new JsonResponse(['code' => 1, 'budget' => $budget, 'type' => $type]);
     }
@@ -76,19 +72,17 @@ class DonneeController extends AbstractController
 
         $isAddition = $type != "income" ? true : false; //car on rajoute ce qu'on a dépensé
         $donnee = $this->updateOrGet($em, $type, 'donnee', "remove", null, $id);
-
         if(!$donnee){
             return new JsonResponse(['code' => 0, 'message' => 'Valeur inconnue.']);
         }
+
         $user = $this->getUser();
         $budget = $donnee->getBudget();
-
         if(!$budget){
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
 
         $budget = $this->updateOrGet($em, $type, "budget", "remove", $budget, $donnee);
-
         //budgets of others months of this year
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
         //update initMonth and toSpend of other months of this year
