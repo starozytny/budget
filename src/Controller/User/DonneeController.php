@@ -76,11 +76,6 @@ class DonneeController extends AbstractController
 
         $isAddition = $type != "income" ? true : false; //car on rajoute ce qu'on a dépensé
         $donnee = $this->updateOrGet($em, $type, 'donnee', "remove", null, $id);
-        switch($type){
-            default:
-                $donnee = $em->getRepository(RegularSpend::class)->find($id);
-                break;
-        }
 
         if(!$donnee){
             return new JsonResponse(['code' => 0, 'message' => 'Valeur inconnue.']);
