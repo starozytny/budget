@@ -78,26 +78,25 @@ class AdminCreateUsersCommand extends Command
             ));
 
             $init = 1500;
+            $y = 2020;
 
-            for($y=2020 ; $y<=2022 ; $y++){
-                for($m=1 ; $m<=12 ; $m++){
-                    if($y == 2020 && $m <= 6){
-                        $init = 0;
-                    }else{
-                        $init = 1500;
-                    }
-                    
-                    $budget = (new Budget())
-                        ->setYear($y)
-                        ->setMonth($m)
-                        ->setToSpend($init)
-                        ->setInitMonth($init)
-                        ->setUser($new)
-                    ;
-                    
-                    $this->em->persist($budget);
+            for($m=1 ; $m<=12 ; $m++){
+                if($y == 2020 && $m <= 6){
+                    $init = 0;
+                }else{
+                    $init = 1500;
                 }
-            }            
+                
+                $budget = (new Budget())
+                    ->setYear($y)
+                    ->setMonth($m)
+                    ->setToSpend($init)
+                    ->setInitMonth($init)
+                    ->setUser($new)
+                ;
+                
+                $this->em->persist($budget);
+            }      
 
             $this->em->persist($new);
             $io->text('USER : ' . $user['username'] . ' créé' );

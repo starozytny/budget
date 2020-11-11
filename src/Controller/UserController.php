@@ -49,17 +49,32 @@ class UserController extends AbstractController
         $user = $this->getUser();
         $previousBudget = $em->getRepository(Budget::class)->findOneBy(['year' => $year-1, 'month' => 12, 'user' => $user]);
         $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => 1, 'user' => $user]);
+        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $year, 'user' => $user], ['month' => 'ASC']);
 
         if(!$budget){
             if($direction == 'previous'){
                 return new JsonResponse(['code' => 0, 'message' => 'Aucune donnée antérieur.']);
             }else{
                 // create years months 
-                return new JsonResponse(['code' => 0, 'message' => 'En cours.']);
+                $budgets = [];
+                for($m=1 ; $m<=12 ; $m++){                    
+                    $createBudget = (new Budget())
+                        ->setYear($year)
+                        ->setMonth($m)
+                        ->setToSpend($previousBudget->getToSpend())
+                        ->setInitMonth($previousBudget->getInitMonth())
+                        ->setUser($user)
+                    ;
+                    
+                    if($m == 1){
+                        $budget = $createBudget;
+                    }
+
+                    $em->persist($createBudget);
+                    array_push($budgets, $createBudget);
+                }
             }
         }
-
-        $budgets = $em->getRepository(Budget::class)->findBy(['year' => $year, 'user' => $user], ['month' => 'ASC']);
 
         if($direction == 'next'){
             if($budget->getInitMonth() > $previousBudget->getToSpend()){
@@ -74,6 +89,8 @@ class UserController extends AbstractController
             $budget->setInitMonth($previousBudget->getToSpend());
             $budgetService->updateNextBudget($budgets, $budget, $isAddition, $difference);
         }
+
+       
 
         $em->persist($budget); $em->flush();
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
