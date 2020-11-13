@@ -51,7 +51,7 @@ class Budget
     private $toSpend;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outgo::class, mappedBy="budget", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Outgo::class, fetch="EAGER", mappedBy="budget", orphanRemoval=true)
      */
     private $outgos;
 
@@ -61,12 +61,12 @@ class Budget
     private $regularSpends;
 
     /**
-     * @ORM\OneToMany(targetEntity=Income::class, mappedBy="budget")
+     * @ORM\OneToMany(targetEntity=Income::class, fetch="EAGER", mappedBy="budget")
      */
     private $incomes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Economy::class, mappedBy="budget")
+     * @ORM\OneToMany(targetEntity=Economy::class, fetch="EAGER", mappedBy="budget")
      */
     private $economies;
 

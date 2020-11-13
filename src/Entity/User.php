@@ -103,6 +103,11 @@ class User implements UserInterface
      */
     private $budgets;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Goal::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $goals;
+
     public function __construct()
     {
         $this->setRoles(['ROLE_USER']);
@@ -117,6 +122,7 @@ class User implements UserInterface
         }
         $this->agendaEvents = new ArrayCollection();
         $this->budgets = new ArrayCollection();
+        $this->goals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -409,6 +415,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($budget->getUser() === $this) {
                 $budget->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Goal[]
+     */
+    public function getGoals(): Collection
+    {
+        return $this->goals;
+    }
+
+    public function addGoal(Goal $goal): self
+    {
+        if (!$this->goals->contains($goal)) {
+            $this->goals[] = $goal;
+            $goal->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoal(Goal $goal): self
+    {
+        if ($this->goals->contains($goal)) {
+            $this->goals->removeElement($goal);
+            // set the owning side to null (unless already changed)
+            if ($goal->getUser() === $this) {
+                $goal->setUser(null);
             }
         }
 

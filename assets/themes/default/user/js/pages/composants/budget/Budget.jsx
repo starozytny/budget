@@ -23,6 +23,7 @@ export class Budget extends Component {
             budgets: JSON.parse(props.budgets),
             budget: JSON.parse(props.budget),
             previousBudget: JSON.parse(props.previousBudget),
+            goals: JSON.parse(props.goals),
         }
 
         this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
@@ -56,7 +57,7 @@ export class Budget extends Component {
     }
 
     render () {
-        const {budgets, budget, previousBudget} = this.state
+        const {budgets, budget, previousBudget, goals} = this.state
 
         //Get months
         let months = [];
@@ -97,7 +98,7 @@ export class Budget extends Component {
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
                             type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" 
                     />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} goals={goals}
                             type="economy" donnees={budget.economies} title="Economies" 
                     />
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}

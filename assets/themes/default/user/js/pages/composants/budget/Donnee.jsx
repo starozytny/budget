@@ -4,7 +4,7 @@ import toastr             from 'toastr';
 import axios              from 'axios';
 import Swal               from 'sweetalert2';
 
-import {Input}            from '@reactFolder/composants/Fields';
+import {Input, Select}            from '@reactFolder/composants/Fields';
 import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 import Loader             from '@reactFolder/functions/loader';
 import Validateur         from '@reactFolder/functions/validateur';
@@ -19,7 +19,8 @@ export class Donnee extends Component {
 
         this.state = {
             name: {value: '', error: ''},
-            price: {value: '', error: ''}
+            price: {value: '', error: ''},
+            goal: {value: '', error: ''},
         }
 
         this.handleChange = this.handleChange.bind(this)
@@ -88,11 +89,18 @@ export class Donnee extends Component {
     } 
 
     render () {
-        const {id, type, donnees, title} = this.props
-        const {name, price} = this.state
+        const {id, type, donnees, title, goals} = this.props
+        const {name, price, goal} = this.state
 
         let items = <div className="objet"><div className="name">Aucune donnée.</div></div>
         let total = 0;
+
+        if(goals){
+            let items = [];
+            goals.forEach(elem => {
+                items.push([ {'value': elem.id, 'libelle': elem.name} ])
+            })
+        }
 
         if(donnees.length != 0){
             items = donnees.map((elem, index) => {
@@ -115,16 +123,20 @@ export class Donnee extends Component {
             </div>
             <div className="card-1-footer">
                 <form className="items" onSubmit={e => {e.preventDefault(); this.handleAdd(type, id);}}>
-                    <div className="item">
+                    <div className="item item-name">
                         <Input valeur={name} identifiant="name" id={"name-" + type} placeholder="Nom" onChange={this.handleChange} />
                     </div>
-                    <div className="item">
+                    {goals ? <div className="item item-goal">
+                        <Select valeur={goal} identifiant="goal" placeholder="Objectif" onChange={this.handleChange} items={items}></Select>
+                    </div> : null}
+                    <div className="item item-price">
                         <Input type="number" valeur={price} identifiant="price" id={"price-" + type} placeholder="Prix €" onChange={this.handleChange} />
                     </div>
                     <div className="item">
                         <button type="submit" className="btn-icon"><span className="icon-plus"></span></button>
                     </div>
                 </form>
+                {goals ? <div className="add-goal">Ajouter un objectif</div> : null}
             </div>
         </div>
     }

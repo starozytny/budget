@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Budget;
+use App\Entity\Goal;
 use App\Entity\Settings;
 use App\Service\BudgetService;
 use App\Service\CalendarService;
@@ -19,6 +20,7 @@ class UserController extends AbstractController
                                'outgos' => ['id', 'name', 'price'],
                                'incomes' => ['id', 'name', 'price'],
                             ];
+    const ATTRIBUTES_GOAL = ['id', 'name'];
 
     /**
      * @Route("/espace-utilisateur", name="user_dashboard")
@@ -44,14 +46,18 @@ class UserController extends AbstractController
             $previousBudget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => $month-1, 'user' => $user]);
         }
 
+        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
+
         $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);
         $previousBudget = $serializer->getSerializeData($previousBudget, self::ATTRIBUTES_BUDGET);
+        $goals = $serializer->getSerializeData($goals, self::ATTRIBUTES_GOAL);
 
         return $this->render('root/user/index.html.twig', [
             'budgets' => $budgets,
             'budget' => $budget,
-            'previousBudget' => $previousBudget
+            'previousBudget' => $previousBudget,
+            'goals' => $goals,
         ]);
     }
 

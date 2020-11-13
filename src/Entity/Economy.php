@@ -33,6 +33,11 @@ class Economy
      */
     private $budget;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Goal::class, inversedBy="economy")
+     */
+    private $goal;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +75,18 @@ class Economy
     public function setBudget(?Budget $budget): self
     {
         $this->budget = $budget;
+
+        return $this;
+    }
+
+    public function getGoal(): ?Goal
+    {
+        return $this->goal;
+    }
+
+    public function setGoal(?Goal $goal): self
+    {
+        $this->goal = $goal;
 
         return $this;
     }
