@@ -34,7 +34,7 @@ class Economy
     private $budget;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Goal::class, inversedBy="economy")
+     * @ORM\ManyToOne(targetEntity=Goal::class, fetch="EAGER", inversedBy="economy")
      */
     private $goal;
 

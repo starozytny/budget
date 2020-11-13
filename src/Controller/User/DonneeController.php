@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Entity\Budget;
+use App\Entity\Goal;
 use App\Service\BudgetService;
 use App\Service\CalendarService;
 use App\Service\SerializeData;
@@ -18,7 +19,7 @@ class DonneeController extends AbstractController
 {
     const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 
                                'regularSpends' => ['id', 'name', 'price'],
-                               'economies' => ['id', 'name', 'price'],
+                               'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name'] ],
                                'outgos' => ['id', 'name', 'price'],
                                'incomes' => ['id', 'name', 'price'],
                             ];
@@ -54,6 +55,19 @@ class DonneeController extends AbstractController
         //set new data
         $donnee->setName($name);
         $donnee->setPrice($price);
+
+        if($type == "economy"){
+            if($data->goal->value != ""){
+                $goal = $em->getRepository(Goal::class)->find($data->goal->value);
+                if($goal){
+                    $donnee->setGoal($goal);
+                }else{
+                    return new JsonResponse(['code' => 0, 'message' => 'L\'objectif n\'existe pas. Veuillez contacter le support.']);
+                }
+            }
+            
+        }
+
         //add data to this budget
         $budget = $budgetService->updateOrGet($type, "budget", "add", $budget, $donnee);
 

@@ -4,11 +4,13 @@ import toastr             from 'toastr';
 import axios              from 'axios';
 
 import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
+import {Aside}            from '@reactFolder/composants/page/Aside';
 import Loader             from '@reactFolder/functions/loader';
 import ActionsArray       from '@reactFolder/functions/actions_array';
 import {Page}             from '@reactFolder/composants/page/Page';
 
 import {Donnee}           from './Donnee';
+import {Goal}           from './Goal';
 
 
 function setCurrency(price){
@@ -26,9 +28,12 @@ export class Budget extends Component {
             goals: JSON.parse(props.goals),
         }
 
+        this.aside = React.createRef();
+
         this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
         this.handleChangeYear = this.handleChangeYear.bind(this)
+        this.handleOpenAside = this.handleOpenAside.bind(this)
     }
 
     handleMonth = (id) => {
@@ -54,6 +59,10 @@ export class Budget extends Component {
                 toastr.error(data.message)
             }
         });
+    }
+
+    handleOpenAside = () => {
+        this.aside.current.handleUpdate('Créer un objectif')
     }
 
     render () {
@@ -98,7 +107,7 @@ export class Budget extends Component {
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
                             type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" 
                     />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} goals={goals}
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} goals={goals} onOpenAside={this.handleOpenAside}
                             type="economy" donnees={budget.economies} title="Economies" 
                     />
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
@@ -111,8 +120,11 @@ export class Budget extends Component {
             </div>
         </div>
 
+        let asideContent = <Goal />
+
         return <>
             <Page infos={infos} content={content} />
+            <Aside content={asideContent} ref={this.aside} />
         </>
     }
 }

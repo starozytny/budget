@@ -4,7 +4,7 @@ import toastr             from 'toastr';
 import axios              from 'axios';
 import Swal               from 'sweetalert2';
 
-import {Input, Select}            from '@reactFolder/composants/Fields';
+import {Input, Select}    from '@reactFolder/composants/Fields';
 import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 import Loader             from '@reactFolder/functions/loader';
 import Validateur         from '@reactFolder/functions/validateur';
@@ -89,16 +89,16 @@ export class Donnee extends Component {
     } 
 
     render () {
-        const {id, type, donnees, title, goals} = this.props
+        const {id, type, donnees, title, goals, onOpenAside} = this.props
         const {name, price, goal} = this.state
 
         let items = <div className="objet"><div className="name">Aucune donnée.</div></div>
         let total = 0;
+        let goalsItems = [{'value': "none", 'libelle': 'Aucun objectif'}];
 
         if(goals){
-            let items = [];
             goals.forEach(elem => {
-                items.push([ {'value': elem.id, 'libelle': elem.name} ])
+                goalsItems.push( {'value': elem.id, 'libelle': elem.name} )
             })
         }
 
@@ -106,13 +106,13 @@ export class Donnee extends Component {
             items = donnees.map((elem, index) => {
                 total += elem.price;
                 return <div key={index} className="objet">
-                    <div className="name">{elem.name}</div>
+                    <div className="name">{elem.name} {elem.goal ? <span className="goal">- {elem.goal.name}</span> : null}</div>
                     <div className="price currency">{type == "income" ? "+" : "-"} {setCurrency(elem.price)}</div>
                     <div className="delete" onClick={e => {this.handleDelete(type, elem.id)}}><span className="icon-trash"></span></div>
                 </div>
             })
         }
-
+        
         return <div className="card-1 card-budget">
             <div className="card-1-header">
                 <div className="title">{title}</div>
@@ -126,8 +126,8 @@ export class Donnee extends Component {
                     <div className="item item-name">
                         <Input valeur={name} identifiant="name" id={"name-" + type} placeholder="Nom" onChange={this.handleChange} />
                     </div>
-                    {goals ? <div className="item item-goal">
-                        <Select valeur={goal} identifiant="goal" placeholder="Objectif" onChange={this.handleChange} items={items}></Select>
+                    {goals && goalsItems.length != 0 ? <div className="item item-goal">
+                        <Select valeur={goal} identifiant="goal" placeholder="Objectif" onChange={this.handleChange} items={goalsItems}></Select>
                     </div> : null}
                     <div className="item item-price">
                         <Input type="number" valeur={price} identifiant="price" id={"price-" + type} placeholder="Prix €" onChange={this.handleChange} />
@@ -136,7 +136,7 @@ export class Donnee extends Component {
                         <button type="submit" className="btn-icon"><span className="icon-plus"></span></button>
                     </div>
                 </form>
-                {goals ? <div className="add-goal">Ajouter un objectif</div> : null}
+                {goals ? <div className="add-goal" onClick={onOpenAside}>Ajouter un objectif</div> : null}
             </div>
         </div>
     }

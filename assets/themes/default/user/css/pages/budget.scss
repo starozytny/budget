@@ -99,6 +99,10 @@
             .price{
                 width: 30%;
             }
+            .goal{
+                font-size: 14px;
+                opacity: 0.7;
+            }
             .delete{
                 width: 10%;
                 text-align: right;
@@ -128,7 +132,7 @@
                 }
 
                 & + .item-goal{
-                    // width: 15%;
+                    width: 35%;
 
                     select{
                         width: 100%;
