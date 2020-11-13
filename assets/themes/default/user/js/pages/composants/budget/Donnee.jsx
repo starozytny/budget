@@ -105,8 +105,28 @@ export class Donnee extends Component {
         if(donnees.length != 0){
             items = donnees.map((elem, index) => {
                 total += elem.price;
+                let pourcentage;
+                if(elem.goal){
+                    pourcentage = Math.round((elem.price/elem.goal.total)*100)
+                    if(pourcentage > 0 && pourcentage < 25){
+                        pourcentage = 25
+                    }else if(pourcentage >= 25 && pourcentage < 50){
+                        pourcentage = 50
+                    }else if(pourcentage >= 50 && pourcentage < 75){
+                        pourcentage = 75
+                    }else if(pourcentage >= 75 && pourcentage < 100){
+                        pourcentage = 85
+                    }else{
+                        pourcentage = 100
+                    }
+                }
+                
+
                 return <div key={index} className="objet">
-                    <div className="name">{elem.name} {elem.goal ? <span className="goal">- {elem.goal.name}</span> : null}</div>
+                    <div className="name">
+                        <div>{elem.name} {elem.goal ? <span className="goal">- {elem.goal.name} ({setCurrency(elem.goal.total)})</span> : null}</div> 
+                        {elem.goal ? <div className={"goal-progress progress-" + pourcentage}></div> : null}
+                    </div>
                     <div className="price currency">{type == "income" ? "+" : "-"} {setCurrency(elem.price)}</div>
                     <div className="delete" onClick={e => {this.handleDelete(type, elem.id)}}><span className="icon-trash"></span></div>
                 </div>

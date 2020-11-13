@@ -174,6 +174,30 @@
         opacity: 1;
     }
 }
+.goal-progress{
+    position: relative;
+    background-color: var(--colorBorder);
+    border-radius: 5px;
+    width: 80%;
+    height: 3px;
+    margin-bottom: 8px;
+    margin-top: 2px;
+
+    &:after{
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        background-color: var(--success);
+        height: 3px;
+        display: block;
+    }
+
+    &.progress-25{&:after{width: 5%;}}
+    &.progress-50{&:after{width: 30%;}}
+    &.progress-75{&:after{width: 55%;}}
+    &.progress-85{&:after{width: 65%;}}
+    &.progress-100{&:after{width: 80%;}}
+}
 
 //                      __   _____ __    ___    __
 //                     | _| |___  / /_  ( _ )  |_ |

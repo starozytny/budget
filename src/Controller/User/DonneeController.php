@@ -19,7 +19,7 @@ class DonneeController extends AbstractController
 {
     const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 
                                'regularSpends' => ['id', 'name', 'price'],
-                               'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name'] ],
+                               'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name', 'total'] ],
                                'outgos' => ['id', 'name', 'price'],
                                'incomes' => ['id', 'name', 'price'],
                             ];
