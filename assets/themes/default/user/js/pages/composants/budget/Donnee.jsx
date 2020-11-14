@@ -94,7 +94,7 @@ export class Donnee extends Component {
     }
 
     render () {
-        const {id, type, donnees, title, goals, onOpenAside} = this.props
+        const {id, budget, type, donnees, title, goals, onOpenAside} = this.props
         const {name, price, goal} = this.state
 
         let items = <div className="objet"><div className="name">Aucune donnée.</div></div>
@@ -102,8 +102,19 @@ export class Donnee extends Component {
 
         // for select goals
         let goalsItems = [{'value': "none", 'libelle': 'Aucun objectif'}];
+        let goalsUntilThisMonth = []
         if(goals){
             goals.forEach(elem => {
+
+                let tot = 0;
+
+                elem.economy.forEach(eco => {
+                    if(eco.budget.year == budget.year && eco.budget.month <= budget.month){
+                        tot += eco.price
+                    }
+                })
+
+                goalsUntilThisMonth.push({'id': elem.id, 'tot': tot})
                 goalsItems.push( {'value': elem.id, 'libelle': elem.name} )
             })
         }
@@ -114,16 +125,24 @@ export class Donnee extends Component {
                 let pourcentage, goalDiff;
 
                 if(elem.goal){
-                    pourcentage = Math.round((elem.goal.fill/elem.goal.total)*100)
-                    goalDiff = elem.goal.fill - elem.goal.total
+
+                    let fill = 0;
+                    goalsUntilThisMonth.forEach(goalUntilThisMonth => {
+                        if(goalUntilThisMonth.id == elem.goal.id){
+                            fill = goalUntilThisMonth.tot
+                        }
+                    })
+
+                    pourcentage = Math.round((fill/elem.goal.total)*100)
+                    goalDiff = fill - elem.goal.total
                     
-                    if(pourcentage > 0 && pourcentage <= 25){
+                    if(pourcentage > 0 && pourcentage <= 35){
                         pourcentage = 25
-                    }else if(pourcentage > 25 && pourcentage <= 50){
+                    }else if(pourcentage > 35 && pourcentage <= 50){
                         pourcentage = 50
                     }else if(pourcentage > 50 && pourcentage <= 75){
                         pourcentage = 75
-                    }else if(pourcentage > 75 && pourcentage <= 100){
+                    }else if(pourcentage > 75 && pourcentage < 100){
                         pourcentage = 85
                     }else{
                         pourcentage = 100

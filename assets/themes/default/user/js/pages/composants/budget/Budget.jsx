@@ -155,7 +155,7 @@ export class Budget extends Component {
                     <Donnee id={budget.id} onUpdateBudgets={this.handleUpdateBudgets}
                             type="income" donnees={budget.incomes} title="Gains réguliers" 
                     />
-                    <Donnee id={budget.id} onUpdateBudgets={this.handleUpdateBudgets} goals={goals} onOpenAside={this.handleOpenAsideGoal} ref={this.donnee}
+                    <Donnee id={budget.id} onUpdateBudgets={this.handleUpdateBudgets} budget={budget} goals={goals} onOpenAside={this.handleOpenAsideGoal} ref={this.donnee}
                             type="economy" donnees={budget.economies} title="Economies" 
                     />
                 </div>
