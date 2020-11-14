@@ -83,6 +83,13 @@
 }
 
 .card-comment{
+    .card-1-header{
+        @include flex(row, center, flex-start);
+
+        & > div:first-child{
+            margin-right: 12px;
+        }
+    }
     .card-1-footer{
         margin-top: 0;
     }

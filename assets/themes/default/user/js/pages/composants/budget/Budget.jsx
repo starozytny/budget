@@ -126,19 +126,14 @@ export class Budget extends Component {
                     <div className="card-1 card-comment">
                         <div className="card-1-header">
                             <div className="title">Quoi de neuf ?</div>
+                             <div className="btn-icon" onClick={() => {this.handleOpenAsideComment(budget.comment ? "Modifier" : "Ajouter")}}>
+                                <span className="icon-pencil"></span><span className="tooltip tooltip-bot-right">{budget.comment ? "Modifier" : "Ajouter"}</span>
+                            </div>
                         </div>
                         <div className="card-1-body">
                             <p>{budget.comment ? htmlToReactParser.parse(budget.comment) : "Rien ce mois-ci."}</p>
                         </div>
-                        <div className="card-1-footer">
-                            <div className="items">
-                                <div className="item">
-                                    <div className="btn-icon" onClick={() => {this.handleOpenAsideComment(budget.comment ? "Modifier" : "Ajouter")}}>
-                                        <span className="icon-pencil"></span><span className="tooltip">{budget.comment ? "Modifier" : "Ajouter"}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div className="card-1-footer"> <div className="items"> <div className="item"></div> </div> </div>
                     </div>
                 </div>
             </div>
