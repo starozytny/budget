@@ -96,6 +96,11 @@
         background-color: var(--colorDisabled);
         border-radius: 50px;
         @include flex(row, center, center);
+
+        &.regularSpend{ background-color: var(--danger-bg); }
+        &.income{ background-color: var(--primary-bg); }
+        &.economy{ background-color: var(--warning-bg); }
+        &.outgo{ background-color: var(--dark-bg); }
     }
 
     .card-1-header-infos{
