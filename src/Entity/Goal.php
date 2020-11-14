@@ -40,9 +40,15 @@ class Goal
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $fill;
+
     public function __construct()
     {
         $this->economy = new ArrayCollection();
+        $this->setFill(0);
     }
 
     public function getId(): ?int
@@ -113,6 +119,18 @@ class Goal
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getFill(): ?float
+    {
+        return $this->fill;
+    }
+
+    public function setFill(float $fill): self
+    {
+        $this->fill = $fill;
 
         return $this;
     }

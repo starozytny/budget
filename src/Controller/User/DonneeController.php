@@ -19,12 +19,12 @@ class DonneeController extends AbstractController
 {
     const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 
                                'regularSpends' => ['id', 'name', 'price'],
-                               'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name', 'total'] ],
+                               'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name', 'total', 'fill'] ],
                                'outgos' => ['id', 'name', 'price'],
                                'incomes' => ['id', 'name', 'price'],
                             ];
 
-    /**
+    /** 
      * @Route("/{type}/{id}/ajouter", options={"expose"=true}, name="add")
      */
     public function add(Request $request, SerializeData $serializer, CalendarService $calendarService, BudgetService $budgetService, $type, $id)
@@ -61,6 +61,7 @@ class DonneeController extends AbstractController
                 $goal = $em->getRepository(Goal::class)->find($data->goal->value);
                 if($goal){
                     $donnee->setGoal($goal);
+                    $goal->setFill($goal->getFill() + $price);
                 }else{
                     return new JsonResponse(['code' => 0, 'message' => 'L\'objectif n\'existe pas. Veuillez contacter le support.']);
                 }

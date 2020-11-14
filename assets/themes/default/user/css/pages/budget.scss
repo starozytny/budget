@@ -180,8 +180,6 @@
     border-radius: 5px;
     width: 80%;
     height: 3px;
-    margin-bottom: 8px;
-    margin-top: 2px;
 
     &:after{
         content: '';
@@ -192,11 +190,24 @@
         display: block;
     }
 
-    &.progress-25{&:after{width: 5%;}}
-    &.progress-50{&:after{width: 30%;}}
-    &.progress-75{&:after{width: 55%;}}
-    &.progress-85{&:after{width: 65%;}}
-    &.progress-100{&:after{width: 80%;}}
+    &.progress-overkill{
+        &:after{
+            background-color: var(--danger);
+        }
+    }
+
+    &.progress-25{&:after{width: 25%;}}
+    &.progress-50{&:after{width: 50%;}}
+    &.progress-75{&:after{width: 75%;}}
+    &.progress-85{&:after{width: 85%;}}
+    &.progress-100{&:after{width: 100%;}}
+}
+
+.goal-overkill{
+    font-size: 14px;
+    opacity: 0.7;
+    color: var(--danger);
+    margin-bottom: 4px;
 }
 
 //                      __   _____ __    ___    __

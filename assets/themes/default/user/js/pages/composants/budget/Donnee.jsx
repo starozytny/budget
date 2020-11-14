@@ -94,8 +94,9 @@ export class Donnee extends Component {
 
         let items = <div className="objet"><div className="name">Aucune donnée.</div></div>
         let total = 0;
-        let goalsItems = [{'value': "none", 'libelle': 'Aucun objectif'}];
 
+        // for select goals
+        let goalsItems = [{'value': "none", 'libelle': 'Aucun objectif'}];
         if(goals){
             goals.forEach(elem => {
                 goalsItems.push( {'value': elem.id, 'libelle': elem.name} )
@@ -105,9 +106,12 @@ export class Donnee extends Component {
         if(donnees.length != 0){
             items = donnees.map((elem, index) => {
                 total += elem.price;
-                let pourcentage;
+                let pourcentage, goalDiff;
                 if(elem.goal){
-                    pourcentage = Math.round((elem.price/elem.goal.total)*100)
+
+                    pourcentage = Math.round((elem.goal.fill/elem.goal.total)*100)
+                    goalDiff = elem.goal.fill - elem.goal.total
+                    
                     if(pourcentage > 0 && pourcentage < 25){
                         pourcentage = 25
                     }else if(pourcentage >= 25 && pourcentage < 50){
@@ -120,12 +124,12 @@ export class Donnee extends Component {
                         pourcentage = 100
                     }
                 }
-                
 
                 return <div key={index} className="objet">
                     <div className="name">
                         <div>{elem.name} {elem.goal ? <span className="goal">- {elem.goal.name} ({setCurrency(elem.goal.total)})</span> : null}</div> 
-                        {elem.goal ? <div className={"goal-progress progress-" + pourcentage}></div> : null}
+                        {elem.goal ? <div className={"goal-progress progress-" + pourcentage + (goalDiff > 0 ? ' progress-overkill' : '')}></div> : null}
+                        {goalDiff > 0 ? <div className="goal-overkill">{"surplus de " + setCurrency(goalDiff)}</div> : null}
                     </div>
                     <div className="price currency">{type == "income" ? "+" : "-"} {setCurrency(elem.price)}</div>
                     <div className="delete" onClick={e => {this.handleDelete(type, elem.id)}}><span className="icon-trash"></span></div>
