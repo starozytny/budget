@@ -107,8 +107,8 @@ export class Donnee extends Component {
             items = donnees.map((elem, index) => {
                 total += elem.price;
                 let pourcentage, goalDiff;
-                if(elem.goal){
 
+                if(elem.goal){
                     pourcentage = Math.round((elem.goal.fill/elem.goal.total)*100)
                     goalDiff = elem.goal.fill - elem.goal.total
                     
