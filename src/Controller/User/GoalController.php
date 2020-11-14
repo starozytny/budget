@@ -39,7 +39,7 @@ class GoalController extends AbstractController
         ;
 
         $em->persist($newGoal); $em->flush();
-        $goal = $serializer->getSerializeData($goal, self::ATTRIBUTES_GOAL);
-        return new JsonResponse(['code' => 1, 'goal' => $goal]);
+        $newGoal = $serializer->getSerializeData($newGoal, self::ATTRIBUTES_GOAL);
+        return new JsonResponse(['code' => 1, 'goal' => $newGoal]);
     }
 }

@@ -34,6 +34,7 @@ export class Budget extends Component {
         this.handleMonth = this.handleMonth.bind(this)
         this.handleChangeYear = this.handleChangeYear.bind(this)
         this.handleOpenAside = this.handleOpenAside.bind(this)
+        this.handleUpdateGoal = this.handleUpdateGoal.bind(this)
     }
 
     handleMonth = (id) => {
@@ -43,6 +44,11 @@ export class Budget extends Component {
 
     handleUpdateBudget = (bu, bus) => {
         this.setState({ budgets: JSON.parse(bus), budget: JSON.parse(bu) })
+    }
+
+    handleUpdateGoal = (goal) => {
+        const {goals} = this.state
+        this.setState({ goals: ActionsArray.addOrUpdateInArray(goals, goal) })
     }
 
     handleChangeYear = (direction, y) => {
@@ -118,7 +124,7 @@ export class Budget extends Component {
             </div>
         </div>
 
-        let asideContent = <Goal />
+        let asideContent = <Goal onUpdateGoal={this.handleUpdateGoal}/>
 
         return <>
             <Page infos={infos} content={content} />

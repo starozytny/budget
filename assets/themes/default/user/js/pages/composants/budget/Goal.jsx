@@ -49,7 +49,8 @@ export class Goal extends Component {
                 let data = response.data; let code = data.code; Loader.loader(false)
 
                 if(code === 1){
-                    // self.props.onUpdateGoals(data.goal)
+                    
+                    self.props.onUpdateGoal(data.goal)
                 }else{
                     self.setState({error: data.message})
                 }
