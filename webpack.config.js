@@ -85,6 +85,7 @@ Encore
 
     .addEntry('default_user', './assets/themes/default/user/js/default.jsx')
     .addEntry('default_user_agenda', './assets/themes/default/user/js/pages/agenda.jsx')
+    .addEntry('default_user_goals', './assets/themes/default/user/js/pages/goals.jsx')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

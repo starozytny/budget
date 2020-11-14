@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Goal
 {
-    const ATTRIBUTES_GOAL = ['id', 'name'];
+    const ATTRIBUTES_GOAL = ['id', 'name', 'fill', 'total'];
 
     /**
      * @ORM\Id

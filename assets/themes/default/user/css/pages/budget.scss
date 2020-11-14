@@ -1,6 +1,8 @@
 @import "../vars/vars.scss";
 
-.toolbar{ display: none; }
+#budget{
+    .toolbar{ display: none; }
+}
 
 .budget-months{
     @include flex(row, center, flex-start);
