@@ -133,8 +133,9 @@ export class Donnee extends Component {
                         }
                     })
 
-                    pourcentage = Math.round((fill/elem.goal.total)*100)
-                    goalDiff = fill - elem.goal.total
+                    let total = elem.goal.total
+                    pourcentage = Math.round((fill/total)*100)
+                    goalDiff = fill - total
                     
                     if(pourcentage > 0 && pourcentage <= 35){
                         pourcentage = 25

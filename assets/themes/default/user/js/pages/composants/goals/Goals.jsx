@@ -84,8 +84,7 @@ export class Goals extends Component {
                     finalYear = y; finalMonth = m;
                 }
 
-                prevYear = y
-                prevMonth = m
+                prevYear = y; prevMonth = m;
             })
 
             return <div className="card-1" key={elem.id}>
@@ -98,11 +97,15 @@ export class Goals extends Component {
                     <div className="title">{elem.name}</div>
                 </div>
                 <div className="card-1-body">
-                    <div>Total atteint au mois de {getMonthString(now.getMonth()).toLowerCase()}</div>
-                    <div>{setCurrency(totNow)} / {setCurrency(elem.total)}</div>
+                    <div className="progress">
+                        <div>Total atteint au mois de {getMonthString(now.getMonth()).toLowerCase()}</div>
+                        <div>{setCurrency(totNow)} / {setCurrency(elem.total)}</div>
+                    </div>
 
-                    <div>Total atteint en {getMonthString(finalMonth-1).toLowerCase()} {finalYear}</div>
-                    <div>{setCurrency(elem.fill)} / {setCurrency(elem.total)}</div>
+                    <div className="progress">
+                        <div>Total atteint en {getMonthString(finalMonth-1).toLowerCase()} {finalYear}</div>
+                        <div>{setCurrency(elem.fill)} / {setCurrency(elem.total)}</div>
+                    </div>                    
                 </div>
                 <div className="card-1-footer">
                     <div className="items">
