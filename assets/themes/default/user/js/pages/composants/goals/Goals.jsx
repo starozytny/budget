@@ -33,6 +33,22 @@ function getMonthString(expr){
       }
 }
 
+function getPourcentage(pourcentage){
+    let p = 0
+    if(pourcentage > 0 && pourcentage <= 35){
+        p = 25
+    }else if(pourcentage > 35 && pourcentage <= 50){
+        p = 50
+    }else if(pourcentage > 50 && pourcentage <= 75){
+        p = 75
+    }else if(pourcentage > 75 && pourcentage < 100){
+        p = 85
+    }else{
+        p = 100
+    }
+    return p
+}
+
 export class Goals extends Component {
     constructor (props){
         super ()
@@ -116,7 +132,36 @@ export class Goals extends Component {
                 prevYear = y; prevMonth = m;
             })
 
-            return <div className="card-1" key={elem.id}>
+            let total = elem.total
+            let nPourcentage = Math.round((totNow/total)*100)
+            let nStylePourcentage = getPourcentage(nPourcentage)
+            let fPourcentage = Math.round((elem.fill/total)*100)
+            let fStylePourcentage = getPourcentage(fPourcentage)
+            
+            let fPourcentageColor;
+            if(fPourcentage == 0){
+                fPourcentageColor = "grey"
+            }else if(fPourcentage == 100){
+                fPourcentageColor = "green"
+            }else if(fPourcentage > 100){
+                fPourcentageColor = "red"
+            }else{
+                fPourcentageColor = "primary"
+            }
+
+            let nPourcentageColor;
+            if(nPourcentage == 0){
+                nPourcentageColor = "grey"
+            }else if(nPourcentage == 100){
+                nPourcentageColor = "green"
+            }else if(nPourcentage > 100){
+                nPourcentageColor = "red"
+            }else{
+                nPourcentageColor = "primary"
+            }
+
+
+            return <div className="card-1 card-goal" key={elem.id}>
                 {/* <div class="card-1-drawing">
                     <div class="image">
                         <img src="{{ asset(path_images ~ "drawing.jpg") }}" alt="illustration">
@@ -126,15 +171,30 @@ export class Goals extends Component {
                     <div className="title">{elem.name}</div>
                 </div>
                 <div className="card-1-body">
-                    <div className="progress">
+                    <div className="progress-real">
+                        <div className={"c100 p" + nStylePourcentage + " " + nPourcentageColor}>
+                            <span>{nPourcentage}%</span>
+                            <div className="slice">
+                                <div className="bar"></div>
+                                <div className="fill"></div>
+                            </div>
+                        </div>
                         <div>Total atteint au mois de {getMonthString(now.getMonth()).toLowerCase()}</div>
                         <div>{setCurrency(totNow)} / {setCurrency(elem.total)}</div>
                     </div>
 
-                    <div className="progress">
-                        <div>Total atteint {elem.fill < elem.total ? 'indéterminé' : "en " + getMonthString(finalMonth-1).toLowerCase() + " " + finalYear}</div>
+                    {elem.fill >= elem.total ? <div className="progress-final">
+                        <div className={"c100 p" + fStylePourcentage + " " + fPourcentageColor}>
+                            <span>{fPourcentage}%</span>
+                            <div className="slice">
+                                <div className="bar"></div>
+                                <div className="fill"></div>
+                            </div>
+                        </div>
+                        <div>Total atteint en {getMonthString(finalMonth-1).toLowerCase()} {finalYear}</div>
                         <div>{setCurrency(elem.fill)} / {setCurrency(elem.total)}</div>
-                    </div>                    
+                    </div> : null}
+                                    
                 </div>
                 <div className="card-1-footer">
                     <div className="items">

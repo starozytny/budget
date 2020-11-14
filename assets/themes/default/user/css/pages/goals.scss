@@ -1,1 +1,18 @@
 @import "../vars/vars.scss";
+
+.card-goal{
+    .title{
+        text-align: center;
+    }
+
+    .card-1-body{
+        text-align: center;
+    }
+
+    .progress-real{
+        margin-bottom: 12px;
+    }
+    .progress-final, .progress-real{
+        @include flex(column, center, center);
+    }
+}
