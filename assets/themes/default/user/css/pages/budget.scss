@@ -82,6 +82,12 @@
     border-bottom: 1px solid var(--color5);
 }
 
+.card-comment{
+    .card-1-footer{
+        margin-top: 0;
+    }
+}
+
 .card-budget{
 
     .card-1-header{
@@ -238,6 +244,15 @@
 //                     | |   /_/  \___/ \___/   | |
 //                     |__|                    |__|
 @media (min-width:768px) {
+    .budget-general{
+        overflow: hidden;
+
+        .budget-general-container{
+            @include flex(row, stretch, flex-start);
+            width: calc(100% + 24px);
+        }
+    }
+
     .budget-cards{
         overflow: hidden;
 
@@ -276,6 +291,15 @@
 //                     | |  |_|_____\___/ \___/   | |
 //                     |__|                      |__|
 @media (min-width:1280px) {
+    .budget-general{
+        .budget-general-container{
+            width: calc(100% + 34px);
+
+            .card-comment{
+                width: calc(100% - 33% - 36px);
+            }
+        }
+    }
     .budget-cards{
         .budget-cards-container{
             width: calc(100% + 34px);

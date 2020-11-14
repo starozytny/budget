@@ -102,15 +102,34 @@ export class Budget extends Component {
         let content = <div>
             <div className="budget-months">{months}</div>
             <div className="budget-general">
-                <div className={"card-1 card-budget-toSpend " + (budget.toSpend > 0 ? 'positive' : 'negative')}>
-                    <div className="card-1-header">
-                        <div className="title">{setCurrency(budget.toSpend)}</div>
+                <div className="budget-general-container">
+                    <div className={"card-1 card-budget-toSpend " + (budget.toSpend > 0 ? 'positive' : 'negative')}>
+                        <div className="card-1-header">
+                            <div className="title">{setCurrency(budget.toSpend)}</div>
+                        </div>
+                        <div className="card-1-body">
+                            <p>
+                                Reste à dépenser pour {budget.monthString} <br/>
+                                Compte au début du mois {setCurrency(budget.initMonth)}
+                            </p>
+                        </div>
                     </div>
-                    <div className="card-1-body">
-                        <p>
-                            Reste à dépenser pour {budget.monthString} <br/>
-                            Compte au début du mois {setCurrency(budget.initMonth)}
-                        </p>
+                    <div className="card-1 card-comment">
+                        <div className="card-1-header">
+                            <div className="title">Quoi de neuf ?</div>
+                        </div>
+                        <div className="card-1-body">
+                            <p>{budget.comment ? budget.comment : "Rien ce mois-ci."}</p>
+                        </div>
+                        <div className="card-1-footer">
+                            <div className="items">
+                                <div className="item">
+                                    <div className="btn-icon">
+                                        <span className="icon-pencil"></span><span className="tooltip">{budget.comment ? "Modifier" : "Ajouter"}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
