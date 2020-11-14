@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Budget
 {
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 'comment',
+                               'regularSpends' => ['id', 'name', 'price'],
+                               'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name', 'total', 'fill'] ],
+                               'outgos' => ['id', 'name', 'price'],
+                               'incomes' => ['id', 'name', 'price'],
+                            ];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

@@ -17,13 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DonneeController extends AbstractController
 {
-    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 
-                               'regularSpends' => ['id', 'name', 'price'],
-                               'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name', 'total', 'fill'] ],
-                               'outgos' => ['id', 'name', 'price'],
-                               'incomes' => ['id', 'name', 'price'],
-                            ];
-
     /** 
      * @Route("/{type}/{id}/ajouter", options={"expose"=true}, name="add")
      */
@@ -87,8 +80,8 @@ class DonneeController extends AbstractController
         }
         
         $em->persist($budget); $em->persist($donnee); $em->flush();
-        $budget = $serializer->getSerializeData($budget, self::ATTRIBUTES_BUDGET);
-        $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);
+        $budget = $serializer->getSerializeData($budget, Budget::ATTRIBUTES_BUDGET);
+        $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
         return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
     }
 
@@ -126,8 +119,8 @@ class DonneeController extends AbstractController
 
         $em->persist($budget); $em->remove($donnee); $em->flush();
 
-        $budget = $serializer->getSerializeData($donnee->getBudget(), self::ATTRIBUTES_BUDGET);
-        $budgets = $serializer->getSerializeData($budgets, self::ATTRIBUTES_BUDGET);
+        $budget = $serializer->getSerializeData($donnee->getBudget(), Budget::ATTRIBUTES_BUDGET);
+        $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
         return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
     }
 }

@@ -29,6 +29,7 @@
         "aos": "^2.3.4",
         "axios": "^0.19.2",
         "babel-plugin-loop-optimizer": "^1.4.1",
+        "html-to-react": "^1.4.5",
         "js-cookie": "^2.2.1",
         "normalize.css": "^8.0.1",
         "prop-types": "^15.7.2",

@@ -11,7 +11,9 @@ import {Page}             from '@reactFolder/composants/page/Page';
 
 import {Donnee}           from './Donnee';
 import {Goal}           from './Goal';
+import {Comment}           from './Comment';
 
+let HtmlToReactParser = require('html-to-react').Parser;
 
 function setCurrency(price){
     return new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"}).format(price);
@@ -28,13 +30,18 @@ export class Budget extends Component {
             goals: JSON.parse(props.goals),
         }
 
-        this.aside = React.createRef();
+        this.asideGoal = React.createRef();
         this.donnee = React.createRef();
 
-        this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
+        this.asideComment = React.createRef();
+
+        this.handleUpdateBudgets = this.handleUpdateBudgets.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
         this.handleChangeYear = this.handleChangeYear.bind(this)
-        this.handleOpenAside = this.handleOpenAside.bind(this)
+
+        this.handleOpenAsideComment = this.handleOpenAsideComment.bind(this)
+        this.handleOpenAsideGoal = this.handleOpenAsideGoal.bind(this)
+
         this.handleCloseAside = this.handleCloseAside.bind(this)
         this.handleUpdateGoal = this.handleUpdateGoal.bind(this)
     }
@@ -44,7 +51,7 @@ export class Budget extends Component {
         this.setState({ budget: budget[0] })
     }
 
-    handleUpdateBudget = (bu, bus) => {
+    handleUpdateBudgets = (bu, bus) => {
         this.setState({ budgets: JSON.parse(bus), budget: JSON.parse(bu) })
     }
 
@@ -56,7 +63,8 @@ export class Budget extends Component {
     }
 
     handleCloseAside = () => {
-        this.aside.current.handleClose()
+        this.asideGoal.current.handleClose()
+        this.asideComment.current.handleClose()
     }
 
     handleChangeYear = (direction, y) => {
@@ -73,9 +81,8 @@ export class Budget extends Component {
         });
     }
 
-    handleOpenAside = () => {
-        this.aside.current.handleUpdate('Créer un objectif')
-    }
+    handleOpenAsideGoal = () => { this.asideGoal.current.handleUpdate("Créer un objectif") }
+    handleOpenAsideComment = (type) => { this.asideComment.current.handleUpdate(type + ' - Quoi de neuf ?') }
 
     render () {
         const {budgets, budget, previousBudget, goals} = this.state
@@ -98,6 +105,8 @@ export class Budget extends Component {
                 <div className="item" onClick={e => this.handleChangeYear('next', budget.year+1)}><span className="icon-right-arrow"></span></div>
             </div>
         </div>
+        
+        let htmlToReactParser = new HtmlToReactParser()
 
         let content = <div>
             <div className="budget-months">{months}</div>
@@ -119,12 +128,12 @@ export class Budget extends Component {
                             <div className="title">Quoi de neuf ?</div>
                         </div>
                         <div className="card-1-body">
-                            <p>{budget.comment ? budget.comment : "Rien ce mois-ci."}</p>
+                            <p>{budget.comment ? htmlToReactParser.parse(budget.comment) : "Rien ce mois-ci."}</p>
                         </div>
                         <div className="card-1-footer">
                             <div className="items">
                                 <div className="item">
-                                    <div className="btn-icon">
+                                    <div className="btn-icon" onClick={() => {this.handleOpenAsideComment(budget.comment ? "Modifier" : "Ajouter")}}>
                                         <span className="icon-pencil"></span><span className="tooltip">{budget.comment ? "Modifier" : "Ajouter"}</span>
                                     </div>
                                 </div>
@@ -135,27 +144,29 @@ export class Budget extends Component {
             </div>
             <div className="budget-cards">
                 <div className="budget-cards-container">
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
+                    <Donnee id={budget.id} onUpdateBudgets={this.handleUpdateBudgets}
                             type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" 
                     />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
+                    <Donnee id={budget.id} onUpdateBudgets={this.handleUpdateBudgets}
                             type="income" donnees={budget.incomes} title="Gains réguliers" 
                     />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} goals={goals} onOpenAside={this.handleOpenAside} ref={this.donnee}
+                    <Donnee id={budget.id} onUpdateBudgets={this.handleUpdateBudgets} goals={goals} onOpenAside={this.handleOpenAsideGoal} ref={this.donnee}
                             type="economy" donnees={budget.economies} title="Economies" 
                     />
                 </div>
             </div>
             <div className="budget-outgos">
-                <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} type="outgo" donnees={budget.outgos} title="Dépenses occasionnelles" />
+                <Donnee id={budget.id} onUpdateBudgets={this.handleUpdateBudgets} type="outgo" donnees={budget.outgos} title="Dépenses occasionnelles" />
             </div>
         </div>
 
         let asideContent = <Goal onUpdateGoal={this.handleUpdateGoal} onCloseAside={this.handleCloseAside} />
+        let asideComment = <Comment id={budget.id} comment={budget.comment} onUpdateBudgets={this.handleUpdateBudgets} onCloseAside={this.handleCloseAside} />
 
         return <>
             <Page infos={infos} content={content} />
-            <Aside content={asideContent} ref={this.aside} />
+            <Aside content={asideContent} ref={this.asideGoal} />
+            <Aside content={asideComment} ref={this.asideComment} />
         </>
     }
 }

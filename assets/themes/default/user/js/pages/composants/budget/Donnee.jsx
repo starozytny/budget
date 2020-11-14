@@ -49,7 +49,7 @@ export class Donnee extends Component {
                     let data = response.data; let code = data.code; Loader.loader(false)
 
                     if(code === 1){
-                        self.props.onUpdateBudget(data.budget, data.budgets)
+                        self.props.onUpdateBudgets(data.budget, data.budgets)
                         toastr.info('Suppression réussie.')
                     }else{
                         toastr.error(data.message)
@@ -77,7 +77,7 @@ export class Donnee extends Component {
                 let data = response.data; let code = data.code; Loader.loader(false)
 
                 if(code === 1){
-                    self.props.onUpdateBudget(data.budget, data.budgets)
+                    self.props.onUpdateBudgets(data.budget, data.budgets)
                     self.setState({ 
                         name: {value: '', error: ''},
                         price: {value: '', error: ''}
