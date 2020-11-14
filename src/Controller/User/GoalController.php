@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class GoalController extends AbstractController
 {    
+
+    const ATTRIBUTES_GOAL = ['id', 'name', 'total', 'fill'];
+
     /**
      * @Route("/", options={"expose"=true}, name="index")
      */
@@ -47,13 +50,14 @@ class GoalController extends AbstractController
         }
 
         $newGoal = (new Goal())
-            ->setUser($this->getUser())
+            ->setUser($user)
             ->setName($name)
             ->setTotal($total)
         ;
 
         $em->persist($newGoal); $em->flush();
-        $newGoal = $serializer->getSerializeData($newGoal, Goal::ATTRIBUTES_GOAL);
+        $newGoal = $serializer->getSerializeData($newGoal, self::ATTRIBUTES_GOAL);
+
         return new JsonResponse(['code' => 1, 'goal' => $newGoal]);
     }
 

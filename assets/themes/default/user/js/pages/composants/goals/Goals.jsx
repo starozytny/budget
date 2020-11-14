@@ -123,19 +123,21 @@ export class Goals extends Component {
         let items = goals.map(elem => {
 
             let totNow = 0, prevYear = 0, prevMonth = 0, finalYear = 0, finalMonth = 0;
-            elem.economies.forEach(eco => {
-                let y = eco.budget.year
-                let m = eco.budget.month
-                if( (y < now.getFullYear()) || (y == now.getFullYear() && m <= now.getMonth() + 1) ){
-                    totNow += eco.price
-                }
-
-                if((prevYear < y) || (prevYear == y && prevMonth < m) || (prevYear > y)){
-                    finalYear = y; finalMonth = m;
-                }
-
-                prevYear = y; prevMonth = m;
-            })
+            if(elem.economies){
+                elem.economies.forEach(eco => {
+                    let y = eco.budget.year
+                    let m = eco.budget.month
+                    if( (y < now.getFullYear()) || (y == now.getFullYear() && m <= now.getMonth() + 1) ){
+                        totNow += eco.price
+                    }
+    
+                    if((prevYear < y) || (prevYear == y && prevMonth < m) || (prevYear > y)){
+                        finalYear = y; finalMonth = m;
+                    }
+    
+                    prevYear = y; prevMonth = m;
+                })
+            }
 
             let total = elem.total
             let nPourcentage = Math.round((totNow/total)*100)
@@ -217,7 +219,7 @@ export class Goals extends Component {
         let content = <div className="liste">
             <div className="card-container">
                 <div className="cards-items">
-                    {items}
+                    {items.length != 0 ? items : 'Aucune donnée.'}
                 </div>
             </div>
         </div>
