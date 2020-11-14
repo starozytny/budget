@@ -29,11 +29,13 @@ export class Budget extends Component {
         }
 
         this.aside = React.createRef();
+        this.donnee = React.createRef();
 
         this.handleUpdateBudget = this.handleUpdateBudget.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
         this.handleChangeYear = this.handleChangeYear.bind(this)
         this.handleOpenAside = this.handleOpenAside.bind(this)
+        this.handleCloseAside = this.handleCloseAside.bind(this)
         this.handleUpdateGoal = this.handleUpdateGoal.bind(this)
     }
 
@@ -48,7 +50,13 @@ export class Budget extends Component {
 
     handleUpdateGoal = (goal) => {
         const {goals} = this.state
+
         this.setState({ goals: ActionsArray.addOrUpdateInArray(goals, goal) })
+        this.donnee.current.handleSelectGoal(JSON.parse(goal))
+    }
+
+    handleCloseAside = () => {
+        this.aside.current.handleClose()
     }
 
     handleChangeYear = (direction, y) => {
@@ -111,7 +119,7 @@ export class Budget extends Component {
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
                             type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" 
                     />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} goals={goals} onOpenAside={this.handleOpenAside}
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} goals={goals} onOpenAside={this.handleOpenAside} ref={this.donnee}
                             type="economy" donnees={budget.economies} title="Economies" 
                     />
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
@@ -124,7 +132,7 @@ export class Budget extends Component {
             </div>
         </div>
 
-        let asideContent = <Goal onUpdateGoal={this.handleUpdateGoal}/>
+        let asideContent = <Goal onUpdateGoal={this.handleUpdateGoal} onCloseAside={this.handleCloseAside} />
 
         return <>
             <Page infos={infos} content={content} />

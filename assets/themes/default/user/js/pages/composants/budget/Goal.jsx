@@ -49,10 +49,10 @@ export class Goal extends Component {
                 let data = response.data; let code = data.code; Loader.loader(false)
 
                 if(code === 1){
-                    
                     self.props.onUpdateGoal(data.goal)
+                    self.props.onCloseAside()
                 }else{
-                    self.setState({error: data.message})
+                    self.setState({ name: {value: name.value, error: data.message} })
                 }
             });
         }

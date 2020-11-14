@@ -26,6 +26,7 @@ export class Donnee extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
+        this.handleSelectGoal = this.handleSelectGoal.bind(this)
     }
 
     handleChange = (e) => {
@@ -86,7 +87,11 @@ export class Donnee extends Component {
                 }
             });
         }
-    } 
+    }
+
+    handleSelectGoal = (goal) => {
+        this.setState({ goal: {value: goal.id, error: ''} })
+    }
 
     render () {
         const {id, type, donnees, title, goals, onOpenAside} = this.props
@@ -112,13 +117,13 @@ export class Donnee extends Component {
                     pourcentage = Math.round((elem.goal.fill/elem.goal.total)*100)
                     goalDiff = elem.goal.fill - elem.goal.total
                     
-                    if(pourcentage > 0 && pourcentage < 25){
+                    if(pourcentage > 0 && pourcentage <= 25){
                         pourcentage = 25
-                    }else if(pourcentage >= 25 && pourcentage < 50){
+                    }else if(pourcentage > 25 && pourcentage <= 50){
                         pourcentage = 50
-                    }else if(pourcentage >= 50 && pourcentage < 75){
+                    }else if(pourcentage > 50 && pourcentage <= 75){
                         pourcentage = 75
-                    }else if(pourcentage >= 75 && pourcentage < 100){
+                    }else if(pourcentage > 75 && pourcentage <= 100){
                         pourcentage = 85
                     }else{
                         pourcentage = 100
