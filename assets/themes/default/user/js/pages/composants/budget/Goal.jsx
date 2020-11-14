@@ -18,11 +18,23 @@ export class Goal extends Component {
         super ()
 
         this.state = {
+            type: "add",
+            id: null,
             name: {value: '', error: ''},
             total: {value: '', error: ''}
         }
 
         this.handleChange = this.handleChange.bind(this)
+        this.handleUpdateState = this.handleUpdateState.bind(this)
+    }
+
+    handleUpdateState = (type, id, name, total) => {
+        this.setState({
+            type: type,
+            id: id,
+            name: {value: name, error: ''},
+            total: {value: total, error: ''}
+        })
     }
 
     handleChange = (e) => {
@@ -32,7 +44,7 @@ export class Goal extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         
-        const {name, total} = this.state
+        const {type, id, name, total} = this.state
 
         let validate = Validateur.validateur([
             {type: "text", id: 'name', value: name.value},
@@ -44,8 +56,10 @@ export class Goal extends Component {
         }else{
             Loader.loader(true)
 
+            let url = type == "add" ? Routing.generate('user_goals_add') : Routing.generate('user_goals_edit', {'id': id})
+
             let self = this
-            axios({ method: 'post', url:  Routing.generate('user_goals_add'), data: self.state }).then(function (response) {
+            axios({ method: 'post', url: url, data: self.state }).then(function (response) {
                 let data = response.data; let code = data.code; Loader.loader(false)
 
                 if(code === 1){
@@ -59,7 +73,7 @@ export class Goal extends Component {
     }
 
     render () {
-        const {name, total} = this.state
+        const {type, name, total} = this.state
 
         return <form onSubmit={this.handleSubmit}>
             <div className="line line-2">
@@ -67,7 +81,7 @@ export class Goal extends Component {
                 <Input type="number" identifiant="total" valeur={total} onChange={this.handleChange}>Total</Input>
             </div>
             <div className="form-button">
-                <button type="submit" className="btn btn-primary"><span>Ajouter</span></button>
+                <button type="submit" className="btn btn-primary"><span>{type == "add" ? "Ajouter" : "Modifier"}</span></button>
             </div>
         </form>
     }

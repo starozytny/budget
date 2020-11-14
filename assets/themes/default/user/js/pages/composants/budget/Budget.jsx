@@ -32,6 +32,7 @@ export class Budget extends Component {
 
         this.asideGoal = React.createRef();
         this.donnee = React.createRef();
+        this.goal = React.createRef();
 
         this.asideComment = React.createRef();
         this.comment = React.createRef();
@@ -61,6 +62,7 @@ export class Budget extends Component {
 
         this.setState({ goals: ActionsArray.addOrUpdateInArray(goals, goal) })
         this.donnee.current.handleSelectGoal(JSON.parse(goal))
+        this.goal.current.handleUpdateState("add", null, '', '')
     }
 
     handleCloseAside = () => {
@@ -165,7 +167,7 @@ export class Budget extends Component {
             </div>
         </div>
 
-        let asideContent = <Goal onUpdateGoal={this.handleUpdateGoal} onCloseAside={this.handleCloseAside} />
+        let asideContent = <Goal ref={this.goal} onUpdateGoal={this.handleUpdateGoal} onCloseAside={this.handleCloseAside} />
         let asideComment = <Comment id={budget.id} ref={this.comment} onUpdateBudgets={this.handleUpdateBudgets} onCloseAside={this.handleCloseAside} />
 
         return <>

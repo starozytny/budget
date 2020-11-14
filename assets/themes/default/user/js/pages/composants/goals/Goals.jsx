@@ -58,28 +58,33 @@ export class Goals extends Component {
         }
 
         this.asideGoal = React.createRef()
+        this.goal = React.createRef()
 
         this.handleAdd = this.handleAdd.bind(this)
         this.handleCloseAside = this.handleCloseAside.bind(this)
         this.handleUpdateGoal = this.handleUpdateGoal.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
+        this.handleEdit = this.handleEdit.bind(this)
     }
 
     handleAdd = () => {
         this.asideGoal.current.handleUpdate("Créer un objectif")
+        this.goal.current.handleUpdateState("add", null, '', '')
     }
 
-    
+    handleEdit = (id, name, total) => {
+        this.asideGoal.current.handleUpdate("Modifier un " + name)
+        this.goal.current.handleUpdateState("edit", id, name, total)
+    }
+
     handleUpdateGoal = (goal) => {
         const {goals} = this.state
 
         this.setState({ goals: ActionsArray.addOrUpdateInArray(goals, goal) })
-        this.donnee.current.handleSelectGoal(JSON.parse(goal))
     }
 
     handleCloseAside = () => {
         this.asideGoal.current.handleClose()
-        this.asideComment.current.handleClose()
     }
 
     handleDelete = (id) => {
@@ -199,7 +204,10 @@ export class Goals extends Component {
                 <div className="card-1-footer">
                     <div className="items">
                         <div className="item">
-                            <div className="btn-icon" onClick={() => this.handleDelete(elem.id)}><span className="icon-trash"></span></div>
+                            <div className="btn-icon" onClick={() => this.handleDelete(elem.id)}><span className="icon-trash"></span><span className="tooltip">Supprimer</span></div>
+                        </div>
+                        <div className="item">
+                            <div className="btn-icon" onClick={() => this.handleEdit(elem.id, elem.name, elem.total)}><span className="icon-pencil"></span><span className="tooltip">Modifier</span></div>
                         </div>
                     </div>
                 </div>
@@ -215,7 +223,7 @@ export class Goals extends Component {
         </div>
 
         
-        let asideContent = <Goal onUpdateGoal={this.handleUpdateGoal} onCloseAside={this.handleCloseAside} />
+        let asideContent = <Goal ref={this.goal} onUpdateGoal={this.handleUpdateGoal} onCloseAside={this.handleCloseAside} />
 
         return <>
             <Page content={content} 
