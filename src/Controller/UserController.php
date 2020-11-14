@@ -65,6 +65,7 @@ class UserController extends AbstractController
         $previousBudget = $em->getRepository(Budget::class)->findOneBy(['year' => $year-1, 'month' => 12, 'user' => $user]);
         $budget = $em->getRepository(Budget::class)->findOneBy(['year' => $year, 'month' => 1, 'user' => $user]);
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $year, 'user' => $user], ['month' => 'ASC']);
+        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
 
         if(!$budget){
             if($direction == 'previous'){
@@ -112,6 +113,7 @@ class UserController extends AbstractController
         $em->persist($budget); $em->flush();
         $budget = $serializer->getSerializeData($budget, Budget::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
-        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
+        $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);
+        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget, 'goals' => $goals]);
     }
 }

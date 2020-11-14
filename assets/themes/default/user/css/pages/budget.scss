@@ -224,6 +224,7 @@
         background-color: var(--success);
         height: 3px;
         display: block;
+        transition: all 0.2s ease;
     }
 
     &.progress-overkill{

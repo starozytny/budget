@@ -4,7 +4,7 @@ import toastr             from 'toastr';
 import axios              from 'axios';
 import Swal               from 'sweetalert2';
 
-import {Input}    from '@reactFolder/composants/Fields';
+import {Input}            from '@reactFolder/composants/Fields';
 import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 import Loader             from '@reactFolder/functions/loader';
 import Validateur         from '@reactFolder/functions/validateur';

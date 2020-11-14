@@ -77,11 +77,14 @@ class DonneeController extends AbstractController
                 $budgetService->addRegularDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price);
             }
         }
+
+        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
         
         $em->persist($budget); $em->persist($donnee); $em->flush();
         $budget = $serializer->getSerializeData($budget, Budget::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
-        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
+        $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);
+        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget, 'goals' => $goals]);
     }
 
     /**
@@ -125,8 +128,11 @@ class DonneeController extends AbstractController
 
         $em->persist($budget); $em->remove($donnee); $em->flush();
 
+        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
+
         $budget = $serializer->getSerializeData($donnee->getBudget(), Budget::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
-        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget]);
+        $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);
+        return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget, 'goals' => $goals]);
     }
 }

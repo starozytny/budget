@@ -52,8 +52,8 @@ export class Budget extends Component {
         this.setState({ budget: budget[0] })
     }
 
-    handleUpdateBudgets = (bu, bus) => {
-        this.setState({ budgets: JSON.parse(bus), budget: JSON.parse(bu) })
+    handleUpdateBudgets = (bu, bus, goals) => {
+        this.setState({ budgets: JSON.parse(bus), budget: JSON.parse(bu), goals: JSON.parse(goals) })
     }
 
     handleUpdateGoal = (goal) => {

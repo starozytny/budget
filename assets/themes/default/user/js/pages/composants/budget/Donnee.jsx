@@ -49,7 +49,7 @@ export class Donnee extends Component {
                     let data = response.data; let code = data.code; Loader.loader(false)
 
                     if(code === 1){
-                        self.props.onUpdateBudgets(data.budget, data.budgets)
+                        self.props.onUpdateBudgets(data.budget, data.budgets, data.goals)
                         toastr.info('Suppression réussie.')
                     }else{
                         toastr.error(data.message)
@@ -77,7 +77,7 @@ export class Donnee extends Component {
                 let data = response.data; let code = data.code; Loader.loader(false)
 
                 if(code === 1){
-                    self.props.onUpdateBudgets(data.budget, data.budgets)
+                    self.props.onUpdateBudgets(data.budget, data.budgets, data.goals)
                     self.setState({ 
                         name: {value: '', error: ''},
                         price: {value: '', error: ''}
@@ -109,7 +109,7 @@ export class Donnee extends Component {
                 let tot = 0;
 
                 elem.economy.forEach(eco => {
-                    if(eco.budget.year == budget.year && eco.budget.month <= budget.month){
+                    if( (eco.budget.year < budget.year) || (eco.budget.year == budget.year && eco.budget.month <= budget.month) ){
                         tot += eco.price
                     }
                 })
