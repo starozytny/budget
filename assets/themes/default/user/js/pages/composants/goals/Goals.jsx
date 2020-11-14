@@ -5,11 +5,10 @@ import axios              from 'axios';
 import Swal               from 'sweetalert2';
 
 import {Page}             from '@reactFolder/composants/page/Page';
-import {Aside}             from '@reactFolder/composants/page/Aside';
-import {Input}            from '@reactFolder/composants/Fields';
+import {Aside}            from '@reactFolder/composants/page/Aside';
 import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 import Loader             from '@reactFolder/functions/loader';
-import Validateur         from '@reactFolder/functions/validateur';
+import ActionsArray       from '@reactFolder/functions/actions_array';
 
 import {Goal}           from '../budget/Goal';
 
@@ -47,6 +46,7 @@ export class Goals extends Component {
         this.handleAdd = this.handleAdd.bind(this)
         this.handleCloseAside = this.handleCloseAside.bind(this)
         this.handleUpdateGoal = this.handleUpdateGoal.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
     }
 
     handleAdd = () => {
@@ -66,6 +66,35 @@ export class Goals extends Component {
         this.asideComment.current.handleClose()
     }
 
+    handleDelete = (id) => {
+        Swal.fire({
+            title: 'Etes-vous sûr ?',
+            text: "La suppression est définitive.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, je confirme',
+            cancelButtonText: 'Annuler'
+          }).then((result) => {
+            if (result.value) {
+                Loader.loader(true)
+                let self = this
+                axios({ method: 'post', url: Routing.generate('user_goals_delete', {'id': id}) }).then(function (response) {
+                    let data = response.data; let code = data.code; Loader.loader(false)
+
+                    if(code === 1){
+                        let goal = self.state.goals.filter(v => v.id == id)
+                        self.setState({
+                            goals: ActionsArray.deleteInArray(self.state.goals, goal[0])
+                        })
+                        toastr.info('Suppression réussie.')
+                    }else{
+                        toastr.error(data.message)
+                    }
+                });
+            }
+          })
+    }
+
     render () {
         const {goals} = this.state
 
@@ -73,7 +102,7 @@ export class Goals extends Component {
         let items = goals.map(elem => {
 
             let totNow = 0, prevYear = 0, prevMonth = 0, finalYear = 0, finalMonth = 0;
-            elem.economy.forEach(eco => {
+            elem.economies.forEach(eco => {
                 let y = eco.budget.year
                 let m = eco.budget.month
                 if( (y < now.getFullYear()) || (y == now.getFullYear() && m <= now.getMonth() + 1) ){
@@ -103,14 +132,14 @@ export class Goals extends Component {
                     </div>
 
                     <div className="progress">
-                        <div>Total atteint en {getMonthString(finalMonth-1).toLowerCase()} {finalYear}</div>
+                        <div>Total atteint {elem.fill < elem.total ? 'indéterminé' : "en " + getMonthString(finalMonth-1).toLowerCase() + " " + finalYear}</div>
                         <div>{setCurrency(elem.fill)} / {setCurrency(elem.total)}</div>
                     </div>                    
                 </div>
                 <div className="card-1-footer">
                     <div className="items">
                         <div className="item">
-                            
+                            <div className="btn-icon" onClick={() => this.handleDelete(elem.id)}><span className="icon-trash"></span></div>
                         </div>
                     </div>
                 </div>

@@ -22,7 +22,7 @@ class GoalController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
-        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
+        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user], ['name' => 'ASC']);
 
         $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);     
         return $this->render('root/user/pages/goals/index.html.twig', [
@@ -56,4 +56,27 @@ class GoalController extends AbstractController
         $newGoal = $serializer->getSerializeData($newGoal, Goal::ATTRIBUTES_GOAL);
         return new JsonResponse(['code' => 1, 'goal' => $newGoal]);
     }
+
+    /**
+     * @Route("/supprimer/{id}", options={"expose"=true}, name="delete")
+     */
+    public function delete($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $goal = $em->getRepository(Goal::class)->find($id);
+        if(!$goal){
+            return new JsonResponse(['code' => 0, 'message' => 'Cet objectif n\'existe pas.']);
+        }
+        
+        if($goal->getEconomies()){
+            foreach($goal->getEconomies() as $eco){
+                $eco->setGoal(null);
+            }
+        }
+
+        $em->remove($goal); $em->flush();
+        return new JsonResponse(['code' => 1]);
+    }
+
 }

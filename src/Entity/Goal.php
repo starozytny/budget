@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Goal
 {
-    const ATTRIBUTES_GOAL = ['id', 'name', 'fill', 'total', 'economy' => ['id', 'price', 'budget' => ['id', 'year', 'month']]];
+    const ATTRIBUTES_GOAL = ['id', 'name', 'fill', 'total', 'economies' => ['id', 'price', 'budget' => ['id', 'year', 'month']]];
 
     /**
      * @ORM\Id
@@ -34,7 +34,7 @@ class Goal
     /**
      * @ORM\OneToMany(targetEntity=Economy::class, mappedBy="goal")
      */
-    private $economy;
+    private $economies;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="goals")
@@ -85,15 +85,15 @@ class Goal
     /**
      * @return Collection|Economy[]
      */
-    public function getEconomy(): Collection
+    public function getEconomies(): Collection
     {
-        return $this->economy;
+        return $this->economies;
     }
 
     public function addEconomy(Economy $economy): self
     {
-        if (!$this->economy->contains($economy)) {
-            $this->economy[] = $economy;
+        if (!$this->economies->contains($economy)) {
+            $this->economies[] = $economy;
             $economy->setGoal($this);
         }
 
@@ -102,8 +102,8 @@ class Goal
 
     public function removeEconomy(Economy $economy): self
     {
-        if ($this->economy->contains($economy)) {
-            $this->economy->removeElement($economy);
+        if ($this->economies->contains($economy)) {
+            $this->economies->removeElement($economy);
             // set the owning side to null (unless already changed)
             if ($economy->getGoal() === $this) {
                 $economy->setGoal(null);

@@ -108,7 +108,7 @@ export class Donnee extends Component {
 
                 let tot = 0;
 
-                elem.economy.forEach(eco => {
+                elem.economies.forEach(eco => {
                     if( (eco.budget.year < budget.year) || (eco.budget.year == budget.year && eco.budget.month <= budget.month) ){
                         tot += eco.price
                     }
