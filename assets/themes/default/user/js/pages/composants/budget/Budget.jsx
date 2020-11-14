@@ -119,11 +119,11 @@ export class Budget extends Component {
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
                             type="regularSpend" donnees={budget.regularSpends} title="Dépenses régulières" 
                     />
+                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
+                            type="income" donnees={budget.incomes} title="Gains réguliers" 
+                    />
                     <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget} goals={goals} onOpenAside={this.handleOpenAside} ref={this.donnee}
                             type="economy" donnees={budget.economies} title="Economies" 
-                    />
-                    <Donnee id={budget.id} onUpdateBudget={this.handleUpdateBudget}
-                            type="income" donnees={budget.incomes} title="Entrées d'argent" 
                     />
                 </div>
             </div>

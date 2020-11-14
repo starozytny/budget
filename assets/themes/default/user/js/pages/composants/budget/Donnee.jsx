@@ -144,8 +144,13 @@ export class Donnee extends Component {
         
         return <div className="card-1 card-budget">
             <div className="card-1-header">
-                <div className="title">{title}</div>
-                <div className="subtitle">{setCurrency(total)}</div>
+                <div className={"card-1-header-type " + type}>
+                    <span className="icon-bookmark"></span>
+                </div>
+                <div className="card-1-header-infos">
+                    <div className="title">{title}</div>
+                    <div className="subtitle">{setCurrency(total)}</div>
+                </div>
             </div>
             <div className="card-1-body">
                 {items}

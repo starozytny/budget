@@ -83,10 +83,30 @@
 }
 
 .card-budget{
+
+    .card-1-header{
+        @include flex(column, center, flex-start);
+        border-bottom: 1px solid var(--color5);
+        padding-right: 0; padding-left: 0;
+        margin-right: 12px; margin-left: 12px;
+    }
+
+    .card-1-header-type{
+        width: 46px; height: 46px;
+        background-color: var(--colorDisabled);
+        border-radius: 50px;
+        @include flex(row, center, center);
+    }
+
+    .card-1-header-infos{
+        text-align: center;
+        width: 100%;
+        margin-top: 12px;
+    }
+
     .subtitle{
         margin-top: 4px;
         padding-bottom: 12px;
-        border-bottom: 1px solid var(--color5);
     }
 
     .card-1-body{
@@ -137,10 +157,6 @@
                     select{
                         width: 100%;
                     }
-
-                    // & + .item-price{
-                    //     width: 18%;
-                    // }
                 }
             }
 
@@ -224,6 +240,21 @@
             @include flex(row, flex-start, flex-start);
             flex-wrap: wrap;
             width: calc(100% + 24px);
+        }
+    }
+    .card-budget{
+
+        .card-1-header{
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+    
+        .card-1-header-infos{
+            text-align: left;
+            margin-left: 24px;
+            margin-top: 0;
+            width: calc(100% - 46px - 24px);
         }
     }
     .budget-outgos{
