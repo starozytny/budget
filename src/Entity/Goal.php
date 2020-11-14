@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Goal
 {
+    const ATTRIBUTES_GOAL = ['id', 'name'];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

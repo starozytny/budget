@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/espace-utilisateur/budgets/", name="user_budgets_")
+ * @Route("/espace-utilisateur/budgets", name="user_budgets_")
  */
 class BudgetController extends AbstractController
 {

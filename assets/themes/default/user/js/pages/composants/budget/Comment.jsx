@@ -21,7 +21,6 @@ export class Comment extends Component {
     }
 
     handleUpdateComment = (comment) => {
-        console.log(comment)
         this.setState({comment: {value: comment == null ? '' : comment, error: '', html: comment}})
     }
 

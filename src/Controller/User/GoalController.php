@@ -10,11 +10,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/espace-utilisateur/objectifs/", name="user_goals_")
+ * @Route("/espace-utilisateur/objectifs", name="user_goals_")
  */
 class GoalController extends AbstractController
-{
-    const ATTRIBUTES_GOAL = ['id', 'name'];
+{    
+    /**
+     * @Route("/", options={"expose"=true}, name="index")
+     */
+    public function index(SerializeData $serializer)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
+
+        $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);     
+        return $this->render('root/user/pages/goals/index.html.twig', [
+            'goals' => $goals,
+        ]);
+    }
 
     /**
      * @Route("/ajouter", options={"expose"=true}, name="add")
@@ -39,7 +53,7 @@ class GoalController extends AbstractController
         ;
 
         $em->persist($newGoal); $em->flush();
-        $newGoal = $serializer->getSerializeData($newGoal, self::ATTRIBUTES_GOAL);
+        $newGoal = $serializer->getSerializeData($newGoal, Goal::ATTRIBUTES_GOAL);
         return new JsonResponse(['code' => 1, 'goal' => $newGoal]);
     }
 }

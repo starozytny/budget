@@ -14,8 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    const ATTRIBUTES_GOAL = ['id', 'name'];
-
     /**
      * @Route("/espace-utilisateur", name="user_dashboard")
      */
@@ -45,7 +43,7 @@ class UserController extends AbstractController
         $budget = $serializer->getSerializeData($budget, Budget::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
         $previousBudget = $serializer->getSerializeData($previousBudget, Budget::ATTRIBUTES_BUDGET);
-        $goals = $serializer->getSerializeData($goals, self::ATTRIBUTES_GOAL);
+        $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);
 
         return $this->render('root/user/index.html.twig', [
             'budgets' => $budgets,
