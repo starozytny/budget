@@ -59,7 +59,6 @@ class DonneeController extends AbstractController
                     return new JsonResponse(['code' => 0, 'message' => 'L\'objectif n\'existe pas. Veuillez contacter le support.']);
                 }
             }
-            
         }
 
         //add data to this budget
@@ -114,6 +113,13 @@ class DonneeController extends AbstractController
             $today = $calendarService->getToday();
             if($budget->getYear() >= $today['year'] && $budget->getMonth() >= $today['mon']){
                 $budgetService->removeRegulatDonneeToNextBudget($type, $budgets, $budget, $isAddition, $donnee->getName(), $donnee->getPrice());
+            }
+        }
+
+        if($type == "economy"){
+            $goal = $donnee->getGoal();
+            if($goal){
+                $goal->setFill($goal->getFill() - $donnee->getPrice());
             }
         }
 
