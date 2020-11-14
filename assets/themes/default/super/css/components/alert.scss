@@ -23,7 +23,8 @@ $types:
     "primary" var(--primary) var(--primaryRGBA),
     "info" var(--primary) var(--primaryRGBA),
     "warning" var(--warning) var(--warningRGBA),
-    "success" var(--success) var(--successRGBA);
+    "success" var(--success) var(--successRGBA),
+    "question" var(--beta) var(--betaRGBA);
 
 @each $name, $color, $shadowColor in $types{
     .alert-#{$name}{

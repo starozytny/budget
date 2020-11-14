@@ -12,7 +12,7 @@ export class Comment extends Component {
         super ()
 
         this.state = {
-            comment: {value: props.comment == null ? '' : props.comment, error: '', html: props.comment}
+            comment: {value: '', error: '', html: ''}
         }
 
         this.trumbowyg = React.createRef();
@@ -20,7 +20,14 @@ export class Comment extends Component {
         this.handleChangeText = this.handleChangeText.bind(this)
     }
 
-    handleChangeText = (e) => { this.setState({comment: {value: this.props.comment == null ? '' : this.props.comment, error: '', html: e.currentTarget.innerHTML}}) }
+    handleUpdateComment = (comment) => {
+        console.log(comment)
+        this.setState({comment: {value: comment == null ? '' : comment, error: '', html: comment}})
+    }
+
+    handleChangeText = (e) => { 
+        this.setState({comment: {value: this.state.comment.value == null ? '' : this.state.comment.value, error: '', html: e.currentTarget.innerHTML}}) 
+    }
 
     handleSubmit = (e) => {
         e.preventDefault();

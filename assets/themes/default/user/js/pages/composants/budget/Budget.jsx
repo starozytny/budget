@@ -34,6 +34,7 @@ export class Budget extends Component {
         this.donnee = React.createRef();
 
         this.asideComment = React.createRef();
+        this.comment = React.createRef();
 
         this.handleUpdateBudgets = this.handleUpdateBudgets.bind(this)
         this.handleMonth = this.handleMonth.bind(this)
@@ -82,7 +83,10 @@ export class Budget extends Component {
     }
 
     handleOpenAsideGoal = () => { this.asideGoal.current.handleUpdate("Créer un objectif") }
-    handleOpenAsideComment = (type) => { this.asideComment.current.handleUpdate(type + ' - Quoi de neuf ?') }
+    handleOpenAsideComment = (type, comment) => { 
+        this.asideComment.current.handleUpdate(type + ' - Quoi de neuf ?') 
+        this.comment.current.handleUpdateComment(comment)
+    }
 
     render () {
         const {budgets, budget, previousBudget, goals} = this.state
@@ -110,6 +114,12 @@ export class Budget extends Component {
 
         let content = <div>
             <div className="budget-months">{months}</div>
+
+            {budget.month == 1 ? <div className="alert alert-question active">
+                <span className="icon-question"></span>
+                <p>Les gains et dépenses réguliers sont <b>réinitialisés</b> à chaque début d'années. Il est temps de faire un bilan de la situation !</p>
+            </div> : null}
+
             <div className="budget-general">
                 <div className="budget-general-container">
                     <div className={"card-1 card-budget-toSpend " + (budget.toSpend > 0 ? 'positive' : 'negative')}>
@@ -126,12 +136,12 @@ export class Budget extends Component {
                     <div className="card-1 card-comment">
                         <div className="card-1-header">
                             <div className="title">Quoi de neuf ?</div>
-                             <div className="btn-icon" onClick={() => {this.handleOpenAsideComment(budget.comment ? "Modifier" : "Ajouter")}}>
+                             <div className="btn-icon" onClick={() => {this.handleOpenAsideComment((budget.comment ? "Modifier" : "Ajouter"), budget.comment)}}>
                                 <span className="icon-pencil"></span><span className="tooltip tooltip-bot-right">{budget.comment ? "Modifier" : "Ajouter"}</span>
                             </div>
                         </div>
                         <div className="card-1-body">
-                            <p>{budget.comment ? htmlToReactParser.parse(budget.comment) : "Rien ce mois-ci."}</p>
+                            {budget.comment ? htmlToReactParser.parse(budget.comment) : <p>Rien ce mois-ci.</p>}
                         </div>
                         <div className="card-1-footer"> <div className="items"> <div className="item"></div> </div> </div>
                     </div>
@@ -156,7 +166,7 @@ export class Budget extends Component {
         </div>
 
         let asideContent = <Goal onUpdateGoal={this.handleUpdateGoal} onCloseAside={this.handleCloseAside} />
-        let asideComment = <Comment id={budget.id} comment={budget.comment} onUpdateBudgets={this.handleUpdateBudgets} onCloseAside={this.handleCloseAside} />
+        let asideComment = <Comment id={budget.id} ref={this.comment} onUpdateBudgets={this.handleUpdateBudgets} onCloseAside={this.handleCloseAside} />
 
         return <>
             <Page infos={infos} content={content} />
