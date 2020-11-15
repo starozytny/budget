@@ -6,7 +6,6 @@ import {Formulaire}       from '@reactFolder/composants/Formulaire';
 import Validateur         from '@reactFolder/functions/validateur';
 import AjaxSend           from '@reactFolder/functions/ajax_classique';
 
-
 export class FormLost extends Component {
     constructor(props) {
         super();

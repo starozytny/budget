@@ -1,8 +1,10 @@
 import '../../css/pages/security.scss';
 import React        from 'react';
 import ReactDOM     from 'react-dom';
+
 import {ButtonLost} from './components/security/FormLost';
 import {FormReinit} from './components/security/FormReinit';
+import {Register}   from './components/security/Register';
 
 formulaireLost();
 formulaireReinit();
@@ -27,4 +29,11 @@ function formulaireReinit(){
             form
         );
     }
+}
+
+let el = document.querySelector('#register')
+if(el != null){
+    ReactDOM.render(
+        <Register />, el
+    )
 }
