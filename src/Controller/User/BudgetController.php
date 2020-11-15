@@ -34,9 +34,11 @@ class BudgetController extends AbstractController
 
         $user = $this->getUser();
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
+        $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
 
         $budget = $serializer->getSerializeData($budget, Budget::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
+        $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);
         return new JsonResponse(['code' => 1, 'budget' => $budget, 'budgets' => $budgets]);
     }
 }
