@@ -3,7 +3,7 @@ import Routing            from '@publicFolder/bundles/fosjsrouting/js/router.min
 
 function setUnderlineActive(elementActive){
     let underline = document.querySelector('.nav-items-active');
-    if(underline){
+    if(underline && elementActive){
         underline.style.width = elementActive.offsetWidth + 'px'
         underline.style.left = elementActive.offsetLeft + 'px'
     }
@@ -59,8 +59,8 @@ export class Menu extends Component {
         return <>
             <nav className={menuOpened}>
                 <div className="nav-header">
-                    <a href={Routing.generate('app_homepage')} title="Chanbora Chhun">
-                        Shanbo
+                    <a href={Routing.generate('app_homepage')} title="Shanbo Budget">
+                        ShanboB
                     </a>
                     <div className="nav-header-actions">
                         <span className={"icon-menu " + (menuOpened == "" ? "active" : null)} onClick={onOpenMenu}></span>

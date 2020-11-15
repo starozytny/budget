@@ -1,5 +1,10 @@
 {% extends 'themes/default/base.html.twig' %}
 
+{% block noindex %}
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+{% endblock %}
+
 {% block title %}| Espace utilisateur Shanbo Budget{% endblock %}
 
 {% block stylesheets %}
