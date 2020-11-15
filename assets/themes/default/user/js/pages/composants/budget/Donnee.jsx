@@ -184,7 +184,7 @@ export class Donnee extends Component {
                         <Select valeur={goal} identifiant="goal" placeholder="Objectif" onChange={this.handleChange} items={goalsItems}></Select>
                     </div> : null}
                     <div className="item item-price">
-                        <Input type="number" valeur={price} identifiant="price" id={"price-" + type} placeholder="Prix €" onChange={this.handleChange} />
+                        <Input type="custom-number" valeur={price} identifiant="price" id={"price-" + type} placeholder="Prix €" onChange={this.handleChange} />
                     </div>
                     <div className="item">
                         <button type="submit" className="btn-icon"><span className="icon-plus"></span></button>

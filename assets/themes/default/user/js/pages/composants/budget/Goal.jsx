@@ -78,7 +78,7 @@ export class Goal extends Component {
         return <form onSubmit={this.handleSubmit}>
             <div className="line line-2">
                 <Input identifiant="name" valeur={name} onChange={this.handleChange}>Nom de l'objectif</Input>
-                <Input type="number" identifiant="total" valeur={total} onChange={this.handleChange}>Total</Input>
+                <Input type="custom-number" identifiant="total" valeur={total} onChange={this.handleChange}>Total</Input>
             </div>
             <div className="form-button">
                 <button type="submit" className="btn btn-primary"><span>{type == "add" ? "Ajouter" : "Modifier"}</span></button>
