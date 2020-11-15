@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
-use App\Entity\Newsletter;
 use App\Entity\Rgpd;
 use App\Service\Mailer;
 use App\Service\SettingsService;

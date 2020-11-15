@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Budget;
 use App\Entity\User;
+use App\Service\CalendarService;
 use App\Service\CheckTime;
 use App\Service\Mailer;
 use App\Service\SettingsService;
@@ -27,9 +29,10 @@ class SecurityController extends AbstractController
         if ($this->getUser()) {
             if ($this->isGranted('ROLE_SUPER_ADMIN')){
                 return $this->redirectToRoute('super_dashboard');
-            }
-            if ($this->isGranted('ROLE_ADMIN')){
+            }else if ($this->isGranted('ROLE_ADMIN')){
                 return $this->redirectToRoute('admin_dashboard');
+            }else if ($this->isGranted('ROLE_USER')){
+                return $this->redirectToRoute('user_dashboard');
             }
             return $this->redirectToRoute('app_homepage');
         }
@@ -45,8 +48,61 @@ class SecurityController extends AbstractController
     /**
      * @Route("/creation-de-compte", options={"expose"=true}, name="app_register")
      */
-    public function register()
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, CalendarService $calendarService)
     {
+        if($request->isMethod("POST")){
+            $em = $this->getDoctrine()->getManager();
+            $data = json_decode($request->getContent());
+            $username = $data->username->value;
+            $email = $data->email->value;
+            $password = $data->password->value;
+            $passwordConfirme = $data->passwordConfirme->value;
+            $solde = $data->solde->value;
+
+            if($password != $passwordConfirme){
+                return new JsonResponse(['code' => 0, 'message' => 'Les mots de passe ne sont pas identiques.']);
+            }
+
+            $existe = $em->getRepository(User::class)->findOneBy(['username' => $username]);
+            if($existe){
+                return new JsonResponse(['code' => 0, 'message' => 'Ce nom d\'utilisateur existe déjà.']);
+            }
+
+            $existe = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+            if($existe){
+                return new JsonResponse(['code' => 0, 'message' => 'Cet adresse e-mail existe déjà.']);
+            }
+
+            $user = (new User())
+                ->setUsername($username)
+                ->setEmail($email)
+                ->setIsNew(false)
+            ;
+
+            $user->setPassword($passwordEncoder->encodePassword($user, $password));
+
+            $em->persist($user);
+
+            $today = $calendarService->getToday();
+            for($m=1 ; $m<=12 ; $m++){
+                $init = ($m < $today['mon']) ? 0 : $solde;
+                
+                $budget = (new Budget())
+                    ->setYear($today['year'])
+                    ->setMonth($m)
+                    ->setToSpend($init)
+                    ->setInitMonth($init)
+                    ->setUser($user)
+                ;
+                
+                $em->persist($budget);
+            }
+
+            $em->flush();
+            $url = $this->generateUrl('app_login', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            return new JsonResponse(['code' => 1, 'message' => 'Création réussie. La page va se rafraichir automatiquement.', 'url' => $url]);
+        }
+
         return $this->render('root/app/pages/security/register.html.twig');
     }
 
