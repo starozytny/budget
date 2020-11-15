@@ -43,6 +43,14 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * @Route("/creation-de-compte", options={"expose"=true}, name="app_register")
+     */
+    public function register()
+    {
+        return $this->render('root/app/pages/security/register.html.twig');
+    }
+
+    /**
      * @Route("/deconnexion", options={"expose"=true}, name="app_logout")
      */
     public function logout()
