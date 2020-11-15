@@ -59,6 +59,7 @@ export class Budget extends Component {
 
     handleUpdateGoal = (goal) => {
         const {goals} = this.state
+        
 
         this.setState({ goals: ActionsArray.addOrUpdateInArray(goals, goal) })
         this.donnee.current.handleSelectGoal(JSON.parse(goal))
