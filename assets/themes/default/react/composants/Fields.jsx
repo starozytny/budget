@@ -21,7 +21,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import {Drop} from './Drop';
 
 export function Input({type="text", identifiant, id=null, valeur, onChange, children, placeholder}) {
-    let content = <input type={type} name={identifiant} id={id == null ? identifiant : id} placeholder={placeholder} value={valeur.value} onChange={onChange}/>
+    let content;
+
+    if(type != "custom-number"){
+        content = <input type={type} name={identifiant} id={id == null ? identifiant : id} placeholder={placeholder} value={valeur.value} onChange={onChange}/>
+    }else{
+        content = <input type="number" step="0.01" name={identifiant} id={id == null ? identifiant : id} placeholder={placeholder} value={valeur.value} onChange={onChange}/>
+    }
+    
 
     return (<ClassiqueStructure valeur={valeur} identifiant={id == null ? identifiant : id} content={content} label={children} />)
 }
