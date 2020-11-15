@@ -80,7 +80,7 @@ class DonneeController extends AbstractController
         // ---- if month not passed = spread to others 
         if($type == "regularSpend" or $type == "income"){
             $today = $calendarService->getToday();
-            if($budget->getYear() >= $today['year'] && $budget->getMonth() >= $today['mon']){
+            if(($budget->getYear() == $today['year'] && $budget->getMonth() >= $today['mon']) || ($budget->getYear() > $today['year'])){
                 $budgetService->addRegularDonneeToNextBudget($type, $budgets, $budget, $isAddition, $name, $price);
             }
         }
