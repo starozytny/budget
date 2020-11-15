@@ -80,14 +80,14 @@ class AdminCreateUsersCommand extends Command
                 $new, 'azerty'
             ));
 
-            $init = 1500;
+            $init = 1805.86;
             $y = 2020;
 
             for($m=1 ; $m<=12 ; $m++){
                 if($y == 2020 && $m <= 6){
                     $init = 0;
                 }else{
-                    $init = 1500;
+                    $init = 1805.86;
                 }
                 
                 $budget = (new Budget())
