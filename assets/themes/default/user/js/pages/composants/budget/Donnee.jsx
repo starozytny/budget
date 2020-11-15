@@ -97,8 +97,17 @@ export class Donnee extends Component {
         const {id, budget, type, donnees, title, goals, onOpenAside} = this.props
         const {name, price, goal} = this.state
 
-        let items = <div className="objet"><div className="name">Aucune donnée.</div></div>
+        let items = [];
         let total = 0;
+
+        let datas = []
+        
+        if(!Array.isArray(donnees)){
+            let tab = Object.values(donnees)
+            tab.forEach(el => { datas.push(el) })
+        }else{
+            datas = donnees
+        }
 
         // for select goals
         let goalsItems = [{'value': "none", 'libelle': 'Aucun objectif'}];
@@ -119,8 +128,9 @@ export class Donnee extends Component {
             })
         }
 
-        if(donnees.length != 0){
-            items = donnees.map((elem, index) => {
+        if(datas.length != 0){
+            datas.forEach((elem, index) => {
+
                 total += elem.price;
                 let pourcentage, goalDiff;
 
@@ -150,7 +160,7 @@ export class Donnee extends Component {
                     }
                 }
 
-                return <div key={index} className="objet">
+                items.push(<div key={index} className="objet">
                     <div className="name">
                         <div>{elem.name} {elem.goal ? <span className="goal">- {elem.goal.name} ({setCurrency(elem.goal.total)})</span> : null}</div> 
                         {elem.goal ? <div className={"goal-progress progress-" + pourcentage + (goalDiff > 0 ? ' progress-overkill' : '')}></div> : null}
@@ -158,9 +168,9 @@ export class Donnee extends Component {
                     </div>
                     <div className="price currency">{type == "income" ? "+" : "-"} {setCurrency(elem.price)}</div>
                     <div className="delete" onClick={e => {this.handleDelete(type, elem.id)}}><span className="icon-trash"></span></div>
-                </div>
+                </div>)
             })
-        }
+        }        
         
         return <div className="card-1 card-budget">
             <div className="card-1-header">
@@ -173,7 +183,7 @@ export class Donnee extends Component {
                 </div>
             </div>
             <div className="card-1-body">
-                {items}
+                {items.length != 0 ? items : <div className="objet"><div className="name">Aucune donnée.</div></div>}
             </div>
             <div className="card-1-footer">
                 <form className="items" onSubmit={e => {e.preventDefault(); this.handleAdd(type, id);}}>

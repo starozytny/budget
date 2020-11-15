@@ -17,6 +17,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DonneeController extends AbstractController
 {
+    const ATTRIBUTES_BUDGET = ['id', 'year', 'month', 'monthString', 'initMonth', 'toSpend', 'comment',
+                                'regularSpends' => ['id', 'name', 'price'],
+                                'economies' => ['id', 'name', 'price', 'goal' => ['id', 'name', 'total', 'fill'] ],
+                                'outgos' => ['id', 'name', 'price'],
+                                'incomes' => ['id', 'name', 'price'],
+                            ];
+
     /** 
      * @Route("/{type}/{id}/ajouter", options={"expose"=true}, name="add")
      */
@@ -105,8 +112,8 @@ class DonneeController extends AbstractController
         if(!$budget){
             return new JsonResponse(['code' => 0, 'message' => 'Budget inconnu.']);
         }
-
         $budget = $budgetService->updateOrGet($type, "budget", "remove", $budget, $donnee);
+
         //budgets of others months of this year to update  initMonth and toSpend of other months
         $budgets = $em->getRepository(Budget::class)->findBy(['year' => $budget->getYear(), 'user' => $user], ['month' => 'ASC']);
         $budgetService->updateNextBudget($budgets, $budget, $isAddition, $donnee->getPrice());
@@ -125,12 +132,11 @@ class DonneeController extends AbstractController
                 $goal->setFill($goal->getFill() - $donnee->getPrice());
             }
         }
-
-        $em->persist($budget); $em->remove($donnee); $em->flush();
-
+        
+        $em->persist($budget); $em->remove($donnee); $em->flush();   
         $goals = $em->getRepository(Goal::class)->findBy(['user' => $user]);
 
-        $budget = $serializer->getSerializeData($donnee->getBudget(), Budget::ATTRIBUTES_BUDGET);
+        $budget = $serializer->getSerializeData($budget, Budget::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
         $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);
         return new JsonResponse(['code' => 1, 'budgets' => $budgets, 'budget' => $budget, 'goals' => $goals]);
