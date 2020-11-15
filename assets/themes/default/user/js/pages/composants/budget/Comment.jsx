@@ -38,7 +38,6 @@ export class Comment extends Component {
             let data = response.data; let code = data.code; Loader.loader(false)
 
             if(code === 1){
-                console.log(data)
                 self.props.onUpdateBudgets(data.budget, data.budgets, data.goals)
                 self.props.onCloseAside()
             }else{
