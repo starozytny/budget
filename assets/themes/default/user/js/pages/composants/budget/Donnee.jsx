@@ -112,16 +112,16 @@ export class Donnee extends Component {
         // for select goals
         let goalsItems = [{'value': "none", 'libelle': 'Aucun objectif'}];
         let goalsUntilThisMonth = []
-        if(goals){
+        if(goals != undefined){
             goals.forEach(elem => {
-
                 let tot = 0;
-
-                elem.economies.forEach(eco => {
-                    if( (eco.budget.year < budget.year) || (eco.budget.year == budget.year && eco.budget.month <= budget.month) ){
-                        tot += eco.price
-                    }
-                })
+                if(elem.economies){
+                    elem.economies.forEach(eco => {
+                        if( (eco.budget.year < budget.year) || (eco.budget.year == budget.year && eco.budget.month <= budget.month) ){
+                            tot += eco.price
+                        }
+                    })
+                }
 
                 goalsUntilThisMonth.push({'id': elem.id, 'tot': tot})
                 goalsItems.push( {'value': elem.id, 'libelle': elem.name} )
