@@ -39,6 +39,6 @@ class BudgetController extends AbstractController
         $budget = $serializer->getSerializeData($budget, Budget::ATTRIBUTES_BUDGET);
         $budgets = $serializer->getSerializeData($budgets, Budget::ATTRIBUTES_BUDGET);
         $goals = $serializer->getSerializeData($goals, Goal::ATTRIBUTES_GOAL);
-        return new JsonResponse(['code' => 1, 'budget' => $budget, 'budgets' => $budgets]);
+        return new JsonResponse(['code' => 1, 'budget' => $budget, 'budgets' => $budgets, 'goals' => $goals]);
     }
 }
