@@ -57,10 +57,21 @@
     margin-bottom: 12px;
   }
 
-  .card-body{
+  .card-body, .card-footer{
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid var(--fond);
+  }
+
+  .card-footer{
+    .line{
+      margin-bottom: 4px;
+    }
+    .form-button{
+      .btn{
+        width: 100%;
+      }
+    }
   }
 
   &.expenses{
