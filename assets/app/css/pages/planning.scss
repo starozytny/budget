@@ -68,6 +68,26 @@
     border-top: 1px solid var(--fond);
   }
 
+  .card-body{
+    .item{
+      @include flex(row, center, space-between);
+      opacity: 0.8;
+
+      .col-1{
+        width: calc(100% - 40% - 12px - 30px);
+        margin-right: 12px;
+      }
+
+      .col-2{
+        width: calc(40% - 12px);
+        margin-right: 12px;
+      }
+      .col-3{
+        width: 30px;
+      }
+    }
+  }
+
   .card-footer{
     .line{
       margin-bottom: 4px;

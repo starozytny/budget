@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 
-import { Months }       from "@dashboardComponents/Tools/Days";
-import {Button, ButtonIcon} from "@dashboardComponents/Tools/Button";
-import { Alert }        from "@dashboardComponents/Tools/Alert";
+import axios       from "axios";
+import Routing     from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 
-import Sanitize from "@dashboardComponents/functions/sanitaze";
-import {icon} from "leaflet/dist/leaflet-src.esm";
-import {Input, Select} from "@dashboardComponents/Tools/Fields";
-import Validator from "@dashboardComponents/functions/validateur";
+import { Months }               from "@dashboardComponents/Tools/Days";
+import { Alert }                from "@dashboardComponents/Tools/Alert";
+import { Input, Select }        from "@dashboardComponents/Tools/Fields";
+import { Button, ButtonIcon }   from "@dashboardComponents/Tools/Button";
+
+import Sanitize     from "@dashboardComponents/functions/sanitaze";
+import Validator    from "@dashboardComponents/functions/validateur";
+import Formulaire   from "@dashboardComponents/functions/Formulaire";
 
 export class Planning extends Component {
     constructor(props) {
@@ -66,13 +69,13 @@ export class Planning extends Component {
                 </div>
 
                 <div className="planning-line planning-line-3">
-                    <Card classCard="regular" data={elem.expenses}>Dépenses fixes</Card>
-                    <Card classCard="income" data={elem.expenses}>Gains fixes</Card>
-                    <Card classCard="economy" data={elem.expenses}>Economies</Card>
+                    <Card classCard="regular" data={elem.expenses} planning={elem.id} >Dépenses fixes</Card>
+                    <Card classCard="income" data={elem.expenses} planning={elem.id} >Gains fixes</Card>
+                    <Card classCard="economy" data={elem.expenses} planning={elem.id} >Economies</Card>
                 </div>
 
                 <div className="planning-line">
-                    <Card classCard="expenses" data={elem.expenses}>Dépenses occasionnelles</Card>
+                    <Card classCard="expenses" data={elem.expenses} planning={elem.id} url={Routing.generate('api_expenses_create')}>Dépenses occasionnelles</Card>
                 </div>
             </>
         }
@@ -96,6 +99,7 @@ class Card extends Component {
         super(props);
 
         this.state = {
+            planning: props.planning,
             name: "",
             icon: "",
             price: "",
@@ -111,20 +115,36 @@ class Card extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
+        const { url } = this.props;
         const { name, icon, price } = this.state;
 
         this.setState({ errors: [] })
 
         let validate = Validator.validateur([
             {type: "text", id: 'name', value: name},
-            {type: "text", id: 'icon', value: icon},
             {type: "text", id: 'price', value: price}
         ])
 
         if(!validate.code){
             this.setState({ errors: validate.errors });
         }else{
-            this.setState({ errors: []});
+            this.setState({ errors: [] });
+
+            Formulaire.loader(true);
+            let self = this;
+
+            axios.request({ method: "POST", url: url, data: this.state })
+                .then(function (response) {
+                    let data = response.data;
+                    console.log(data)
+                })
+                .catch(function (error) {
+                    Formulaire.displayErrors(self, error);
+                })
+                .then(function () {
+                    Formulaire.loader(false);
+                })
+            ;
         }
     }
 
@@ -133,10 +153,24 @@ class Card extends Component {
         const { errors, name, icon, price } = this.state;
 
         let total = 0;
+        data.forEach(elem => {
+            total += elem.price;
+        })
 
         let icons = [
             { value: 'bookmark', label: 'Bookmark', identifiant: 'bookmark' },
         ]
+
+        let items = [];
+        data.forEach(elem => {
+            items.push(<div className="item" key={elem.id}>
+                <div className="col-1">{elem.name}</div>
+                <div className="col-2">-{Sanitize.toFormatCurrency(elem.price)}</div>
+                <div className="col-3 actions">
+                    <ButtonIcon icon="trash">Supprimer</ButtonIcon>
+                </div>
+            </div>)
+        })
 
         return <div className={"card" + (classCard ? " " + classCard : "")}>
             <div className="card-header">
@@ -149,7 +183,7 @@ class Card extends Component {
                 </div>
             </div>
             <div className="card-body">
-                {data.length !== 0 ? "ok" : "Aucune donnée enregistrée."}
+                {items.length !== 0 ? items : "Aucune donnée enregistrée."}
             </div>
             <div className="card-footer">
                 <div className="line line-3">
