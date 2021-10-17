@@ -5,6 +5,7 @@ namespace App\Entity\Budget;
 use App\Entity\User;
 use App\Repository\Budget\BuPlanningRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=BuPlanningRepository::class)
@@ -15,16 +16,19 @@ class BuPlanning
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $year;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $month;
 
@@ -36,11 +40,13 @@ class BuPlanning
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"user:read"})
      */
     private $start;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"user:read"})
      */
     private $end;
 

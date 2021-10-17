@@ -1,30 +1,47 @@
 import React, { Component } from "react";
 
-import {Months} from "@dashboardComponents/Tools/Days";
+import { Months } from "@dashboardComponents/Tools/Days";
 
 export class Planning extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: [ {day: 1}, {day: 2}, {day: 3}, {day: 4}, {day: 5} ],
-            dayActive: 1
+            yearActive: (new Date()).getFullYear(),
+            monthActive: (new Date()).getMonth() + 1
         }
 
-        this.handleSelectDay = this.handleSelectDay.bind(this);
+        this.handleSelectMonth = this.handleSelectMonth.bind(this);
     }
 
-    handleSelectDay = (dayActive, atLeastOne) => {
+    componentDidMount = () => {
+        const { donnees } = this.props;
+        const { yearActive } = this.state;
+
+
+        let data = [];
+        JSON.parse(donnees).forEach(elem => {
+            if(parseInt(elem.year) === yearActive){
+                data.push(elem);
+            }
+        })
+
+        this.setState({ data: data })
+    }
+
+    handleSelectMonth = (monthActive, atLeastOne) => {
         if(atLeastOne) {
-            this.setState({ dayActive })
+            this.setState({ monthActive })
         }
     }
 
     render () {
-        const { data, dayActive } = this.state;
+        const { data, monthActive } = this.state;
+
+        console.log(data)
 
         return <>
-            <Months data={data} dayActive={dayActive} onSelectDay={this.handleSelectDay}/>
+            <Months data={data} monthActive={monthActive} onSelectMonth={this.handleSelectMonth}/>
         </>
     }
 }

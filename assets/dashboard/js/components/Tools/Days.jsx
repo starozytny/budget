@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import Sanitize from "@dashboardComponents/functions/sanitaze";
+
 export class Days extends Component {
     render () {
         const { data, dayActive, onSelectDay, useShortName = false } = this.props
@@ -41,7 +43,7 @@ export class Days extends Component {
 
 export class Months extends Component {
     render () {
-        const { data, dayActive, onSelectDay, useShortName = false } = this.props
+        const { data, monthActive, onSelectMonth, useShortName = false } = this.props
 
         let days = [
             { id: 1, name: 'Janvier',       shortName: 'Jan' },
@@ -60,19 +62,22 @@ export class Months extends Component {
 
         let items = days.map(elem => {
 
+            let start = 0;
             let atLeastOne = false;
             if(data){
                 data.forEach(el => {
-                    if(el.day === elem.id || (el.slot && el.slot.day === elem.id)){
+                    if(el.month === elem.id || (el.slot && el.slot.month === elem.id)){
                         atLeastOne = true;
+                        start = el.start;
                     }
                 })
             }
 
-            return <div className={"day" + (elem.id === dayActive ? " active" : "") + (atLeastOne ? "" : " disabled")}
-                        onClick={() => onSelectDay(elem.id, atLeastOne)}
+            return <div className={"day" + (elem.id === monthActive ? " active" : "") + (atLeastOne ? "" : " disabled")}
+                        onClick={() => onSelectMonth(elem.id, atLeastOne)}
                         key={elem.id}>
-                {useShortName ? elem.shortName : elem.name}
+                <div>{useShortName ? elem.shortName : elem.name}</div>
+                <div className="sub">{Sanitize.toFormatCurrency(start)}</div>
             </div>
         })
 
