@@ -27,12 +27,17 @@
 
 .planning-line{
   margin-bottom: 12px;
+
+  & > .card:not(:last-child){
+    margin-bottom: 12px;
+  }
 }
 
 .card{
   padding: 12px;
   border-radius: 4px;
   border: 1px solid var(--fond);
+  background-color: var(--alpha);
 
   .card-header{
     @include flex(row, center, flex-start);
@@ -70,13 +75,33 @@
     .form-button{
       .btn{
         width: 100%;
+        padding-top: 6px;
+        padding-bottom: 6px;
       }
     }
   }
 
   &.expenses{
     .icon{
+      background-color: var(--dangerShadow);
+    }
+  }
+
+  &.regular{
+    .icon{
       background-color: var(--color0Shadow);
+    }
+  }
+
+  &.income{
+    .icon{
+      background-color: var(--primaryShadow);
+    }
+  }
+
+  &.economy{
+    .icon{
+      background-color: var(--warningShadow);
     }
   }
 
@@ -90,5 +115,47 @@
   }
   &.current.false{
     background-color: var(--danger);
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .planning-line.planning-line-3{
+    @include flex(row, flex-start, flex-start);
+    width: calc(100% + 12px);
+
+    & > *{
+      width: calc(33% - 12px);
+      margin-right: 12px;
+    }
+
+    & > .card:not(:last-child){
+      margin-bottom: 0;
+    }
+  }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  .planning-line{
+    margin-bottom: 24px;
+  }
+  .planning-line.planning-line-3{
+    width: calc(100% + 24px);
+
+    & > *{
+      width: calc(33% - 24px);
+      margin-right: 24px;
+    }
   }
 }

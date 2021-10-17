@@ -65,8 +65,10 @@ export class Planning extends Component {
                     </div>
                 </div>
 
-                <div className="planning-line">
-                    <Card classCard="expenses" data={elem.expenses}>Dépenses occasionnelles</Card>
+                <div className="planning-line planning-line-3">
+                    <Card classCard="regular" data={elem.expenses}>Dépenses fixes</Card>
+                    <Card classCard="income" data={elem.expenses}>Gains fixes</Card>
+                    <Card classCard="economy" data={elem.expenses}>Economies</Card>
                 </div>
 
                 <div className="planning-line">
@@ -156,7 +158,7 @@ class Card extends Component {
                     <Select items={icons} identifiant="icon" valeur={icon} errors={errors} onChange={this.handleChange} placeholder="Icône" />
                 </div>
                 <div className="form-button">
-                    <Button isSubmit={true} icon="plus" type="default" outline={true} onClick={this.handleSubmit}>Ajouter</Button>
+                    <Button isSubmit={true} type="default" outline={true} onClick={this.handleSubmit}>Ajouter</Button>
                 </div>
             </div>
         </div>

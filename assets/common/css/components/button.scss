@@ -93,9 +93,18 @@ $icons:
 
 .btn-default{
   border-color: var(--greyShadow);
+
+  &:hover{
+    border-color: var(--grey);
+  }
 }
 
 .btn-outline-default{
   color: var(--txt);
   border-color: var(--grey);
+
+  &:hover{
+    opacity: 1;
+    border-color: var(--grey2);
+  }
 }
