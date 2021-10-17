@@ -107,6 +107,35 @@ function setCityFromZipcode(self, e, arrayPostalCode){
     }
 }
 
+function getMonthStringLong(month) {
+    switch (month){
+        case 2:
+            return "Février";
+        case 3:
+            return "Mars";
+        case 4:
+            return "Avril";
+        case 5:
+            return "Mai";
+        case 6:
+            return "Juin";
+        case 7:
+            return "Juillet";
+        case 8:
+            return "Août";
+        case 9:
+            return "Septembre";
+        case 10:
+            return "Octobre";
+        case 11:
+            return "Novembre";
+        case 12:
+            return "Décembre";
+        default:
+            return "Janvier";
+    }
+}
+
 module.exports = {
     sanitizeString,
     getPostalCodes,
@@ -115,5 +144,6 @@ module.exports = {
     toFormatDateTime,
     toFormatPhone,
     toFormatCurrency,
-    setCityFromZipcode
+    setCityFromZipcode,
+    getMonthStringLong
 }

@@ -82,7 +82,7 @@ class AdminUsersCreateCommand extends Command
             $this->em->persist($new);
             $io->text('USER : ' . $user['username'] . ' créé' );
 
-            for($i=0 ; $i < 12 ; $i++){
+            for($i=1 ; $i <= 12 ; $i++){
                 $planning = (new BuPlanning())
                     ->setYear(2021)
                     ->setMonth($i)

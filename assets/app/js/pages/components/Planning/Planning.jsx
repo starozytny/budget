@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 
-import { Months } from "@dashboardComponents/Tools/Days";
-import { ButtonIcon } from "@dashboardComponents/Tools/Button";
+import { Months }       from "@dashboardComponents/Tools/Days";
+import { ButtonIcon }   from "@dashboardComponents/Tools/Button";
+import { Alert }        from "@dashboardComponents/Tools/Alert";
+
+import Sanitize from "@dashboardComponents/functions/sanitaze";
 
 export class Planning extends Component {
     constructor(props) {
@@ -28,12 +31,31 @@ export class Planning extends Component {
     render () {
         const { data, yearActive, monthActive } = this.state;
 
-        let items = [];
-        data.forEach(elem => {
-            if(parseInt(elem.year) === yearActive){
-                items.push(elem);
+        let items = []; let elem = null;
+        data.forEach(element => {
+            if(parseInt(element.year) === yearActive){
+                items.push(element);
+
+                if(parseInt(element.month) === monthActive){
+                    elem = element;
+                }
             }
         })
+
+        let content = <Alert>Aucune donnée disponible.</Alert>
+        if(elem){
+            content = <>
+                <div className={"card current " + (elem.end >= 0)}>
+                    <div className="card-header">
+                        <div className="name">{Sanitize.toFormatCurrency(elem.end)}</div>
+                        <div className="sub">
+                            <div>Reste à dépenser pour {Sanitize.getMonthStringLong(elem.month)}</div>
+                            <div>Compte au début du mois : {Sanitize.toFormatCurrency(elem.start)}</div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        }
 
         return <>
             <div className="years">
@@ -42,6 +64,9 @@ export class Planning extends Component {
                 <ButtonIcon icon="right-arrow" onClick={() => this.handleSelectYear(yearActive + 1)} >{yearActive + 1}</ButtonIcon>
             </div>
             <Months data={items} monthActive={monthActive} onSelectMonth={this.handleSelectMonth}/>
+            <div className="content">
+                {content}
+            </div>
         </>
     }
 }
