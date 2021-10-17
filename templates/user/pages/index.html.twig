@@ -5,6 +5,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('dashboard_homepage') }}
+    {{ encore_entry_link_tags('app_planning') }}
 {% endblock %}
 
 {% block main_content %}
@@ -21,7 +22,11 @@
             </div>
         </div>
         <div class="dash-line-2">
-            Hello world
+            <div id="planning"></div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app_planning') }}
 {% endblock %}
