@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Budget\BuPlanning;
 use App\Repository\UserRepository;
-use Carbon\Carbon;
-use Carbon\Factory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -119,6 +118,11 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
     private $notifications;
 
     /**
+     * @ORM\OneToMany(targetEntity=BuPlanning::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $plannings;
+
+    /**
      * @throws Exception
      */
     public function __construct()
@@ -126,6 +130,7 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
         $this->createdAt = $this->initNewDate();
         $this->token = $this->initToken();
         $this->notifications = new ArrayCollection();
+        $this->plannings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -427,5 +432,35 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
+    }
+
+    /**
+     * @return Collection|BuPlanning[]
+     */
+    public function getPlannings(): Collection
+    {
+        return $this->plannings;
+    }
+
+    public function addPlanning(BuPlanning $planning): self
+    {
+        if (!$this->plannings->contains($planning)) {
+            $this->plannings[] = $planning;
+            $planning->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanning(BuPlanning $planning): self
+    {
+        if ($this->plannings->removeElement($planning)) {
+            // set the owning side to null (unless already changed)
+            if ($planning->getUser() === $this) {
+                $planning->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
