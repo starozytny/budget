@@ -44,6 +44,12 @@ class BuPlanning
      */
     private $end;
 
+    public function __construct()
+    {
+        $this->start = 0;
+        $this->end = 0;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

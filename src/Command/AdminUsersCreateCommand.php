@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Budget\BuPlanning;
 use App\Entity\User;
 use App\Service\DatabaseService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -80,6 +81,17 @@ class AdminUsersCreateCommand extends Command
 
             $this->em->persist($new);
             $io->text('USER : ' . $user['username'] . ' créé' );
+
+            for($i=0 ; $i < 12 ; $i++){
+                $planning = (new BuPlanning())
+                    ->setYear(2021)
+                    ->setMonth($i)
+                    ->setUser($new)
+                ;
+
+                $this->em->persist($planning);
+            }
+
         }
 
         if ($input->getOption('fake')) {
