@@ -1,3 +1,22 @@
 @import "../vars/vars";
 
 @import "../../../common/css/components/planning";
+
+.years{
+  @include flex(row, center, space-between);
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--fond);
+
+  & > *{
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-radius: 4px;
+  }
+
+  .current{
+    background: var(--primary);
+    color: var(--alpha);
+  }
+}

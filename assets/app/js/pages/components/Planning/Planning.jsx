@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { Months } from "@dashboardComponents/Tools/Days";
+import { ButtonIcon } from "@dashboardComponents/Tools/Button";
 
 export class Planning extends Component {
     constructor(props) {
@@ -36,11 +37,16 @@ export class Planning extends Component {
     }
 
     render () {
-        const { data, monthActive } = this.state;
+        const { data, yearActive, monthActive } = this.state;
 
         console.log(data)
 
         return <>
+            <div className="years">
+                <ButtonIcon icon="left-arrow">{yearActive - 1}</ButtonIcon>
+                <div className="current">{yearActive}</div>
+                <ButtonIcon icon="right-arrow">{yearActive + 1}</ButtonIcon>
+            </div>
             <Months data={data} monthActive={monthActive} onSelectMonth={this.handleSelectMonth}/>
         </>
     }
