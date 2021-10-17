@@ -5,6 +5,7 @@ import { ButtonIcon }   from "@dashboardComponents/Tools/Button";
 import { Alert }        from "@dashboardComponents/Tools/Alert";
 
 import Sanitize from "@dashboardComponents/functions/sanitaze";
+import {icon} from "leaflet/dist/leaflet-src.esm";
 
 export class Planning extends Component {
     constructor(props) {
@@ -44,15 +45,26 @@ export class Planning extends Component {
 
         let content = <Alert>Aucune donnée disponible.</Alert>
         if(elem){
+
+            console.log(elem)
+
             content = <>
-                <div className={"card current " + (elem.end >= 0)}>
-                    <div className="card-header">
-                        <div className="name">{Sanitize.toFormatCurrency(elem.end)}</div>
-                        <div className="sub">
-                            <div>Reste à dépenser pour {Sanitize.getMonthStringLong(elem.month)}</div>
-                            <div>Compte au début du mois : {Sanitize.toFormatCurrency(elem.start)}</div>
+                <div className="planning-line">
+                    <div className={"card current " + (elem.end >= 0)}>
+                        <div className="card-header">
+                            <div>
+                                <div className="name">{Sanitize.toFormatCurrency(elem.end)}</div>
+                                <div className="sub">
+                                    <div>Reste à dépenser pour {Sanitize.getMonthStringLong(elem.month)}</div>
+                                    <div>Compte au début du mois : {Sanitize.toFormatCurrency(elem.start)}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                <div className="planning-line">
+                    <Card classCard="expenses" price={0} data={elem.expenses}>Dépenses occasionnelles</Card>
                 </div>
             </>
         }
@@ -69,4 +81,24 @@ export class Planning extends Component {
             </div>
         </>
     }
+}
+
+function Card ({ classCard = null, iconCard = "bookmark", children, price, data }) {
+    return <div className={"card" + (classCard ? " " + classCard : "")}>
+        <div className="card-header">
+            <div className="icon">
+                <span className={"icon-" + iconCard} />
+            </div>
+            <div>
+                <div className="name">{children}</div>
+                <div className="sub">{Sanitize.toFormatCurrency(parseFloat(price))}</div>
+            </div>
+        </div>
+        <div className="card-body">
+            {data.length !== 0 ? "ok" : "Aucune donnée enregistrée."}
+        </div>
+        <div className="card-footer">
+            
+        </div>
+    </div>
 }

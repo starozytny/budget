@@ -4,6 +4,8 @@ namespace App\Entity\Budget;
 
 use App\Entity\User;
 use App\Repository\Budget\BuPlanningRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -50,10 +52,17 @@ class BuPlanning
      */
     private $end;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BuExpense::class, fetch="EAGER", mappedBy="planning", orphanRemoval=true)
+     * @Groups({"user:read"})
+     */
+    private $expenses;
+
     public function __construct()
     {
         $this->start = 0;
         $this->end = 0;
+        $this->expenses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +126,36 @@ class BuPlanning
     public function setEnd(float $end): self
     {
         $this->end = $end;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BuExpense[]
+     */
+    public function getExpenses(): Collection
+    {
+        return $this->expenses;
+    }
+
+    public function addExpense(BuExpense $expense): self
+    {
+        if (!$this->expenses->contains($expense)) {
+            $this->expenses[] = $expense;
+            $expense->setPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExpense(BuExpense $expense): self
+    {
+        if ($this->expenses->removeElement($expense)) {
+            // set the owning side to null (unless already changed)
+            if ($expense->getPlanning() === $this) {
+                $expense->setPlanning(null);
+            }
+        }
 
         return $this;
     }

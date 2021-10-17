@@ -21,15 +21,52 @@
   }
 }
 
+.days{
+  margin-bottom: 24px;
+}
+
+.planning-line{
+  margin-bottom: 12px;
+}
+
 .card{
   padding: 12px;
   border-radius: 4px;
   border: 1px solid var(--fond);
 
+  .card-header{
+    @include flex(row, center, flex-start);
+  }
+
+  .icon{
+    @include flex(row, center, center);
+    background-color: var(--fond);
+    border-radius: 60px;
+    padding: 16px;
+    font-size: 20px;
+
+    & + div{
+      width: calc(100% - 20px - 24px);
+      margin-left: 24px;
+    }
+  }
+
   .name{
     @include fontBold();
     font-size: 22px;
     margin-bottom: 12px;
+  }
+
+  .card-body{
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--fond);
+  }
+
+  &.expenses{
+    .icon{
+      background-color: var(--color0Shadow);
+    }
   }
 
   &.current{

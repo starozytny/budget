@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Budget\BuExpense;
 use App\Entity\Budget\BuPlanning;
 use App\Entity\User;
 use App\Service\DatabaseService;
