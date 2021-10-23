@@ -27,7 +27,7 @@ class DataPlanningItem
         }
 
         if($setNumGroup){
-            $numGroup = !$data->numGroup ? uniqid() : $data->numGroup;
+            $numGroup = (isset($data->numGroup) && $data->numGroup) ? $data->numGroup : uniqid();
             $obj->setNumGroup($numGroup);
         }
 

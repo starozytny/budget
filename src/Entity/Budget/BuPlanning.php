@@ -14,11 +14,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class BuPlanning
 {
+    const ITEM_READ = ["planning-item:read"];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"user:read"})
+     * @Groups({"user:read", "planning-item:read"})
      */
     private $id;
 

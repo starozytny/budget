@@ -15,19 +15,26 @@ import Sanitize     from "@dashboardComponents/functions/sanitaze";
 import Validator    from "@dashboardComponents/functions/validateur";
 import Formulaire   from "@dashboardComponents/functions/Formulaire";
 
-function updateEnd(data, total) {
-    data.forEach(el => {
-        total -= el.price
-    })
+function appendToPlanning(who, planning, elem) {
+    switch (who){
+        case "gains":
+            planning.gains.push(elem)
+            break;
+        case "economies":
+            planning.economies.push(elem)
+            break;
+        case "incomes":
+            planning.incomes.push(elem)
+            break;
+        case "outcomes":
+            planning.outcomes.push(elem)
+            break;
+        default:
+            planning.expenses.push(elem);
+            break;
+    }
 
-    return total;
-}
-
-function getToSpend (data) {
-    let total = updateEnd(data.expenses, data.end);
-    total = updateEnd(data.outcomes, total)
-
-    return total;
+    return planning;
 }
 
 export class Planning extends Component {
@@ -42,6 +49,7 @@ export class Planning extends Component {
 
         this.handleSelectYear = this.handleSelectYear.bind(this);
         this.handleSelectMonth = this.handleSelectMonth.bind(this);
+        this.handleUpdateData = this.handleUpdateData.bind(this);
     }
 
     handleSelectYear = (yearActive) => { this.setState({ yearActive }) }
@@ -50,6 +58,26 @@ export class Planning extends Component {
         if(atLeastOne) {
             this.setState({ monthActive })
         }
+    }
+
+    handleUpdateData = (context, who, elem=null) => {
+        const { data } = this.state;
+
+
+        let newData = [];
+        switch (context){
+            default:
+                data.forEach(item => {
+                    if(item.id === elem.planning.id){
+                        item = appendToPlanning(who, item, elem);
+                    }
+
+                    newData.push(item);
+                })
+                break;
+        }
+
+        this.setState({ data: newData })
     }
 
     render () {
@@ -71,14 +99,12 @@ export class Planning extends Component {
 
             console.log(elem)
 
-            let toSpend = getToSpend(elem);
-
             content = <>
                 <div className="planning-line">
-                    <div className={"card current " + (toSpend >= 0)}>
+                    <div className={"card current " + (elem.end >= 0)}>
                         <div className="card-header">
                             <div>
-                                <div className="name">{Sanitize.toFormatCurrency(toSpend)}</div>
+                                <div className="name">{Sanitize.toFormatCurrency(elem.end)}</div>
                                 <div className="sub">
                                     <div>Reste à dépenser pour {Sanitize.getMonthStringLong(elem.month)}</div>
                                     <div>Compte au début du mois : {Sanitize.toFormatCurrency(elem.start)}</div>
@@ -89,13 +115,13 @@ export class Planning extends Component {
                 </div>
 
                 <div className="planning-line planning-line-3">
-                    <Card classCard="regular" data={elem.outcomes} planning={elem.id} who="outcomes">Dépenses fixes</Card>
-                    <Card classCard="income" data={elem.expenses} planning={elem.id} who="incomes">Gains fixes</Card>
-                    <Card classCard="economy" data={elem.expenses} planning={elem.id} who="economies">Economies</Card>
+                    <Card onUpdateData={this.handleUpdateData} planning={elem.id} data={elem.outcomes} classCard="regular" who="outcomes">Dépenses fixes</Card>
+                    <Card onUpdateData={this.handleUpdateData} planning={elem.id} data={elem.expenses} classCard="income" who="incomes">Gains fixes</Card>
+                    <Card onUpdateData={this.handleUpdateData} planning={elem.id} data={elem.expenses} classCard="economy" who="economies">Economies</Card>
                 </div>
 
                 <div className="planning-line">
-                    <Card classCard="expenses" data={elem.expenses} planning={elem.id} who="expenses" enableSpread={false}>Dépenses occasionnelles</Card>
+                    <Card onUpdateData={this.handleUpdateData} planning={elem.id} data={elem.expenses} classCard="expenses" who="expenses" enableSpread={false}>Dépenses occasionnelles</Card>
                 </div>
             </>
         }
@@ -129,6 +155,7 @@ class Card extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSpread = this.handleSpread.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     handleChange = (e) => { this.setState({ [e.currentTarget.name]: e.currentTarget.value }) }
@@ -157,7 +184,7 @@ class Card extends Component {
             axios.request({ method: "POST", url: Routing.generate('api_'+ who +'_create'), data: this.state })
                 .then(function (response) {
                     let data = response.data;
-                    console.log(data)
+                    self.props.onUpdateData('create', who, data);
                     toastr.info("Félicitation ! L'ajout s'est réalisé avec succès !");
                 })
                 .catch(function (error) {
@@ -201,6 +228,32 @@ class Card extends Component {
         ;
     }
 
+    handleDelete = (elem) => {
+        const { who } = this.props;
+
+        Swal.fire(SwalOptions.options("Supprimer cette donnée ?",""))
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Formulaire.loader(true);
+                    let self = this;
+
+                    axios.request({ method: "DELETE", url: Routing.generate('api_'+ who +'_delete', {id: elem.id}) })
+                        .then(function (response) {
+                            let data = response.data;
+                            toastr.info("Suppression réalisée avec succès !");
+                        })
+                        .catch(function (error) {
+                            Formulaire.displayErrors(self, error);
+                        })
+                        .then(function () {
+                            Formulaire.loader(false);
+                        })
+                    ;
+                }
+            })
+        ;
+    }
+
     render () {
         const { classCard = null, iconCard = "bookmark", children, data, enableSpread = true } = this.props;
         const { errors, name, icon, price } = this.state;
@@ -220,7 +273,7 @@ class Card extends Component {
                 <div className="col-1">{elem.name}</div>
                 <div className="col-2">-{Sanitize.toFormatCurrency(elem.price)}</div>
                 <div className="col-3 actions">
-                    <ButtonIcon icon="trash">Supprimer</ButtonIcon>
+                    <ButtonIcon icon="trash" onClick={() => this.handleDelete(elem)}>Supprimer</ButtonIcon>
                     {enableSpread &&  <ButtonIcon icon="share" onClick={() => this.handleSpread(elem)}>Diffuser</ButtonIcon>}
                 </div>
             </div>)

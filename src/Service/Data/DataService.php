@@ -145,7 +145,7 @@ class DataService
         $this->em->persist($obj);
         $this->em->flush();
 
-        return $this->apiResponse->apiJsonResponse($obj, User::USER_READ);
+        return $this->apiResponse->apiJsonResponse($obj, BuPlanning::ITEM_READ);
     }
 
     /**

@@ -16,37 +16,38 @@ class BuExpense extends DataEntity
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "planning-item:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "planning-item:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "planning-item:read"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "planning-item:read"})
      */
     private $icon;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "planning-item:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=BuPlanning::class, fetch="EAGER", inversedBy="expenses")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"planning-item:read"})
      */
     private $planning;
 
@@ -101,7 +102,7 @@ class BuExpense extends DataEntity
      * return LL -> 5 janvier 2017
      *
      * @return string|null
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "planning-item:read"})
      */
     public function getCreatedAtString(): ?string
     {
