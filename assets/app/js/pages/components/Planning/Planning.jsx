@@ -15,7 +15,29 @@ import Sanitize     from "@dashboardComponents/functions/sanitaze";
 import Validator    from "@dashboardComponents/functions/validateur";
 import Formulaire   from "@dashboardComponents/functions/Formulaire";
 
-function appendToPlanning(who, planning, elem) {
+function removeItemToPlanning(who, planning, elem) {
+    switch (who){
+        case "gains":
+            planning.gains = planning.gains.filter(el => el.id !== elem.id);
+            break;
+        case "economies":
+            planning.economies = planning.economies.filter(el => el.id !== elem.id);
+            break;
+        case "incomes":
+            planning.incomes = planning.incomes.filter(el => el.id !== elem.id);
+            break;
+        case "outcomes":
+            planning.outcomes = planning.outcomes.filter(el => el.id !== elem.id);
+            break;
+        default:
+            planning.expenses = planning.expenses.filter(el => el.id !== elem.id);
+            break;
+    }
+
+    return planning;
+}
+
+function appendItemToPlanning(who, planning, elem) {
     switch (who){
         case "gains":
             planning.gains.push(elem)
@@ -61,15 +83,25 @@ export class Planning extends Component {
     }
 
     handleUpdateData = (context, who, elem=null) => {
-        const { data } = this.state;
+        const { data, yearActive, monthActive } = this.state;
 
 
         let newData = [];
         switch (context){
+            case "delete":
+                data.forEach(item => {
+                    if(item.year === yearActive && item.month === monthActive){
+                        item = removeItemToPlanning(who, item, elem);
+                    }
+
+                    newData.push(item);
+                })
+
+                break;
             default:
                 data.forEach(item => {
                     if(item.id === elem.planning.id){
-                        item = appendToPlanning(who, item, elem);
+                        item = appendItemToPlanning(who, item, elem);
                     }
 
                     newData.push(item);
@@ -97,7 +129,7 @@ export class Planning extends Component {
         let content = <Alert>Aucune donnée disponible.</Alert>
         if(elem){
 
-            console.log(elem)
+            // console.log(elem)
 
             content = <>
                 <div className="planning-line">
@@ -212,7 +244,7 @@ class Card extends Component {
                         .then(function (response) {
                             let data = response.data;
                             console.log(data);
-                            toastr.info("Diffusion réalisée avec succès !");
+                            toastr.info("Diffusion Réussie !");
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -239,8 +271,8 @@ class Card extends Component {
 
                     axios.request({ method: "DELETE", url: Routing.generate('api_'+ who +'_delete', {id: elem.id}) })
                         .then(function (response) {
-                            let data = response.data;
-                            toastr.info("Suppression réalisée avec succès !");
+                            self.props.onUpdateData('delete', who, elem);
+                            toastr.info("Suppression réussie !");
                         })
                         .catch(function (error) {
                             Formulaire.displayErrors(self, error);
