@@ -178,4 +178,23 @@ class DataService
 
         return $this->apiResponse->apiJsonResponseSuccessful(200);
     }
+
+    /**
+     * Delete item for planning
+     *
+     * @param $obj
+     * @param DataPlanningItem $dataEntity
+     * @return JsonResponse
+     */
+    public function deleteItem($obj, DataPlanningItem $dataEntity): JsonResponse
+    {
+        $planning = $obj->getPlanning();
+
+        $newEnd = $dataEntity->updateEnd($obj->getPrice(), $planning, false);
+        $dataEntity->updateNextMonths(false, $newEnd, $planning->getNext());
+
+        $this->em->remove($obj);
+        $this->em->flush();
+        return $this->apiResponse->apiJsonResponseSuccessful("Supression réussie !");
+    }
 }

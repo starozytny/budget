@@ -94,11 +94,12 @@ class OutcomeController extends AbstractController
      * @OA\Tag(name="Outcomes")
      *
      * @param BuOutcome $obj
+     * @param DataPlanningItem $dataEntity
      * @return JsonResponse
      */
-    public function delete(BuOutcome $obj): JsonResponse
+    public function delete(BuOutcome $obj, DataPlanningItem $dataEntity): JsonResponse
     {
-        return $this->dataService->delete($obj);
+        return $this->dataService->deleteItem($obj, $dataEntity);
     }
 
     /**

@@ -33,12 +33,7 @@ class DataPlanningItem
 
         $price = $data->price;
 
-
-        $end = $planning->getEnd();
-        $newEnd = $isDepense ? $end - $price : $end + $price;
-
-        $planning->setEnd($newEnd);
-
+        $newEnd = $this->updateEnd($price, $planning, $isDepense);
         $this->updateNextMonths($isDepense, $newEnd, $planning->getNext());
 
         return ($obj)
@@ -49,20 +44,48 @@ class DataPlanningItem
         ;
     }
 
-    public function updateNextMonths($isDepense, $newEnd, BuPlanning $nextPlanning)
+    public function updateNextMonths($isDepense, $newEnd, ?BuPlanning $nextPlanning)
     {
-        $nextEnd =  $nextPlanning->getEnd();
-        $nextStart = $nextPlanning->getStart();
+        if($nextPlanning){
+            $nextEnd =  $nextPlanning->getEnd();
+            $nextStart = $nextPlanning->getStart();
 
-        $nextPlanning->setStart($newEnd);
+            $newNextEnd = $isDepense ? $nextEnd - $this->operatorGoodOrder($isDepense, $nextStart, $newEnd) : $nextEnd + $this->operatorGoodOrder($isDepense, $nextStart, $newEnd);
 
-        $newNextEnd = $isDepense ? $nextEnd - ($nextStart - $newEnd) : $nextEnd + ($nextStart - $newEnd);
+            $nextPlanning->setStart($newEnd);
+            $nextPlanning->setEnd($newNextEnd);
 
-        $nextPlanning->setEnd($newNextEnd);
-
-        if($nextPlanning->getNext()){
-            $this->updateNextMonths($isDepense, $newNextEnd, $nextPlanning->getNext());
+            if($nextPlanning->getNext()){
+                $this->updateNextMonths($isDepense, $newNextEnd, $nextPlanning->getNext());
+            }
         }
+    }
+
+    private function operatorGoodOrder($isDepense, $a, $b)
+    {
+        if($isDepense){
+            if($a > $b){
+                return $a - $b;
+            }else{
+                return $b - $a;
+            }
+        }else{
+            if($a > $b){
+                return $a + $b;
+            }else{
+                return $b + $a;
+            }
+        }
+    }
+
+    public function updateEnd($price, BuPlanning $planning, $isDepense = true): float
+    {
+        $end = $planning->getEnd();
+        $newEnd = $this->operatorGoodOrder($isDepense, $end, $price);
+
+        $planning->setEnd($newEnd);
+
+        return $newEnd;
     }
 
     public function getNewObject($obj)

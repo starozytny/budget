@@ -92,10 +92,11 @@ class ExpenseController extends AbstractController
      * @OA\Tag(name="Expenses")
      *
      * @param BuExpense $obj
+     * @param DataPlanningItem $dataEntity
      * @return JsonResponse
      */
-    public function delete(BuExpense $obj): JsonResponse
+    public function delete(BuExpense $obj, DataPlanningItem $dataEntity): JsonResponse
     {
-        return $this->dataService->delete($obj);
+        return $this->dataService->deleteItem($obj, $dataEntity);
     }
 }
