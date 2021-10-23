@@ -12,6 +12,10 @@ import Sanitize     from "@dashboardComponents/functions/sanitaze";
 import Validator    from "@dashboardComponents/functions/validateur";
 import Formulaire   from "@dashboardComponents/functions/Formulaire";
 
+function updateData () {
+
+}
+
 export class Planning extends Component {
     constructor(props) {
         super(props);
@@ -53,12 +57,17 @@ export class Planning extends Component {
 
             console.log(elem)
 
+            let toSpend = elem.end;
+            elem.expenses.forEach(el => {
+                toSpend -= el.price
+            })
+
             content = <>
                 <div className="planning-line">
-                    <div className={"card current " + (elem.end >= 0)}>
+                    <div className={"card current " + (toSpend >= 0)}>
                         <div className="card-header">
                             <div>
-                                <div className="name">{Sanitize.toFormatCurrency(elem.end)}</div>
+                                <div className="name">{Sanitize.toFormatCurrency(toSpend)}</div>
                                 <div className="sub">
                                     <div>Reste à dépenser pour {Sanitize.getMonthStringLong(elem.month)}</div>
                                     <div>Compte au début du mois : {Sanitize.toFormatCurrency(elem.start)}</div>
