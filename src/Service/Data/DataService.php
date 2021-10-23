@@ -82,6 +82,16 @@ class DataService
         return $date;
     }
 
+    /**
+     * Create function for Expenses, Outcome, Income and Entries
+     *
+     * @param Request $request
+     * @param DataPlanningItem $dataEntity
+     * @param ValidatorService $validator
+     * @param $obj
+     * @param false $setNumGroup
+     * @return JsonResponse
+     */
     public function createFunction(Request $request, DataPlanningItem $dataEntity, ValidatorService $validator, $obj, $setNumGroup = false): JsonResponse
     {
         $data = json_decode($request->getContent());
@@ -95,21 +105,19 @@ class DataService
         }
 
         $obj = $dataEntity->setData($obj, $data, $setNumGroup);
-        if(!$obj){
-            return $this->apiResponse->apiJsonResponseBadRequest("Une erreur est survenue. Veuillez contacter le support");
-        }
 
-        $noErrors = $validator->validate($obj);
-        if ($noErrors !== true) {
-            return $this->apiResponse->apiJsonResponseValidationFailed($noErrors);
-        }
-
-        $this->em->persist($obj);
-        $this->em->flush();
-
-        return $this->apiResponse->apiJsonResponse($obj, User::ADMIN_READ);
+        return $this->returnCreateOrUpdateFunction($validator, $obj);
     }
 
+    /**
+     * Update function for Expenses, Outcome, Income and Entries
+     *
+     * @param Request $request
+     * @param DataPlanningItem $dataEntity
+     * @param ValidatorService $validator
+     * @param $obj
+     * @return JsonResponse
+     */
     public function updateFunction(Request $request, DataPlanningItem $dataEntity, ValidatorService $validator, $obj): JsonResponse
     {
         $data = json_decode($request->getContent());
@@ -119,6 +127,12 @@ class DataService
         }
 
         $obj = $dataEntity->setData($obj, $data);
+
+        return $this->returnCreateOrUpdateFunction($validator, $obj);
+    }
+
+    private function returnCreateOrUpdateFunction($validator, $obj): JsonResponse
+    {
         if(!$obj){
             return $this->apiResponse->apiJsonResponseBadRequest("Une erreur est survenue. Veuillez contacter le support");
         }
@@ -134,6 +148,15 @@ class DataService
         return $this->apiResponse->apiJsonResponse($obj, User::USER_READ);
     }
 
+    /**
+     * Spread to others month Outcome, Income and Economies
+     *
+     * @param SerializerInterface $serializer
+     * @param DataPlanningItem $dataEntity
+     * @param $obj
+     * @param $newObj
+     * @return JsonResponse
+     */
     public function spreadFunction(SerializerInterface $serializer, DataPlanningItem $dataEntity, $obj, $newObj): JsonResponse
     {
         $planning = $obj->getPlanning();
