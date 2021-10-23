@@ -17,7 +17,7 @@ class DataPlanningItem
         $this->em = $entityManager;
     }
 
-    public function setData($obj, $data, $setNumGroup = false, BuPlanning $planning = null)
+    public function setData($obj, $data, $setNumGroup = false, BuPlanning $planning = null, $isDepense = true)
     {
         if(!$planning){
             $planning = $this->em->getRepository(BuPlanning::class)->find($data->planning);
@@ -31,12 +31,38 @@ class DataPlanningItem
             $obj->setNumGroup($numGroup);
         }
 
+        $price = $data->price;
+
+
+        $end = $planning->getEnd();
+        $newEnd = $isDepense ? $end - $price : $end + $price;
+
+        $planning->setEnd($newEnd);
+
+        $this->updateNextMonths($isDepense, $newEnd, $planning->getNext());
+
         return ($obj)
             ->setIcon($data->icon ?: null)
             ->setName(trim($data->name))
-            ->setPrice($data->price)
+            ->setPrice($price)
             ->setPlanning($planning)
         ;
+    }
+
+    public function updateNextMonths($isDepense, $newEnd, BuPlanning $nextPlanning)
+    {
+        $nextEnd =  $nextPlanning->getEnd();
+        $nextStart = $nextPlanning->getStart();
+
+        $nextPlanning->setStart($newEnd);
+
+        $newNextEnd = $isDepense ? $nextEnd - ($nextStart - $newEnd) : $nextEnd + ($nextStart - $newEnd);
+
+        $nextPlanning->setEnd($newNextEnd);
+
+        if($nextPlanning->getNext()){
+            $this->updateNextMonths($isDepense, $newNextEnd, $nextPlanning->getNext());
+        }
     }
 
     public function getNewObject($obj)

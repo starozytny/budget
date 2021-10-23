@@ -243,12 +243,9 @@ class Card extends Component {
                     axios.request({ method: "POST", url: Routing.generate('api_'+ who +'_spread', {id: elem.id}) })
                         .then(function (response) {
                             let data = response.data;
-                            console.log(data);
                             toastr.info("Diffusion Réussie !");
                         })
                         .catch(function (error) {
-                            console.log(error)
-                            console.log(error.response)
                             Formulaire.displayErrors(self, error);
                         })
                         .then(function () {

@@ -67,6 +67,16 @@ class BuPlanning
      */
     private $outcomes;
 
+    /**
+     * @ORM\OneToOne(targetEntity=BuPlanning::class, cascade={"persist", "remove"})
+     */
+    private $next;
+
+    /**
+     * @ORM\OneToOne(targetEntity=BuPlanning::class, cascade={"persist", "remove"})
+     */
+    private $prev;
+
     public function __construct()
     {
         $this->start = 0;
@@ -196,6 +206,30 @@ class BuPlanning
                 $outcome->setPlanning(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNext(): ?self
+    {
+        return $this->next;
+    }
+
+    public function setNext(?self $next): self
+    {
+        $this->next = $next;
+
+        return $this;
+    }
+
+    public function getPrev(): ?self
+    {
+        return $this->prev;
+    }
+
+    public function setPrev(?self $prev): self
+    {
+        $this->prev = $prev;
 
         return $this;
     }

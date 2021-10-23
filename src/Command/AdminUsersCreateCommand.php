@@ -41,7 +41,7 @@ class AdminUsersCreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $io->title('Reset des tables');
-        $this->databaseService->resetTable($io, [User::class]);
+        $this->databaseService->resetTable($io, [BuPlanning::class, User::class]);
 
         $users = array(
             [
@@ -83,14 +83,22 @@ class AdminUsersCreateCommand extends Command
             $this->em->persist($new);
             $io->text('USER : ' . $user['username'] . ' créé' );
 
+            $prev = null;
             for($i=1 ; $i <= 12 ; $i++){
                 $planning = (new BuPlanning())
                     ->setYear(2021)
                     ->setMonth($i)
                     ->setUser($new)
+                    ->setPrev($prev)
                 ;
 
                 $this->em->persist($planning);
+
+                if($prev){
+                    $prev->setNext($planning);
+                }
+
+                $prev = $planning;
             }
 
         }
