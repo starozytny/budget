@@ -58,11 +58,18 @@ class BuPlanning
      */
     private $expenses;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BuOutcome::class, mappedBy="planning", orphanRemoval=true)
+     * @Groups({"user:read"})
+     */
+    private $outcomes;
+
     public function __construct()
     {
         $this->start = 0;
         $this->end = 0;
         $this->expenses = new ArrayCollection();
+        $this->outcomes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,6 +161,36 @@ class BuPlanning
             // set the owning side to null (unless already changed)
             if ($expense->getPlanning() === $this) {
                 $expense->setPlanning(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BuOutcome[]
+     */
+    public function getOutcomes(): Collection
+    {
+        return $this->outcomes;
+    }
+
+    public function addOutcome(BuOutcome $outcome): self
+    {
+        if (!$this->outcomes->contains($outcome)) {
+            $this->outcomes[] = $outcome;
+            $outcome->setPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOutcome(BuOutcome $outcome): self
+    {
+        if ($this->outcomes->removeElement($outcome)) {
+            // set the owning side to null (unless already changed)
+            if ($outcome->getPlanning() === $this) {
+                $outcome->setPlanning(null);
             }
         }
 

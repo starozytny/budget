@@ -4,11 +4,10 @@
 namespace App\Service\Data;
 
 
-use App\Entity\Budget\BuExpense;
 use App\Entity\Budget\BuPlanning;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DataExpense
+class DataPlanningItem
 {
     private $em;
 
@@ -17,11 +16,19 @@ class DataExpense
         $this->em = $entityManager;
     }
 
-    public function setData(BuExpense $obj, $data)
+    public function setData($obj, $data, $setNumGroup = false)
     {
         $planning = $this->em->getRepository(BuPlanning::class)->find($data->planning);
         if(!$planning){
             return false;
+        }
+
+        if($setNumGroup){
+            if(!$obj->getNumGroup()){
+                $numGroup = uniqid();
+
+                $obj->setNumGroup($numGroup);
+            }
         }
 
         return ($obj)

@@ -12,8 +12,19 @@ import Sanitize     from "@dashboardComponents/functions/sanitaze";
 import Validator    from "@dashboardComponents/functions/validateur";
 import Formulaire   from "@dashboardComponents/functions/Formulaire";
 
-function updateData () {
+function updateEnd(data, total) {
+    data.forEach(el => {
+        total -= el.price
+    })
 
+    return total;
+}
+
+function getToSpend (data) {
+    let total = updateEnd(data.expenses, data.end);
+    total = updateEnd(data.outcomes, total)
+
+    return total;
 }
 
 export class Planning extends Component {
@@ -57,10 +68,7 @@ export class Planning extends Component {
 
             console.log(elem)
 
-            let toSpend = elem.end;
-            elem.expenses.forEach(el => {
-                toSpend -= el.price
-            })
+            let toSpend = getToSpend(elem);
 
             content = <>
                 <div className="planning-line">
@@ -78,7 +86,7 @@ export class Planning extends Component {
                 </div>
 
                 <div className="planning-line planning-line-3">
-                    <Card classCard="regular" data={elem.expenses} planning={elem.id} >Dépenses fixes</Card>
+                    <Card classCard="regular" data={elem.outcomes} planning={elem.id} url={Routing.generate('api_expenses_create')}>Dépenses fixes</Card>
                     <Card classCard="income" data={elem.expenses} planning={elem.id} >Gains fixes</Card>
                     <Card classCard="economy" data={elem.expenses} planning={elem.id} >Economies</Card>
                 </div>

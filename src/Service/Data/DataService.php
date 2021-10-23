@@ -6,8 +6,10 @@ namespace App\Service\Data;
 
 use App\Entity\User;
 use App\Service\ApiResponse;
+use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class DataService
 {
@@ -75,5 +77,57 @@ class DataService
         $date->setTimezone(new \DateTimeZone($timezone));
 
         return $date;
+    }
+
+    public function createFunction(Request $request, DataPlanningItem $dataEntity, ValidatorService $validator, $obj, $setNumGroup = false): JsonResponse
+    {
+        $data = json_decode($request->getContent());
+
+        if ($data === null) {
+            return $this->apiResponse->apiJsonResponseBadRequest('Les données sont vides.');
+        }
+
+        if (!isset($data->name) || !isset($data->price)) {
+            return $this->apiResponse->apiJsonResponseBadRequest('Il manque des données.');
+        }
+
+        $obj = $dataEntity->setData($obj, $data, $setNumGroup);
+        if(!$obj){
+            return $this->apiResponse->apiJsonResponseBadRequest("Une erreur est survenue. Veuillez contacter le support");
+        }
+
+        $noErrors = $validator->validate($obj);
+        if ($noErrors !== true) {
+            return $this->apiResponse->apiJsonResponseValidationFailed($noErrors);
+        }
+
+        $this->em->persist($obj);
+        $this->em->flush();
+
+        return $this->apiResponse->apiJsonResponse($obj, User::ADMIN_READ);
+    }
+
+    public function updateFunction(Request $request, DataPlanningItem $dataEntity, ValidatorService $validator, $obj): JsonResponse
+    {
+        $data = json_decode($request->getContent());
+
+        if($data === null){
+            return $this->apiResponse->apiJsonResponseBadRequest('Les données sont vides.');
+        }
+
+        $obj = $dataEntity->setData($obj, $data);
+        if(!$obj){
+            return $this->apiResponse->apiJsonResponseBadRequest("Une erreur est survenue. Veuillez contacter le support");
+        }
+
+        $noErrors = $validator->validate($obj);
+        if ($noErrors !== true) {
+            return $this->apiResponse->apiJsonResponseValidationFailed($noErrors);
+        }
+
+        $this->em->persist($obj);
+        $this->em->flush();
+
+        return $this->apiResponse->apiJsonResponse($obj, User::USER_READ);
     }
 }

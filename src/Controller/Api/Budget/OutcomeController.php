@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Budget;
 
 use App\Entity\Budget\BuExpense;
+use App\Entity\Budget\BuOutcome;
 use App\Service\Data\DataPlanningItem;
 use App\Service\Data\DataService;
 use App\Service\ValidatorService;
@@ -13,9 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
 
 /**
- * @Route("/api/expenses", name="api_expenses_")
+ * @Route("/api/outcomes", name="api_outcomes_")
  */
-class ExpenseController extends AbstractController
+class OutcomeController extends AbstractController
 {
     private $dataService;
 
@@ -26,13 +27,13 @@ class ExpenseController extends AbstractController
     }
 
     /**
-     * Create an expense
+     * Create an outcome
      *
      * @Route("/", name="create", options={"expose"=true}, methods={"POST"})
      *
      * @OA\Response(
      *     response=200,
-     *     description="Returns a new expense object"
+     *     description="Returns a new outcome object"
      * )
      *
      * @OA\Response(
@@ -40,7 +41,7 @@ class ExpenseController extends AbstractController
      *     description="JSON empty or missing data or validation failed",
      * )
      *
-     * @OA\Tag(name="Expenses")
+     * @OA\Tag(name="Outcomes")
      *
      * @param Request $request
      * @param ValidatorService $validator
@@ -49,38 +50,38 @@ class ExpenseController extends AbstractController
      */
     public function create(Request $request, ValidatorService $validator, DataPlanningItem $dataEntity): JsonResponse
     {
-        return $this->dataService->createFunction($request, $dataEntity, $validator, new BuExpense());
+        return $this->dataService->createFunction($request, $dataEntity, $validator, new BuOutcome(), true);
     }
 
     /**
-     * Update an expense
+     * Update an outcome
      *
      * @Route("/{id}", name="update", options={"expose"=true}, methods={"POST"})
      *
      * @OA\Response(
      *     response=200,
-     *     description="Returns an expense object"
+     *     description="Returns an outcome object"
      * )
      * @OA\Response(
      *     response=400,
      *     description="Validation failed",
      * )
      *
-     * @OA\Tag(name="Expenses")
+     * @OA\Tag(name="Outcomes")
      *
      * @param Request $request
      * @param ValidatorService $validator
-     * @param BuExpense $obj
+     * @param BuOutcome $obj
      * @param DataPlanningItem $dataEntity
      * @return JsonResponse
      */
-    public function update(Request $request, ValidatorService $validator, BuExpense $obj, DataPlanningItem $dataEntity): JsonResponse
+    public function update(Request $request, ValidatorService $validator, BuOutcome $obj, DataPlanningItem $dataEntity): JsonResponse
     {
         return $this->dataService->updateFunction($request, $dataEntity, $validator, $obj);
     }
 
     /**
-     * Delete an expense
+     * Delete an outcome
      *
      * @Route("/{id}", name="delete", options={"expose"=true}, methods={"DELETE"})
      *
@@ -89,7 +90,7 @@ class ExpenseController extends AbstractController
      *     description="Return message successful",
      * )
      *
-     * @OA\Tag(name="Expenses")
+     * @OA\Tag(name="Outcomes")
      *
      * @param BuExpense $obj
      * @return JsonResponse
