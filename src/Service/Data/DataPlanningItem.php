@@ -4,6 +4,7 @@
 namespace App\Service\Data;
 
 
+use App\Entity\Budget\BuOutcome;
 use App\Entity\Budget\BuPlanning;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -16,19 +17,18 @@ class DataPlanningItem
         $this->em = $entityManager;
     }
 
-    public function setData($obj, $data, $setNumGroup = false)
+    public function setData($obj, $data, $setNumGroup = false, BuPlanning $planning = null)
     {
-        $planning = $this->em->getRepository(BuPlanning::class)->find($data->planning);
         if(!$planning){
-            return false;
+            $planning = $this->em->getRepository(BuPlanning::class)->find($data->planning);
+            if(!$planning){
+                return false;
+            }
         }
 
         if($setNumGroup){
-            if(!$obj->getNumGroup()){
-                $numGroup = uniqid();
-
-                $obj->setNumGroup($numGroup);
-            }
+            $numGroup = !$data->numGroup ? uniqid() : $data->numGroup;
+            $obj->setNumGroup($numGroup);
         }
 
         return ($obj)
@@ -37,5 +37,28 @@ class DataPlanningItem
             ->setPrice($data->price)
             ->setPlanning($planning)
         ;
+    }
+
+    public function getNewObject($obj)
+    {
+        if($obj instanceof BuOutcome){
+            return new BuOutcome();
+        }
+
+        return null;
+    }
+
+    public function isExisteObject($planning, $obj): bool
+    {
+        $find = false;
+        if($obj instanceof BuOutcome){
+            foreach($planning->getOutcomes() as $outcome){
+                if($outcome->getNumGroup() == $obj->getNumGroup()){
+                    $find = true;
+                }
+            }
+        }
+
+        return $find;
     }
 }

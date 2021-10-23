@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/api/outcomes", name="api_outcomes_")
@@ -56,7 +57,7 @@ class OutcomeController extends AbstractController
     /**
      * Update an outcome
      *
-     * @Route("/{id}", name="update", options={"expose"=true}, methods={"POST"})
+     * @Route("/{id}", name="update", options={"expose"=true}, methods={"PUT"})
      *
      * @OA\Response(
      *     response=200,
@@ -92,11 +93,37 @@ class OutcomeController extends AbstractController
      *
      * @OA\Tag(name="Outcomes")
      *
-     * @param BuExpense $obj
+     * @param BuOutcome $obj
      * @return JsonResponse
      */
-    public function delete(BuExpense $obj): JsonResponse
+    public function delete(BuOutcome $obj): JsonResponse
     {
         return $this->dataService->delete($obj);
+    }
+
+    /**
+     * Spread an outcome to others months of year
+     *
+     * @Route("/spread/{id}", name="spread", options={"expose"=true}, methods={"POST"})
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns an outcome object"
+     * )
+     * @OA\Response(
+     *     response=400,
+     *     description="Validation failed",
+     * )
+     *
+     * @OA\Tag(name="Outcomes")
+     *
+     * @param BuOutcome $obj
+     * @param DataPlanningItem $dataEntity
+     * @param SerializerInterface $serializer
+     * @return JsonResponse
+     */
+    public function spread(BuOutcome $obj, DataPlanningItem $dataEntity, SerializerInterface $serializer): JsonResponse
+    {
+        return $this->dataService->spreadFunction($serializer, $dataEntity, $obj, new BuOutcome());
     }
 }

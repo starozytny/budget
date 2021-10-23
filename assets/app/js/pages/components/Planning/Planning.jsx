@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 
-import axios       from "axios";
-import Routing     from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
+import axios        from "axios";
+import toastr       from "toastr";
+import Swal         from "sweetalert2";
+import SwalOptions  from "@dashboardComponents/functions/swalOptions";
+import Routing      from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 
 import { Months }               from "@dashboardComponents/Tools/Days";
 import { Alert }                from "@dashboardComponents/Tools/Alert";
@@ -86,13 +89,13 @@ export class Planning extends Component {
                 </div>
 
                 <div className="planning-line planning-line-3">
-                    <Card classCard="regular" data={elem.outcomes} planning={elem.id} url={Routing.generate('api_expenses_create')}>Dépenses fixes</Card>
-                    <Card classCard="income" data={elem.expenses} planning={elem.id} >Gains fixes</Card>
-                    <Card classCard="economy" data={elem.expenses} planning={elem.id} >Economies</Card>
+                    <Card classCard="regular" data={elem.outcomes} planning={elem.id} who="outcomes">Dépenses fixes</Card>
+                    <Card classCard="income" data={elem.expenses} planning={elem.id} who="incomes">Gains fixes</Card>
+                    <Card classCard="economy" data={elem.expenses} planning={elem.id} who="economies">Economies</Card>
                 </div>
 
                 <div className="planning-line">
-                    <Card classCard="expenses" data={elem.expenses} planning={elem.id} url={Routing.generate('api_expenses_create')}>Dépenses occasionnelles</Card>
+                    <Card classCard="expenses" data={elem.expenses} planning={elem.id} who="expenses" enableSpread={false}>Dépenses occasionnelles</Card>
                 </div>
             </>
         }
@@ -125,6 +128,7 @@ class Card extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSpread = this.handleSpread.bind(this);
     }
 
     handleChange = (e) => { this.setState({ [e.currentTarget.name]: e.currentTarget.value }) }
@@ -132,7 +136,7 @@ class Card extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const { url } = this.props;
+        const { who } = this.props;
         const { name, icon, price } = this.state;
 
         this.setState({ errors: [] })
@@ -150,10 +154,11 @@ class Card extends Component {
             Formulaire.loader(true);
             let self = this;
 
-            axios.request({ method: "POST", url: url, data: this.state })
+            axios.request({ method: "POST", url: Routing.generate('api_'+ who +'_create'), data: this.state })
                 .then(function (response) {
                     let data = response.data;
                     console.log(data)
+                    toastr.info("Félicitation ! L'ajout s'est réalisé avec succès !");
                 })
                 .catch(function (error) {
                     Formulaire.displayErrors(self, error);
@@ -165,8 +170,39 @@ class Card extends Component {
         }
     }
 
+    handleSpread = (elem) => {
+        const { who } = this.props;
+
+        Swal.fire(SwalOptions.options(
+            "Diffuser cette donnée sur les prochains mois de cette année ?",
+            elem.name + " : " + Sanitize.toFormatCurrency(elem.price)))
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Formulaire.loader(true);
+                    let self = this;
+
+                    axios.request({ method: "POST", url: Routing.generate('api_'+ who +'_spread', {id: elem.id}) })
+                        .then(function (response) {
+                            let data = response.data;
+                            console.log(data);
+                            toastr.info("Diffusion réalisée avec succès !");
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                            console.log(error.response)
+                            Formulaire.displayErrors(self, error);
+                        })
+                        .then(function () {
+                            Formulaire.loader(false);
+                        })
+                    ;
+                }
+            })
+        ;
+    }
+
     render () {
-        const { classCard = null, iconCard = "bookmark", children, data } = this.props;
+        const { classCard = null, iconCard = "bookmark", children, data, enableSpread = true } = this.props;
         const { errors, name, icon, price } = this.state;
 
         let total = 0;
@@ -185,6 +221,7 @@ class Card extends Component {
                 <div className="col-2">-{Sanitize.toFormatCurrency(elem.price)}</div>
                 <div className="col-3 actions">
                     <ButtonIcon icon="trash">Supprimer</ButtonIcon>
+                    {enableSpread &&  <ButtonIcon icon="share" onClick={() => this.handleSpread(elem)}>Diffuser</ButtonIcon>}
                 </div>
             </div>)
         })

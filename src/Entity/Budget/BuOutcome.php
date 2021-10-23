@@ -52,6 +52,7 @@ class BuOutcome extends DataEntity
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read"})
      */
     private $numGroup;
 

@@ -78,7 +78,7 @@ select{
       opacity: 0.8;
 
       .col-1{
-        width: calc(100% - 40% - 12px - 30px);
+        width: calc(100% - 40% - 12px - 70px);
         margin-right: 12px;
       }
 
@@ -87,7 +87,11 @@ select{
         margin-right: 12px;
       }
       .col-3{
-        width: 30px;
+        width: 70px;
+
+        &.actions{
+          @include flex(row, flex-start, flex-end);
+        }
       }
     }
   }

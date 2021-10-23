@@ -4,12 +4,15 @@
 namespace App\Service\Data;
 
 
+use App\Entity\Budget\BuOutcome;
+use App\Entity\Budget\BuPlanning;
 use App\Entity\User;
 use App\Service\ApiResponse;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class DataService
 {
@@ -129,5 +132,27 @@ class DataService
         $this->em->flush();
 
         return $this->apiResponse->apiJsonResponse($obj, User::USER_READ);
+    }
+
+    public function spreadFunction(SerializerInterface $serializer, DataPlanningItem $dataEntity, $obj, $newObj): JsonResponse
+    {
+        $planning = $obj->getPlanning();
+        $plannings = $this->em->getRepository(BuPlanning::class)->findBy(['year' => $planning->getYear(), 'user' => $planning->getUser()->getId()]);
+
+        $data = $serializer->serialize($obj, 'json', ['groups' => User::USER_READ]);
+
+        foreach($plannings as $pl){
+            if($pl->getMonth() > $planning->getMonth()){
+                if(!$dataEntity->isExisteObject($pl, $obj)){
+                    $new = $dataEntity->setData($dataEntity->getNewObject($newObj), json_decode($data), true, $pl);
+
+                    $this->em->persist($new);
+                }
+            }
+        }
+
+        $this->em->flush();
+
+        return $this->apiResponse->apiJsonResponseSuccessful(200);
     }
 }
